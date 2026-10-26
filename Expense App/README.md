@@ -1,0 +1,58 @@
+# mây. — Expense Tracker
+
+Ứng dụng quản lý lịch sử chi tiêu bằng React 19 và Vite, giao diện tiếng Việt với font Be Vietnam Pro, Lucide cho thao tác và SVG tự vẽ cho danh mục. Hiệu ứng chuyển trang và hộp thoại dùng Motion, tôn trọng tùy chọn giảm chuyển động của thiết bị.
+
+## Chạy ứng dụng
+
+Yêu cầu Node.js 22.12+ và npm.
+
+```sh
+npm install
+npm run dev
+```
+
+Vite in địa chỉ local khi khởi động, thường là `http://localhost:5173`.
+
+```sh
+npm run build       # Build production vào dist/
+npm run preview     # Xem bản production
+npm run test:e2e    # Kiểm tra hành vi bằng Playwright
+npm run format     # Định dạng mã nguồn
+```
+
+## Tính năng
+
+- Tổng quan thu nhập, chi tiêu, số dư theo tháng; biểu đồ chi mỗi ngày và phân bổ theo danh mục tính từ giao dịch thực tế.
+- Thêm, sửa, xóa khoản thu/chi; lưu ngày, danh mục, cách thanh toán và ghi chú riêng.
+- Lịch sử có tìm kiếm không dấu, lọc loại giao dịch/danh mục/tháng, sắp xếp và phân trang; xuất CSV các kết quả đang lọc.
+- Tám danh mục với minh họa SVG riêng, ngân sách từng nhóm và ngân sách tổng theo tháng.
+- Sổ ghi chú với thẻ giấy ba màu, tìm kiếm không dấu, lọc màu/ghim và tab ghi chú từ giao dịch theo tháng. Popup viết có bộ đếm ký tự, chọn màu giấy và thanh lưu cố định trên mobile.
+- Cá nhân hóa tên, xuất/khôi phục bản sao lưu JSON có kiểm tra định dạng và xác nhận trước khi thay thế dữ liệu.
+- Bố cục rộng linh hoạt, sidebar thu gọn trên điện thoại; hộp thoại có điều khiển bàn phím, focus và Escape.
+
+Ứng dụng ban đầu hiển thị dữ liệu mẫu để khám phá. Chọn **Dữ liệu mẫu → Tạo sổ của tôi** hoặc vào **Cài đặt → Tạo sổ của tôi** để xóa các bản ghi mẫu và bắt đầu sổ riêng.
+
+## Lưu trữ
+
+Dữ liệu dùng `localStorage` với khóa `may-expense-tracker-v1`, chỉ lưu trong trình duyệt/thiết bị hiện tại. Chưa có backend, tài khoản hoặc đồng bộ giữa các thiết bị. Dùng **Cài đặt → Xuất bản sao lưu** để lưu hoặc chuyển dữ liệu. Nếu trình duyệt từ chối ghi dữ liệu, ứng dụng hiển thị thông báo và vẫn cho phép xuất bản sao lưu từ trạng thái hiện tại.
+
+Số dư trên dashboard là **thu nhập trừ chi tiêu của tháng đang chọn**. Biểu đồ thể hiện **chi tiêu từng ngày**, không phải số dư hay số liệu tích lũy. Ngân sách tổng và ngân sách từng danh mục được cấu hình riêng.
+
+## Cấu trúc
+
+```text
+src/
+  App.jsx                      # Điều hướng, dashboard, lịch sử, ghi chú, cài đặt
+  App.css                      # Bố cục, giao diện và responsive
+  index.css                    # Font cục bộ, token màu và reset
+  data.js                      # Mẫu dữ liệu, kiểm tra, định dạng, CSV và sao lưu
+  components/
+    CategoryArt.jsx            # Chín minh họa SVG (tám nhóm chi + thu nhập)
+    SpendingChart.jsx          # Biểu đồ SVG tính từ giao dịch
+    NotesView.jsx              # Sổ ghi chú, tìm kiếm, bộ lọc và tab giao dịch
+    dialogs/                   # Module riêng cho popup giao dịch, ghi chú, ngân sách
+tests/expense.spec.js           # Kiểm tra hành vi và responsive
+tests/notes.spec.js             # Tìm kiếm, ghim, tab giao dịch và popup trên mobile
+```
+
+Trên Windows, cấu hình Playwright sử dụng Chrome tại đường dẫn mặc định trong `Program Files`. Trên hệ điều hành khác, chạy `npx playwright install chromium` trước lần kiểm tra đầu tiên. Bộ kiểm tra bao gồm thêm/sửa/xóa, lưu qua tải lại, thu nhập, ghi chú, bộ lọc, CSV, ngân sách, focus, lỗi bộ nhớ và độ rộng 320–2560px.

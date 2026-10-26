@@ -1,0 +1,166 @@
+:root {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  color: #292331;
+  background: #f7f8fc;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  --font-caption: 12px;
+  --font-small: 12px;
+  --font-body: 13px;
+  --font-content: 14px;
+  --font-section: 16px;
+  --font-control: 13px;
+  --font-control-label: 12px;
+  --font-control-option: 13px;
+  --font-picker-title: 14px;
+  --sidebar-width: 252px;
+  --sidebar-padding: 14px;
+  --page-gutter: clamp(18px, 1.8vw, 36px);
+  --page-top: 22px;
+  --topbar-height: 68px;
+  --layout-gap: 16px;
+  --section-gap: 18px;
+  --text-primary: #292331;
+  --text-secondary: #65596f;
+  --text-accent: #72518f;
+  --text-success: #357052;
+  --text-warning: #984d29;
+  --action: #7b5ba4;
+  --action-hover: #69488f;
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --purple: var(--text-accent);
+  --lavender: #eee8f7;
+  --border: #eeedf3;
+  --green: #6b9d8a;
+  --shadow: 0 6px 28px #30214704;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+#root {
+  min-height: 100svh;
+  width: 100%;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+  color: inherit;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+button svg {
+  flex-shrink: 0;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #9b82c8;
+  outline-offset: 4px;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #ab95d4 !important;
+  box-shadow: 0 0 0 3px #a892cc16;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  font-weight: 600;
+}
+button {
+  border: 0;
+  background: none;
+}
+::selection {
+  background: #e1d4f5;
+  color: #4b376a;
+}
+button,
+input,
+textarea,
+select,
+a {
+  touch-action: manipulation;
+}
+input[type='number'] {
+  appearance: textfield;
+}
+select option {
+  font-size: var(--font-control-option);
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+svg {
+  display: block;
+}
+img {
+  max-width: 100%;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: -60px;
+  left: 20px;
+  padding: 12px 20px;
+  background: #34323f;
+  color: white;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --font-control-option: 12px;
+    --font-picker-title: 13px;
+  }
+}

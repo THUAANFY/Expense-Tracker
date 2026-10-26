@@ -1,0 +1,367 @@
+.dialog.note-dialog {
+  --note-dialog-height: min(780px, calc(100dvh - 32px));
+  --note-paper-color: #fffcf5;
+  --note-paper-border: #ece1c9;
+  --note-paper-rule: #efe6d440;
+  width: 560px;
+  max-width: calc(100vw - 24px);
+  max-height: var(--note-dialog-height);
+  padding: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.note-dialog.paper-purple {
+  --note-paper-color: #f9f5fd;
+  --note-paper-border: #e3d6ee;
+  --note-paper-rule: #dfd1ef40;
+}
+
+.note-dialog.paper-green {
+  --note-paper-color: #f4f9f5;
+  --note-paper-border: #d9e7dc;
+  --note-paper-rule: #cfe1d440;
+}
+
+.note-dialog .dialog-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--note-dialog-height) - 2px);
+  padding: 0;
+}
+
+.note-dialog .dialog-heading {
+  flex-shrink: 0;
+  gap: 12px;
+  margin: 0;
+  padding: 21px 22px 18px;
+  border-bottom: 1px solid #eee6f4;
+  background: #fcfaff;
+}
+
+.note-dialog .dialog-heading .eyebrow {
+  color: var(--text-accent);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.note-dialog .dialog-heading h2 {
+  margin-top: 6px;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.note-dialog .dialog-heading p {
+  margin-top: 5px;
+  color: var(--text-secondary);
+  font-size: var(--font-control-label);
+  line-height: 1.7;
+}
+
+.note-dialog .dialog-heading > .icon-button {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  border: 1px solid #e7ddef;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.note-dialog .note-form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+}
+
+.note-editor-body {
+  display: grid;
+  flex: 1 1 auto;
+  align-content: start;
+  gap: 17px;
+  min-height: 0;
+  padding: 20px 22px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c2abd6 #f7f3fb;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+.note-editor-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.note-editor-body::-webkit-scrollbar-thumb {
+  border: 1px solid #f7f3fb;
+  border-radius: 8px;
+  background: #c2abd6;
+}
+
+.note-dialog .note-form .field {
+  gap: 7px;
+  min-width: 0;
+}
+
+.note-editor-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: var(--font-control-label);
+  font-weight: 500;
+}
+
+.note-editor-label > span {
+  color: #897794;
+  font-size: 10px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.note-dialog .field > input,
+.note-dialog .field > textarea {
+  min-width: 0;
+  min-height: 42px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #e5dcec;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: var(--font-control);
+  line-height: 20px;
+}
+
+.note-dialog .field > textarea {
+  min-height: 194px;
+  padding-top: 11px;
+  border-color: var(--note-paper-border);
+  background:
+    repeating-linear-gradient(transparent 0 27px, var(--note-paper-rule) 27px 28px),
+    var(--note-paper-color);
+  line-height: 28px;
+  resize: vertical;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.note-dialog .field > input::placeholder,
+.note-dialog .field > textarea::placeholder {
+  color: #84718f;
+  font-size: var(--font-control);
+}
+
+.note-editor-options {
+  display: grid;
+  gap: 16px;
+}
+
+.note-paper-colors {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.note-paper-colors legend {
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-control-label);
+  font-weight: 500;
+}
+
+.note-paper-swatches {
+  display: flex;
+  gap: 8px;
+}
+
+.note-paper-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 75px;
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid #e9e1ef;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--text-secondary);
+  font-size: var(--font-control-label);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.note-paper-swatch:hover,
+.note-paper-swatch.is-selected {
+  border-color: #bea5d1;
+  background: #f7f2fc;
+  color: var(--text-accent);
+}
+
+.note-paper-color {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #d5bd7c;
+  border-radius: 50%;
+  background: #f4e4af;
+  color: #775c30;
+}
+
+.purple > .note-paper-color {
+  border-color: #b79ecb;
+  background: #ddcdec;
+  color: #73508e;
+}
+
+.green > .note-paper-color {
+  border-color: #96b79f;
+  background: #c8dfce;
+  color: #477255;
+}
+
+.note-editor-pin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  padding: 12px;
+  border: 1px solid #e9e1f0;
+  border-radius: 9px;
+  background: #fcfaff;
+  color: var(--text-secondary);
+  font-size: var(--font-control-label);
+  cursor: pointer;
+}
+
+.note-editor-pin > span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.note-editor-pin small {
+  display: block;
+  margin-top: 2px;
+  color: #8a7795;
+  font-size: 11px;
+}
+
+.note-editor-pin > input {
+  position: relative;
+  flex-shrink: 0;
+  width: 33px;
+  height: 19px;
+  margin: 0;
+  border: 1px solid #d9cce3;
+  border-radius: 20px;
+  appearance: none;
+  background: #eae2f1;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.note-editor-pin > input::before {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px #49315c1a;
+  content: '';
+  transition: transform 160ms ease;
+}
+
+.note-editor-pin > input:checked {
+  border-color: var(--action);
+  background: var(--action);
+}
+
+.note-editor-pin > input:checked::before {
+  transform: translateX(14px);
+}
+
+.note-dialog .delete-confirm,
+.note-dialog .form-error {
+  margin: 0;
+  font-size: var(--font-control-label);
+}
+
+.note-dialog .dialog-actions {
+  flex-shrink: 0;
+  gap: 8px;
+  margin: 0;
+  padding: 13px 22px;
+  border-top: 1px solid #eee6f4;
+  background: #fff;
+}
+
+.note-dialog .dialog-actions .button {
+  min-height: 40px;
+  padding: 9px 13px;
+  font-size: var(--font-control);
+  line-height: 1.5;
+}
+
+.note-dialog .dialog-actions > .icon-button {
+  width: 34px;
+  height: 34px;
+}
+
+@media (max-width: 480px) {
+  .dialog.note-dialog {
+    --note-dialog-height: calc(100dvh - 24px);
+  }
+  .note-dialog .dialog-heading {
+    padding: 18px 17px 15px;
+  }
+  .note-dialog .dialog-heading h2 {
+    font-size: 18px;
+  }
+  .note-editor-body {
+    gap: 15px;
+    padding: 17px;
+  }
+  .note-dialog .field > textarea {
+    min-height: 175px;
+  }
+  .note-paper-swatches {
+    gap: 7px;
+  }
+  .note-paper-swatch {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 8px;
+  }
+  .note-dialog .dialog-actions {
+    padding: 12px 17px;
+  }
+}
+
+@media (pointer: coarse) {
+  .note-dialog .field > input {
+    min-height: 44px;
+  }
+  .note-paper-swatch {
+    min-height: 39px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-dialog *,
+  .note-dialog *::before {
+    transition: none !important;
+  }
+}

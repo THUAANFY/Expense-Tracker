@@ -1,0 +1,474 @@
+/* Native and custom scrolling areas share the app's lilac scrollbar. */
+.dialog,
+.dialog textarea,
+.transaction-form-body {
+  scrollbar-width: thin;
+  scrollbar-color: #c2abd6 #f7f3fb;
+  overscroll-behavior: contain;
+}
+
+.dialog::-webkit-scrollbar,
+.dialog textarea::-webkit-scrollbar,
+.transaction-form-body::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.dialog::-webkit-scrollbar-track,
+.dialog textarea::-webkit-scrollbar-track,
+.transaction-form-body::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #f7f3fb;
+}
+
+.dialog::-webkit-scrollbar-thumb,
+.dialog textarea::-webkit-scrollbar-thumb,
+.transaction-form-body::-webkit-scrollbar-thumb {
+  border: 2px solid #f7f3fb;
+  border-radius: 10px;
+  background: #c2abd6;
+}
+
+.dialog::-webkit-scrollbar-thumb:hover,
+.dialog textarea::-webkit-scrollbar-thumb:hover,
+.transaction-form-body::-webkit-scrollbar-thumb:hover {
+  background: #a98ac4;
+}
+
+.dialog.transaction-dialog {
+  --transaction-dialog-height: min(800px, calc(100dvh - 32px));
+  --transaction-padding: 22px;
+  --transaction-label-size: var(--font-control-label);
+  --transaction-input-size: var(--font-control);
+  --transaction-input-height: 42px;
+  width: 560px;
+  max-width: calc(100vw - 24px);
+  max-height: var(--transaction-dialog-height);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e8def1;
+  border-radius: 16px;
+}
+
+.transaction-dialog .dialog-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--transaction-dialog-height) - 2px);
+  padding: 0;
+}
+
+.dialog.transaction-dialog.wide {
+  width: 560px;
+}
+
+.transaction-dialog .dialog-heading {
+  flex-shrink: 0;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0;
+  padding: 20px var(--transaction-padding) 17px;
+  border-bottom: 1px solid #eee8f4;
+  background: #fff;
+}
+
+.transaction-dialog .dialog-heading .eyebrow {
+  color: var(--text-accent);
+  font-size: 10px;
+  letter-spacing: 1px;
+  line-height: 1.5;
+}
+
+.transaction-dialog .dialog-heading h2 {
+  margin-top: 6px;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.6px;
+  line-height: 1.5;
+}
+
+.transaction-dialog .dialog-heading p {
+  margin-top: 5px;
+  font-size: var(--transaction-label-size);
+  line-height: 1.6;
+}
+
+.transaction-dialog .dialog-heading > .icon-button {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  border: 1px solid #eee6f4;
+  border-radius: 8px;
+  background: #fbf9fd;
+}
+
+.transaction-form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+}
+
+.transaction-form-body {
+  display: grid;
+  flex: 1 1 auto;
+  align-content: start;
+  gap: 16px;
+  min-height: 0;
+  padding: 18px var(--transaction-padding);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.transaction-dialog .type-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #eee7f4;
+  border-radius: 10px;
+  background: #f7f4fa;
+}
+
+.transaction-dialog .type-toggle > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 35px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--text-secondary);
+  font-size: var(--transaction-input-size);
+  font-weight: 500;
+  line-height: 1.5;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.transaction-dialog .type-toggle > button:hover:not(.active) {
+  background: #efe8f7;
+}
+
+.transaction-dialog .type-toggle > .active {
+  border-color: #e7dcef;
+  background: #fff;
+  color: var(--text-accent);
+  box-shadow: 0 2px 6px #4d356608;
+}
+
+.transaction-dialog .type-toggle > .active.income {
+  border-color: #dce9e0;
+  color: var(--text-success);
+}
+
+.transaction-primary-fields,
+.transaction-dialog .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 12px;
+}
+
+.transaction-primary-fields {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
+}
+
+.transaction-dialog .field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: var(--transaction-label-size);
+  line-height: 1.5;
+}
+
+.transaction-dialog .field-label,
+.transaction-dialog .category-field legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 18px;
+  color: var(--text-secondary);
+  font-size: var(--transaction-label-size);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.transaction-dialog .field-label .optional {
+  color: #806b8f;
+  font-size: 11px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.transaction-dialog .field > input,
+.transaction-dialog .field > textarea,
+.transaction-control {
+  width: 100%;
+  min-width: 0;
+  height: var(--transaction-input-height);
+  min-height: var(--transaction-input-height);
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #e7deee;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text-primary);
+  font-size: var(--transaction-input-size);
+  font-weight: 400;
+  line-height: 20px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.transaction-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.transaction-control > input {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 9px 34px 9px 12px;
+  border: 0;
+  border-radius: inherit;
+  outline: 0;
+  appearance: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--transaction-input-size);
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.transaction-control > input:focus {
+  box-shadow: none;
+}
+
+.transaction-amount-control > input {
+  padding-right: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.transaction-currency {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  height: 24px;
+  margin-right: 10px;
+  padding-left: 10px;
+  border-left: 1px solid #eae1f1;
+  color: var(--text-accent);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.transaction-dialog .field > textarea {
+  height: 80px;
+  min-height: 80px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.transaction-dialog .field > input::placeholder,
+.transaction-dialog .field > textarea::placeholder,
+.transaction-control > input::placeholder {
+  color: #806b8f;
+  font-size: var(--transaction-input-size);
+  opacity: 1;
+}
+
+.transaction-dialog .field > input:focus,
+.transaction-dialog .field > textarea:focus,
+.transaction-control:focus-within {
+  border-color: #b292cc;
+  box-shadow: 0 0 0 3px #a48bc814;
+}
+
+.transaction-dialog .category-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.transaction-dialog .category-field legend {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+.transaction-dialog .category-picker {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.transaction-dialog .category-picker > button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 65px;
+  padding: 7px 4px;
+  border: 1px solid #eee7f4;
+  border-radius: 8px;
+  background: #fcfafd;
+  color: var(--text-secondary);
+  font-size: var(--transaction-label-size);
+  font-weight: 400;
+  line-height: 1.5;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.transaction-dialog .category-picker > button > .category-art {
+  width: 32px;
+  height: 32px;
+}
+
+.transaction-dialog .category-picker > button > span {
+  white-space: nowrap;
+}
+
+.transaction-dialog .category-picker > button:hover {
+  border-color: #d5c2e5;
+  background: #f5effa;
+}
+
+.transaction-dialog .category-picker > button.selected {
+  border-color: #b89ad1;
+  background: #f1eaf8;
+  color: var(--text-accent);
+}
+
+.transaction-dialog .category-check {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: var(--text-accent);
+}
+
+.transaction-dialog .form-error,
+.transaction-dialog .delete-confirm {
+  margin: 0;
+  font-size: var(--transaction-label-size);
+}
+
+.transaction-dialog .dialog-actions {
+  flex-shrink: 0;
+  gap: 8px;
+  margin: 0;
+  padding: 13px var(--transaction-padding);
+  border-top: 1px solid #eee8f4;
+  background: #fff;
+}
+
+.transaction-dialog .dialog-actions .button {
+  min-height: 40px;
+  padding: 9px 13px;
+  font-size: var(--transaction-input-size);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.transaction-dialog .dialog-actions > .icon-button {
+  width: 32px;
+  height: 32px;
+}
+
+@media (max-width: 480px) {
+  .dialog.transaction-dialog {
+    --transaction-padding: 16px;
+    --transaction-dialog-height: calc(100dvh - 24px);
+  }
+
+  .transaction-dialog .dialog-heading {
+    padding-top: 17px;
+    padding-bottom: 14px;
+  }
+
+  .transaction-dialog .dialog-heading h2 {
+    font-size: 18px;
+  }
+
+  .transaction-primary-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .transaction-form-body {
+    gap: 14px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .transaction-dialog .form-row {
+    gap: 10px;
+  }
+
+  .transaction-control > input {
+    padding-left: 10px;
+    padding-right: 28px;
+  }
+
+  .transaction-amount-control > input {
+    padding-right: 8px;
+  }
+}
+
+@media (max-width: 359px) {
+  .transaction-dialog .category-picker {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .transaction-dialog .dialog-actions .button {
+    padding-inline: 10px;
+  }
+}
+
+@media (pointer: coarse) {
+  .dialog.transaction-dialog {
+    --transaction-input-height: 44px;
+  }
+
+  .transaction-dialog .type-toggle > button,
+  .transaction-dialog .dialog-actions .button {
+    font-size: var(--font-control);
+  }
+
+  .transaction-dialog .form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transaction-dialog .type-toggle > button,
+  .transaction-dialog .category-picker > button,
+  .transaction-control,
+  .transaction-dialog .field > input,
+  .transaction-dialog .field > textarea {
+    transition: none;
+  }
+}

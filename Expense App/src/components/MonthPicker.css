@@ -1,0 +1,290 @@
+.month-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 40px;
+  max-width: 100%;
+  padding: 5px;
+  border: 1px solid #e5ddec;
+  border-radius: 9px;
+  background: #fff;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.month-picker.is-open,
+.month-picker:focus-within {
+  border-color: #af94ca;
+  box-shadow: 0 0 0 3px #a48bc81a;
+}
+
+.month-arrow,
+.month-browse-arrow,
+.month-popover-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.month-arrow {
+  width: 22px;
+  height: 30px;
+  padding: 0;
+}
+
+.month-picker-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 5px 4px;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: var(--font-control);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.month-picker-trigger > svg:first-child {
+  color: var(--text-accent);
+}
+
+.month-picker-chevron {
+  margin-left: 1px;
+  transition: transform 160ms ease;
+}
+
+.month-picker.is-open .month-picker-chevron {
+  transform: rotate(180deg);
+}
+
+.month-arrow:hover:not(:disabled),
+.month-arrow:focus-visible,
+.month-picker-trigger:hover,
+.month-picker-trigger:focus-visible,
+.month-browse-arrow:hover:not(:disabled),
+.month-popover-close:hover {
+  background: #f1eaf8;
+  color: var(--text-accent);
+}
+
+.month-arrow:focus-visible,
+.month-picker-trigger:focus-visible {
+  outline: none;
+}
+
+.month-popover {
+  position: fixed;
+  z-index: 70;
+  width: 304px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 24px);
+  padding: 15px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #e7ddef;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow:
+    0 16px 48px #49335f1a,
+    0 3px 12px #49335f0a;
+  color: var(--text-primary);
+  scrollbar-width: thin;
+  scrollbar-color: #d9cbe6 transparent;
+  transform-origin: top center;
+}
+
+.month-popover-caption,
+.month-popover-caption > span,
+.month-popover-navigation,
+.month-popover-footer,
+.month-popover-footer > button {
+  display: flex;
+  align-items: center;
+}
+
+.month-popover-caption {
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 9px;
+}
+
+.month-popover-caption > span {
+  gap: 7px;
+  color: var(--text-accent);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+}
+
+.month-popover-close {
+  width: 25px;
+  height: 25px;
+  margin: -3px -3px 0 0;
+}
+
+.month-popover-navigation {
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.month-browse-arrow {
+  width: 31px;
+  height: 31px;
+  border: 1px solid #eee7f4;
+}
+
+.month-year-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 5px 12px;
+  border-radius: 7px;
+  color: var(--text-primary);
+  font-size: var(--font-picker-title);
+  font-weight: 600;
+}
+
+.month-year-toggle > svg {
+  color: #9374b0;
+}
+
+.month-year-toggle:hover {
+  background: #f6f1fa;
+}
+
+.month-year-toggle.is-year-grid {
+  color: var(--text-accent);
+  font-size: var(--font-picker-title);
+}
+
+.month-year-toggle.is-year-grid > svg {
+  transform: rotate(180deg);
+}
+
+.month-options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  animation: month-grid-enter 160ms ease;
+}
+
+.month-option {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 5px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: var(--font-control-option);
+  line-height: 1.5;
+  white-space: nowrap;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.month-option:hover:not(:disabled) {
+  border-color: #e6daf0;
+  background: #f5f0fa;
+  color: var(--text-accent);
+}
+
+.month-option.is-current:not(.is-selected)::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: calc(50% - 2px);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #9e7dbd;
+}
+
+.month-option.is-selected,
+.month-option.is-selected:hover {
+  border-color: var(--action);
+  background: var(--action);
+  box-shadow: 0 3px 9px #7b5ba41c;
+  color: #fff;
+  font-weight: 500;
+}
+
+.month-option:focus-visible {
+  outline: 2px solid #a98bc5;
+  outline-offset: 2px;
+}
+
+.month-popover-footer {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #eee8f3;
+  font-size: var(--font-caption);
+}
+
+.month-popover-footer > span {
+  color: var(--text-secondary);
+}
+
+.month-popover-footer strong {
+  margin-left: 3px;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.month-popover-footer > button {
+  gap: 5px;
+  padding: 6px;
+  border-radius: 6px;
+  color: var(--text-accent);
+  font-size: var(--font-caption);
+}
+
+.month-popover-footer > button:hover {
+  background: #f3edf8;
+}
+
+@keyframes month-grid-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .month-options-grid {
+    animation: none;
+  }
+  .month-picker,
+  .month-arrow,
+  .month-picker-trigger,
+  .month-picker-chevron,
+  .month-browse-arrow,
+  .month-popover-close,
+  .month-option {
+    transition: none;
+  }
+}
