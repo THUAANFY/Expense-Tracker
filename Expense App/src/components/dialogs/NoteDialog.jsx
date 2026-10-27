@@ -59,7 +59,7 @@ export default function NoteDialog({ note, onSave, onClose, onDelete }) {
               <span aria-hidden="true">{form.content.length.toLocaleString('vi-VN')}/3.000</span>
             </span>
             <textarea
-              rows="7"
+              rows="4"
               required
               maxLength="3000"
               placeholder="Viết vài dòng ở đây…"

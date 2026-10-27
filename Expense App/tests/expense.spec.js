@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { chooseHistoryFilter } from './helpers/history-filters.js'
 
 test('development CSS and Vietnamese fonts load without a Vite error overlay', async ({ page }) => {
   const assetErrors = []
@@ -63,9 +64,9 @@ test('expense lifecycle, filters, CSV, persistence and deletion', async ({ page 
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Xuất CSV' }).click()
   expect((await download).suggestedFilename()).toMatch(/may-giao-dich-.*\.csv/)
-  await page.getByRole('combobox', { name: 'Lọc danh mục' }).selectOption('shopping')
+  await chooseHistoryFilter(page, 'Lọc danh mục', 'Mua sắm')
   await expect(page.locator('.transaction-row')).toHaveCount(0)
-  await page.getByRole('combobox', { name: 'Lọc danh mục' }).selectOption('food')
+  await chooseHistoryFilter(page, 'Lọc danh mục', 'Ăn uống')
   await expect(page.locator('.transaction-row')).toHaveCount(1)
   await page.locator('.transaction-row').click()
   await dialog.getByRole('button', { name: 'Xóa giao dịch', exact: true }).click()
@@ -96,7 +97,7 @@ test('income changes totals and month navigation changes the actual data', async
 test('notes can be created, pinned, edited, persisted and removed', async ({ page }) => {
   await page.goto('/')
   await navigate(page, 'Sổ ghi chú')
-  await page.getByRole('button', { name: 'Viết ghi chú' }).click()
+  await page.getByRole('button', { name: 'Viết ghi chú', exact: true }).click()
   const dialog = page.getByRole('dialog')
   await dialog.getByRole('textbox', { name: 'Tiêu đề' }).fill('Kế hoạch kiểm thử')
   await dialog.getByRole('textbox', { name: 'Nội dung' }).fill('Để dành 500.000 đồng mỗi tuần.')

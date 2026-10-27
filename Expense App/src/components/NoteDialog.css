@@ -117,7 +117,7 @@
 }
 
 .note-editor-label > span {
-  color: #897794;
+  color: var(--text-muted);
   font-size: 10px;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
@@ -137,7 +137,8 @@
 }
 
 .note-dialog .field > textarea {
-  min-height: 194px;
+  height: 140px;
+  min-height: 112px;
   padding-top: 11px;
   border-color: var(--note-paper-border);
   background:
@@ -152,7 +153,7 @@
 
 .note-dialog .field > input::placeholder,
 .note-dialog .field > textarea::placeholder {
-  color: #84718f;
+  color: var(--text-placeholder);
   font-size: var(--font-control);
 }
 
@@ -214,19 +215,19 @@
   border: 1px solid #d5bd7c;
   border-radius: 50%;
   background: #f4e4af;
-  color: #775c30;
+  color: #695023;
 }
 
 .purple > .note-paper-color {
   border-color: #b79ecb;
   background: #ddcdec;
-  color: #73508e;
+  color: var(--text-accent);
 }
 
 .green > .note-paper-color {
   border-color: #96b79f;
   background: #c8dfce;
-  color: #477255;
+  color: var(--text-success);
 }
 
 .note-editor-pin {
@@ -253,7 +254,7 @@
 .note-editor-pin small {
   display: block;
   margin-top: 2px;
-  color: #8a7795;
+  color: var(--text-muted);
   font-size: 11px;
 }
 
@@ -335,7 +336,7 @@
     padding: 17px;
   }
   .note-dialog .field > textarea {
-    min-height: 175px;
+    height: 128px;
   }
   .note-paper-swatches {
     gap: 7px;

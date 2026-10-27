@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, MotionConfig } from 'motion/react'
 import {
   ArrowDownLeft,
+  ArrowDownWideNarrow,
   ArrowDownToLine,
   ArrowRight,
   ArrowUpRight,
@@ -15,14 +16,15 @@ import {
   ChevronRight,
   CircleHelp,
   Cloud,
+  Clock3,
   Download,
   Eye,
   EyeOff,
   FileText,
   Heart,
+  History,
   LayoutDashboard,
   Menu,
-  MoreHorizontal,
   PencilLine,
   Pin,
   Plus,
@@ -42,6 +44,11 @@ import SpendingChart from './components/SpendingChart'
 import MonthPicker from './components/MonthPicker'
 import NotesView from './components/NotesView'
 import CategoriesView from './components/CategoriesView'
+import FilterSelect from './components/FilterSelect'
+import HistoryOverview from './components/HistoryOverview'
+import HistoryArt from './components/HistoryArt'
+import OverviewArt from './components/OverviewArt'
+import SidebarArt from './components/SidebarArt'
 import Dialog from './components/dialogs/Dialog'
 import TransactionDialog from './components/dialogs/TransactionDialog'
 import NoteDialog from './components/dialogs/NoteDialog'
@@ -63,12 +70,34 @@ import {
 } from './data'
 import './App.css'
 import './components/TransactionList.css'
+import './components/HistoryView.css'
+import './components/OverviewView.css'
+import './components/Sidebar.css'
 
 const NAVIGATION = [
   { id: 'overview', label: 'Tổng quan', icon: LayoutDashboard },
   { id: 'transactions', label: 'Lịch sử giao dịch', icon: Wallet },
   { id: 'categories', label: 'Danh mục & ngân sách', icon: Tags },
   { id: 'notes', label: 'Sổ ghi chú', icon: BookOpen },
+]
+const CATEGORY_FILTER_OPTIONS = [
+  { value: 'all', label: 'Mọi danh mục', icon: Tags },
+  ...CATEGORIES.map((category) => ({
+    value: category.id,
+    label: category.name,
+    category: category.id,
+    background: category.background,
+  })),
+]
+const SORT_OPTIONS = [
+  { value: 'newest', label: 'Mới nhất', description: 'Ngày gần đây trước', icon: Clock3 },
+  { value: 'oldest', label: 'Cũ nhất', description: 'Ngày xa hơn trước', icon: History },
+  {
+    value: 'highest',
+    label: 'Số tiền cao nhất',
+    description: 'Giá trị giảm dần',
+    icon: ArrowDownWideNarrow,
+  },
 ]
 const TITLES = {
   overview: ['Gọn chi tiêu. Nhẹ cuộc sống.', 'Một góc nhìn rõ ràng hơn về tài chính của bạn.'],
@@ -157,17 +186,11 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
         </div>
         <strong className="stat-value">{showBalance ? money(income - expense) : '••••••••'}</strong>
         <div className="stat-foot">
-          <span className="balance-dot" /> Thu nhập trừ chi tiêu tháng này
+          <span className="balance-dot" /> Thu nhập − chi tiêu trong tháng
         </div>
-        <svg className="balance-decoration" viewBox="0 0 130 130" fill="none" aria-hidden="true">
-          <ellipse cx="90" cy="70" rx="58" ry="26" transform="rotate(-42 90 70)" stroke="#c4b2e4" />
-          <ellipse cx="90" cy="70" rx="58" ry="41" transform="rotate(-42 90 70)" stroke="#c4b2e4" />
-          <ellipse cx="90" cy="70" rx="58" ry="58" stroke="#c4b2e4" />
-          <circle cx="108" cy="21" r="5" fill="#b8a1d8" />
-          <path d="m59 59 4 8 8 4-8 4-4 8-4-8-8-4 8-4Z" fill="#c4aee2" />
-        </svg>
+        <OverviewArt className="overview-balance-art" />
       </section>
-      <section className="stat-card">
+      <section className="stat-card overview-income-card">
         <div className="stat-label">
           <span>
             <span className="stat-icon income">
@@ -175,7 +198,7 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
             </span>{' '}
             Tổng thu nhập
           </span>
-          <ArrowUpRight size={16} className="muted" />
+          <HistoryArt variant="income" className="overview-stat-art" />
         </div>
         <strong className="stat-value">{money(income)}</strong>
         <div className="stat-foot">
@@ -185,7 +208,7 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
           <span>Cho những dự định mới</span>
         </div>
       </section>
-      <section className="stat-card">
+      <section className="stat-card overview-expense-card">
         <div className="stat-label">
           <span>
             <span className="stat-icon expense">
@@ -193,7 +216,7 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
             </span>{' '}
             Tổng chi tiêu
           </span>
-          <ArrowUpRight size={16} className="muted" />
+          <HistoryArt variant="expense" className="overview-stat-art" />
         </div>
         <strong className="stat-value">{money(expense)}</strong>
         <div className="stat-foot">
@@ -224,7 +247,12 @@ function CategoryDonut({ totals, expense, onCategory }) {
     .filter((category) => category.spent > 0)
     .sort((a, b) => b.spent - a.spent)
   let offset = 0
-  const circumference = 2 * Math.PI * 64
+  const ringPoint = (radius, angle) =>
+    `${87 + radius * Math.cos(angle)} ${87 + radius * Math.sin(angle)}`
+  const slicePath = (start, end) => {
+    const middle = (start + end) / 2
+    return `M ${ringPoint(73.5, start)} A 73.5 73.5 0 0 1 ${ringPoint(73.5, middle)} A 73.5 73.5 0 0 1 ${ringPoint(73.5, end)} L ${ringPoint(54.5, end)} A 54.5 54.5 0 0 0 ${ringPoint(54.5, middle)} A 54.5 54.5 0 0 0 ${ringPoint(54.5, start)} Z`
+  }
   return (
     <section className="panel category-panel">
       <div className="panel-heading">
@@ -239,22 +267,16 @@ function CategoryDonut({ totals, expense, onCategory }) {
         >
           <circle cx="87" cy="87" r="64" fill="none" stroke="#f1eef6" strokeWidth="19" />
           {sorted.map((category) => {
-            const length = (category.spent / expense) * circumference
-            const start = offset
-            offset += length
+            const fraction = category.spent / expense
+            const start = offset * 2 * Math.PI - Math.PI / 2
+            offset += fraction
+            const end = offset * 2 * Math.PI - Math.PI / 2
             return (
-              <circle
+              <path
                 key={category.id}
-                cx="87"
-                cy="87"
-                r="64"
-                fill="none"
-                stroke={category.color}
-                strokeWidth="19"
-                strokeDasharray={`${Math.max(0, length - 4)} ${circumference - Math.max(0, length - 4)}`}
-                strokeDashoffset={-start}
-                transform="rotate(-90 87 87)"
-                strokeLinecap="round"
+                d={slicePath(start, end)}
+                fill={category.color}
+                data-category={category.id}
               />
             )
           })}
@@ -264,17 +286,19 @@ function CategoryDonut({ totals, expense, onCategory }) {
           <strong>{compactMoney(expense)}</strong>
           <span>{sorted.length} danh mục</span>
         </div>
-        <span className="donut-spark one">
-          <Sparkles size={15} />
+        <OverviewArt variant="flower" className="overview-donut-flower" />
+        <span className="donut-spark two" aria-hidden="true">
+          ✧
         </span>
-        <span className="donut-spark two">+</span>
       </div>
       <div className="donut-legend">
         {sorted.length ? (
           sorted.slice(0, 3).map((category) => (
             <button key={category.id} onClick={() => onCategory(category.id)}>
               <span className="legend-name">
-                <i style={{ background: category.color }} />
+                <span className="overview-legend-art" style={{ background: category.background }}>
+                  <CategoryArt category={category.id} size={26} />
+                </span>
                 {category.name}
               </span>
               <strong>
@@ -317,6 +341,8 @@ function TransactionList({
   hasFilters = false,
   page = 1,
   onPage,
+  ledger = false,
+  groupByDate = false,
 }) {
   if (!transactions.length)
     return (
@@ -330,9 +356,90 @@ function TransactionList({
         onAdd={onAdd}
       />
     )
+  const renderRows = (items) =>
+    items.map((item) => {
+      const category = getCategory(item.category)
+      const income = item.type === 'income'
+      return (
+        <button
+          className="transaction-row"
+          data-type={item.type}
+          style={
+            ledger
+              ? {
+                  '--transaction-accent': income ? '#6d9d84' : category.color,
+                  '--transaction-tint': income ? '#edf5ee' : category.background,
+                }
+              : undefined
+          }
+          key={item.id}
+          onClick={() => onEdit(item)}
+          aria-label={`Sửa giao dịch ${item.title}, ${money(item.amount)}${ledger ? `, ${formatDate(item.date)}` : ''}`}
+        >
+          <span className="transaction-main">
+            <span
+              className="transaction-art"
+              style={{ background: income ? '#edf5ee' : category.background }}
+            >
+              <CategoryArt category={income ? 'income' : item.category} size={42} />
+            </span>
+            <span className="transaction-copy">
+              <strong title={item.title}>{item.title}</strong>
+              <span className="transaction-meta">
+                <span className="transaction-wallet">{item.wallet}</span>
+                {item.note && (
+                  <>
+                    <span className="transaction-meta-dot" aria-hidden="true" />
+                    <span className="transaction-note" title={item.note}>
+                      <FileText size={12} aria-hidden="true" />
+                      <span>{item.note}</span>
+                    </span>
+                  </>
+                )}
+              </span>
+            </span>
+          </span>
+          <span
+            className="category-badge"
+            style={{
+              background: income ? '#edf5ee' : category.background,
+              color: income ? 'var(--text-success)' : category.textColor,
+            }}
+          >
+            {income ? 'Thu nhập' : category.name}
+          </span>
+          <span className="transaction-date">
+            <CalendarDays size={13} className="transaction-date-icon" aria-hidden="true" />
+            <time dateTime={item.date}>{formatDate(item.date)}</time>
+          </span>
+          <strong className={`transaction-amount ${income ? 'income-text' : ''}`}>
+            {ledger && (
+              <span className="history-amount-kind" aria-hidden="true">
+                {income ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
+              </span>
+            )}
+            {income ? '+' : '−'}
+            {money(item.amount)}
+          </strong>
+          <span className="row-edit" aria-hidden="true">
+            <PencilLine size={15} />
+          </span>
+        </button>
+      )
+    })
+  const groups = []
+  if (ledger && groupByDate) {
+    for (const item of transactions) {
+      const last = groups.at(-1)
+      if (last?.date === item.date) last.items.push(item)
+      else groups.push({ date: item.date, items: [item] })
+    }
+  }
   return (
     <>
-      <div className={`transaction-table ${small ? 'small' : ''}`}>
+      <div
+        className={`transaction-table ${small ? 'small' : ''} ${ledger ? `history-ledger ${groupByDate ? 'is-grouped' : 'is-ranked'}` : ''}`}
+      >
         <div className="table-head">
           <span>Giao dịch</span>
           <span>Danh mục</span>
@@ -340,62 +447,31 @@ function TransactionList({
           <span>Số tiền</span>
           <span />
         </div>
-        {transactions.map((item) => {
-          const category = getCategory(item.category)
-          const income = item.type === 'income'
-          return (
-            <button
-              className="transaction-row"
-              key={item.id}
-              onClick={() => onEdit(item)}
-              aria-label={`Sửa giao dịch ${item.title}, ${money(item.amount)}`}
-            >
-              <span className="transaction-main">
-                <span
-                  className="transaction-art"
-                  style={{ background: income ? '#edf5ee' : category.background }}
-                >
-                  <CategoryArt category={income ? 'income' : item.category} size={42} />
-                </span>
-                <span className="transaction-copy">
-                  <strong title={item.title}>{item.title}</strong>
-                  <span className="transaction-meta">
-                    <span className="transaction-wallet">{item.wallet}</span>
-                    {item.note && (
-                      <>
-                        <span className="transaction-meta-dot" aria-hidden="true" />
-                        <span className="transaction-note" title={item.note}>
-                          <FileText size={12} aria-hidden="true" />
-                          <span>{item.note}</span>
-                        </span>
-                      </>
-                    )}
-                  </span>
-                </span>
-              </span>
-              <span
-                className="category-badge"
-                style={{
-                  background: income ? '#edf5ee' : category.background,
-                  color: income ? 'var(--text-success)' : category.textColor,
-                }}
+        {ledger && groupByDate
+          ? groups.map((group) => (
+              <section
+                className="history-day-group"
+                key={group.date}
+                aria-label={`Giao dịch ngày ${formatDate(group.date)}`}
               >
-                {income ? 'Thu nhập' : category.name}
-              </span>
-              <span className="transaction-date">
-                <CalendarDays size={13} className="transaction-date-icon" aria-hidden="true" />
-                <time dateTime={item.date}>{formatDate(item.date)}</time>
-              </span>
-              <strong className={`transaction-amount ${income ? 'income-text' : ''}`}>
-                {income ? '+' : '−'}
-                {money(item.amount)}
-              </strong>
-              <span className="row-edit" aria-hidden="true">
-                <PencilLine size={15} />
-              </span>
-            </button>
-          )
-        })}
+                <div className="history-day-marker" aria-hidden="true">
+                  <strong>{group.date.slice(8)}</strong>
+                  <span>TH.{Number(group.date.slice(5, 7))}</span>
+                </div>
+                <div className="history-day-content">
+                  <div className="history-day-heading">
+                    <h3>
+                      {group.date === dateKey()
+                        ? 'Hôm nay'
+                        : formatDate(group.date, { weekday: 'long' })}
+                    </h3>
+                    <time dateTime={group.date}>{formatDate(group.date)}</time>
+                  </div>
+                  <div className="history-day-transactions">{renderRows(group.items)}</div>
+                </div>
+              </section>
+            ))
+          : renderRows(transactions)}
       </div>
       {onPage && (
         <div className="pagination">
@@ -819,30 +895,36 @@ export default function App() {
           />
         )}
         <aside
-          className={`sidebar ${mobileMenu ? 'is-open' : ''}`}
+          className={`sidebar sidebar-cute ${mobileMenu ? 'is-open' : ''}`}
           aria-label="Điều hướng chính"
           inert={isMobile && !mobileMenu}
         >
-          <button
-            className="brand-button"
-            aria-label="mây - về tổng quan"
-            onClick={() => navigate('overview')}
-          >
-            <Brand />
-          </button>
-          <button
-            className="mobile-close icon-button"
-            onClick={() => setMobileMenu(false)}
-            aria-label="Đóng menu"
-          >
-            <X size={20} />
-          </button>
-          <div className="workspace-label">KHÔNG GIAN CỦA BẠN</div>
+          <div className="sidebar-brand-row">
+            <button
+              className="brand-button"
+              aria-label="mây - về tổng quan"
+              onClick={() => navigate('overview')}
+            >
+              <Brand />
+            </button>
+            <button
+              className="mobile-close icon-button"
+              onClick={() => setMobileMenu(false)}
+              aria-label="Đóng menu"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <div className="workspace-label">
+            <span>MỘT GÓC CHO MÌNH</span>
+            <Sparkles size={12} aria-hidden="true" />
+          </div>
           <nav>
             {NAVIGATION.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 className={`nav-item ${view === id ? 'active' : ''}`}
+                data-section={id}
                 title={label}
                 onClick={() => navigate(id)}
                 aria-label={label}
@@ -855,7 +937,9 @@ export default function App() {
                     transition={{ duration: 0.35, ease }}
                   />
                 )}
-                <Icon size={19} strokeWidth={1.7} />
+                <span className="sidebar-nav-icon" aria-hidden="true">
+                  <Icon size={18} strokeWidth={1.8} />
+                </span>
                 <span className="nav-label">{label}</span>
                 {id === 'notes' && data.notes.length > 0 && (
                   <span className="nav-count">{data.notes.length}</span>
@@ -866,19 +950,7 @@ export default function App() {
           <div className="sidebar-bottom">
             <div className="sidebar-prompt">
               <div className="prompt-art">
-                <svg viewBox="0 0 160 94" fill="none" aria-hidden="true">
-                  <path d="M29 81h103" stroke="#c6badb" />
-                  <path d="M65 56h35l-5 25H70Z" fill="#c6b5de" />
-                  <path d="M62 53h41v7H62Z" fill="#ac95c9" />
-                  <path d="M82 52V22" stroke="#8e79a8" strokeWidth="2" />
-                  <path d="M82 39C58 42 52 26 56 16c17-1 29 7 26 23Z" fill="#c7d5bd" />
-                  <path d="M83 29C77 10 95 8 106 11c1 17-10 25-23 18Z" fill="#a5bb9a" />
-                  <path d="m64 25 18 17m2-15 12-8" stroke="#7f9e7d" />
-                  <path d="m43 48 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="#d7c47f" />
-                  <path d="m121 31 2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" fill="#c5b3dd" />
-                  <circle cx="40" cy="23" r="2" fill="#c5b3dd" />
-                  <path d="M111 70c9-9 17-7 23-4" stroke="#d8ccdf" strokeDasharray="3 3" />
-                </svg>
+                <SidebarArt />
               </div>
               <h3>Tích nhỏ, thành điều lớn.</h3>
               <p>
@@ -892,10 +964,22 @@ export default function App() {
             </div>
             <button
               className={`nav-item settings-nav ${view === 'settings' ? 'active' : ''}`}
+              data-section="settings"
+              aria-label="Cài đặt"
+              aria-current={view === 'settings' ? 'page' : undefined}
               onClick={() => navigate('settings')}
             >
-              <Settings2 size={19} strokeWidth={1.7} />
-              <span>Cài đặt</span>
+              {view === 'settings' && (
+                <motion.span
+                  className="nav-active-bg"
+                  layoutId="nav-active"
+                  transition={{ duration: 0.35, ease }}
+                />
+              )}
+              <span className="sidebar-nav-icon" aria-hidden="true">
+                <Settings2 size={18} strokeWidth={1.8} />
+              </span>
+              <span className="nav-label">Cài đặt</span>
             </button>
             <div className="sidebar-signature">
               <span className="online-dot" />
@@ -985,7 +1069,17 @@ export default function App() {
             </div>
           </header>
           <main id="main-content" tabIndex="-1">
-            <div className="page-heading">
+            <div
+              className={
+                view === 'categories'
+                  ? 'page-heading categories-page-heading'
+                  : view === 'transactions'
+                    ? 'page-heading history-page-heading'
+                    : view === 'overview'
+                      ? 'page-heading overview-page-heading'
+                      : 'page-heading'
+              }
+            >
               <div>
                 <div className="greeting">
                   <Sun size={15} /> Chào {data.profile.name}, một ngày thật nhẹ nhàng
@@ -1011,6 +1105,7 @@ export default function App() {
                 )}
                 <button
                   className="button primary add-button"
+                  aria-label={view === 'notes' ? 'Viết ghi chú' : 'Thêm giao dịch'}
                   onClick={view === 'notes' ? () => setModal({ type: 'note' }) : addTransaction}
                 >
                   <Plus size={17} />
@@ -1035,7 +1130,7 @@ export default function App() {
                 transition={{ duration: 0.3, ease }}
               >
                 {view === 'overview' && (
-                  <>
+                  <div className="overview-workspace">
                     <Stats
                       income={income}
                       expense={expense}
@@ -1053,9 +1148,12 @@ export default function App() {
                               </h2>
                               <p>Mỗi ngày một chút, nhìn lại cả tháng.</p>
                             </div>
-                            <span className="chart-legend">
-                              <i /> Chi tiêu
-                            </span>
+                            <div className="overview-chart-corner">
+                              <OverviewArt variant="cloud" className="overview-cloud-art" />
+                              <span className="chart-legend">
+                                <i /> Chi tiêu
+                              </span>
+                            </div>
                           </div>
                           <div className="chart-summary">
                             <strong>{money(expense)}</strong>
@@ -1073,6 +1171,7 @@ export default function App() {
                         <section className="panel recent-panel">
                           <div className="panel-heading">
                             <div className="heading-with-count">
+                              <OverviewArt variant="receipt" className="overview-heading-art" />
                               <h2>Giao dịch gần đây</h2>
                               <span className="count-badge">{monthTransactions.length}</span>
                             </div>
@@ -1101,6 +1200,10 @@ export default function App() {
                             {CATEGORIES.slice(0, 5).map((category) => (
                               <button
                                 key={category.id}
+                                style={{
+                                  '--quick-tint': category.background,
+                                  '--quick-accent': category.color,
+                                }}
                                 onClick={() =>
                                   setModal({ type: 'transaction', category: category.id })
                                 }
@@ -1125,7 +1228,13 @@ export default function App() {
                         />
                         <section className="panel budget-panel">
                           <div className="panel-heading">
-                            <h2>Ngân sách tháng</h2>
+                            <div className="overview-budget-intro">
+                              <OverviewArt variant="jar" className="overview-budget-art" />
+                              <div>
+                                <span>TÍCH TỪNG CHÚT NHỎ</span>
+                                <h2>Ngân sách tháng</h2>
+                              </div>
+                            </div>
                             <button
                               className="icon-button"
                               aria-label="Điều chỉnh ngân sách tháng"
@@ -1193,7 +1302,7 @@ export default function App() {
                           </button>
                         )}
                         <div className="little-message">
-                          <Heart size={13} />
+                          <OverviewArt variant="flower" className="overview-message-art" />
                           <p>
                             Chi tiêu thông minh.
                             <br />
@@ -1202,129 +1311,145 @@ export default function App() {
                         </div>
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
                 {view === 'transactions' && (
-                  <>
-                    <div className="history-summary">
-                      <span>
-                        <span className="online-dot" />
-                        {monthTransactions.length} giao dịch trong tháng {monthNumber}
-                      </span>
-                      <div>
-                        <span>
-                          Thu <strong className="income-text">+{money(income)}</strong>
-                        </span>
-                        <span>
-                          Chi <strong>−{money(expense)}</strong>
-                        </span>
-                      </div>
-                    </div>
+                  <div className="history-workspace">
+                    <HistoryOverview
+                      month={month}
+                      transactions={monthTransactions}
+                      income={income}
+                      expense={expense}
+                    />
                     <section className="panel history-panel">
-                      <div className="history-toolbar">
-                        <div className="filter-tabs" role="group" aria-label="Loại giao dịch">
-                          {[
-                            ['all', 'Tất cả'],
-                            ['expense', 'Khoản chi'],
-                            ['income', 'Khoản thu'],
-                          ].map(([id, label]) => (
-                            <button
-                              key={id}
-                              className={filterType === id ? 'active' : ''}
-                              aria-pressed={filterType === id}
-                              onClick={() => {
-                                setFilterType(id)
-                                setPage(1)
-                              }}
-                            >
-                              {label}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="history-filters">
-                          <label className="select-control">
-                            <Tags size={14} />
-                            <select
-                              aria-label="Lọc danh mục"
+                      <div className="history-control-deck">
+                        <div className="history-toolbar">
+                          <div className="filter-tabs" role="group" aria-label="Loại giao dịch">
+                            {[
+                              ['all', 'Tất cả'],
+                              ['expense', 'Khoản chi'],
+                              ['income', 'Khoản thu'],
+                            ].map(([id, label]) => (
+                              <button
+                                key={id}
+                                className={filterType === id ? 'active' : ''}
+                                aria-label={label}
+                                aria-pressed={filterType === id}
+                                onClick={() => {
+                                  setFilterType(id)
+                                  setPage(1)
+                                }}
+                              >
+                                <span className="history-type-icon" aria-hidden="true">
+                                  {id === 'all' ? (
+                                    <Wallet size={14} />
+                                  ) : id === 'income' ? (
+                                    <ArrowDownLeft size={14} />
+                                  ) : (
+                                    <ArrowUpRight size={14} />
+                                  )}
+                                </span>
+                                {label}
+                                <span className="history-type-count" aria-hidden="true">
+                                  {id === 'all'
+                                    ? monthTransactions.length
+                                    : monthTransactions.filter((item) => item.type === id).length}
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                          <div className="history-filters history-custom-filters">
+                            <FilterSelect
+                              label="Lọc danh mục"
+                              caption="DANH MỤC"
                               value={filterCategory}
-                              onChange={(event) => {
-                                setFilterCategory(event.target.value)
+                              options={CATEGORY_FILTER_OPTIONS}
+                              onChange={(value) => {
+                                setFilterCategory(value)
                                 setPage(1)
                               }}
-                            >
-                              <option value="all">Mọi danh mục</option>
-                              {CATEGORIES.map((category) => (
-                                <option key={category.id} value={category.id}>
-                                  {category.name}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-                          <label className="select-control sort-control">
-                            <SlidersHorizontal size={14} />
-                            <select
-                              aria-label="Sắp xếp giao dịch"
+                            />
+                            <FilterSelect
+                              label="Sắp xếp giao dịch"
+                              caption="SẮP XẾP THEO"
                               value={sort}
-                              onChange={(event) => {
-                                setSort(event.target.value)
+                              options={SORT_OPTIONS}
+                              onChange={(value) => {
+                                setSort(value)
                                 setPage(1)
                               }}
+                            />
+                            <button
+                              className="button secondary export-button"
+                              aria-label="Xuất CSV"
+                              onClick={() => {
+                                exportCSV(filtered)
+                                notify(`Đã xuất ${filtered.length} giao dịch`)
+                              }}
                             >
-                              <option value="newest">Mới nhất</option>
-                              <option value="oldest">Cũ nhất</option>
-                              <option value="highest">Số tiền cao nhất</option>
-                            </select>
-                          </label>
-                          <button
-                            className="button secondary export-button"
-                            onClick={() => {
-                              exportCSV(filtered)
-                              notify(`Đã xuất ${filtered.length} giao dịch`)
-                            }}
-                          >
-                            <Download size={15} />
-                            <span>Xuất CSV</span>
-                          </button>
+                              <Download size={15} />
+                              <span>Xuất CSV</span>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="history-search">
-                        <Search size={17} />
-                        <input
-                          aria-label="Tìm trong lịch sử giao dịch"
-                          value={search}
-                          onChange={(event) => {
-                            setSearch(event.target.value)
-                            setPage(1)
-                          }}
-                          placeholder="Tìm tên giao dịch, ghi chú, danh mục…"
-                        />
-                        {(search || filterCategory !== 'all' || filterType !== 'all') && (
-                          <button
-                            className="text-button"
-                            onClick={() => {
-                              setSearch('')
-                              setFilterCategory('all')
-                              setFilterType('all')
+                        <div className="history-search">
+                          <Search size={17} />
+                          <input
+                            aria-label="Tìm trong lịch sử giao dịch"
+                            value={search}
+                            onChange={(event) => {
+                              setSearch(event.target.value)
                               setPage(1)
                             }}
-                          >
-                            <X size={13} /> Xóa bộ lọc
-                          </button>
-                        )}
+                            placeholder="Tìm tên giao dịch, ghi chú, danh mục…"
+                          />
+                          {(search || filterCategory !== 'all' || filterType !== 'all') && (
+                            <button
+                              className="text-button"
+                              aria-label="Xóa bộ lọc"
+                              onClick={() => {
+                                setSearch('')
+                                setFilterCategory('all')
+                                setFilterType('all')
+                                setPage(1)
+                              }}
+                            >
+                              <X size={13} /> Xóa bộ lọc
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <TransactionList
-                        transactions={filtered.slice((currentPage - 1) * 8, currentPage * 8)}
-                        total={filtered.length}
-                        hasFilters={Boolean(
-                          search || filterType !== 'all' || filterCategory !== 'all',
-                        )}
-                        onEdit={editTransaction}
-                        onAdd={addTransaction}
-                        page={currentPage}
-                        onPage={setPage}
-                      />
+                      <div className="history-ledger-section">
+                        <div className="history-results-heading">
+                          <div>
+                            <BookOpen size={16} />
+                            <h2>Nhật ký giao dịch</h2>
+                            <span>{filtered.length}</span>
+                          </div>
+                          <span>
+                            {search || filterCategory !== 'all' || filterType !== 'all'
+                              ? 'Kết quả đang lọc'
+                              : sort === 'highest'
+                                ? 'Xếp theo số tiền'
+                                : 'Ghi chép theo ngày'}
+                          </span>
+                        </div>
+                        <TransactionList
+                          transactions={filtered.slice((currentPage - 1) * 8, currentPage * 8)}
+                          total={filtered.length}
+                          hasFilters={Boolean(
+                            search || filterType !== 'all' || filterCategory !== 'all',
+                          )}
+                          onEdit={editTransaction}
+                          onAdd={addTransaction}
+                          page={currentPage}
+                          onPage={setPage}
+                          ledger
+                          groupByDate={sort !== 'highest'}
+                        />
+                      </div>
                     </section>
-                  </>
+                  </div>
                 )}
                 {view === 'categories' && (
                   <CategoriesView

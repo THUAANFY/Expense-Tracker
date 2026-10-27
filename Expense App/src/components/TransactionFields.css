@@ -34,7 +34,7 @@
 
 .transaction-field-trigger > svg {
   flex-shrink: 0;
-  color: #8a729f;
+  color: var(--text-accent);
 }
 
 .transaction-field-trigger:hover {
@@ -175,7 +175,7 @@
 
 .date-picker-weekdays {
   margin-bottom: 3px;
-  color: #766782;
+  color: var(--text-muted);
   font-size: 11px;
   font-weight: 500;
   text-align: center;
@@ -205,7 +205,7 @@
 }
 
 .date-picker-day.is-outside {
-  color: #7d6a89;
+  color: var(--text-muted);
 }
 
 .date-picker-day.is-today:not(.is-selected) {
@@ -322,17 +322,17 @@
   height: 28px;
   border-radius: 7px;
   background: #eee6f7;
-  color: #8261a2;
+  color: var(--text-accent);
 }
 
 .payment-option-icon.green {
   background: #eaf4ed;
-  color: #518268;
+  color: var(--text-success);
 }
 
 .payment-option-icon.blue {
   background: #eaf0f9;
-  color: #6685b3;
+  color: #476a9b;
 }
 
 .payment-option-check {

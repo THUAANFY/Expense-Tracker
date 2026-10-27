@@ -527,7 +527,7 @@ h1 {
   white-space: nowrap;
 }
 .balance-card .stat-value {
-  color: #6c5689;
+  color: var(--text-accent);
 }
 .stat-foot {
   font-size: var(--font-caption);
@@ -747,7 +747,7 @@ h1 {
   padding: 3px 0;
 }
 .text-button:hover {
-  color: #775394;
+  color: var(--text-accent);
 }
 .heading-with-count {
   display: flex;
@@ -1033,7 +1033,7 @@ h1 {
 .note-body > h3 {
   font-size: var(--font-section);
   margin-top: 10px;
-  color: #69522a;
+  color: #584322;
   font-weight: 600;
   line-height: 1.7;
   overflow-wrap: anywhere;
@@ -1041,7 +1041,7 @@ h1 {
 .note-body > p {
   font-size: var(--font-content);
   line-height: 1.75;
-  color: #76603a;
+  color: #65502c;
   margin-top: 6px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -1052,16 +1052,16 @@ h1 {
   overflow: hidden;
 }
 .purple .note-body > h3 {
-  color: #594071;
+  color: #4d335f;
 }
 .purple .note-body > p {
-  color: #69537d;
+  color: #594369;
 }
 .green .note-body > h3 {
-  color: #365d40;
+  color: #2d5036;
 }
 .green .note-body > p {
-  color: #486c50;
+  color: #3a5d43;
 }
 .note-bottom {
   display: flex;
@@ -1888,7 +1888,7 @@ button:hover > span > .category-art {
   padding: 0;
 }
 .danger-text {
-  color: #aa443e !important;
+  color: var(--text-danger) !important;
 }
 .note-options {
   display: flex;
@@ -3879,7 +3879,7 @@ button:hover > span > .category-art {
   color: var(--text-success) !important;
 }
 .danger-text {
-  color: #aa443e !important;
+  color: var(--text-danger) !important;
 }
 @media (min-width: 761px) and (max-width: 1050px) {
   .stats-grid {

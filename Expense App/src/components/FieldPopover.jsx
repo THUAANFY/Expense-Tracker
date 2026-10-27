@@ -62,7 +62,15 @@ export function useFieldPopover({ width = 304, matchWidth = false } = {}) {
       const scroller = triggerRef.current?.closest('.transaction-form-body')
       const anchor = triggerRef.current?.getBoundingClientRect()
       const bounds = scroller?.getBoundingClientRect()
-      if (bounds && anchor && (anchor.bottom <= bounds.top || anchor.top >= bounds.bottom))
+      const viewportHeight = window.visualViewport?.height || innerHeight
+      if (
+        anchor &&
+        (anchor.bottom <= 0 ||
+          anchor.top >= viewportHeight ||
+          anchor.right <= 0 ||
+          anchor.left >= document.documentElement.clientWidth ||
+          (bounds && (anchor.bottom <= bounds.top || anchor.top >= bounds.bottom)))
+      )
         close(false)
       else updatePosition()
     }

@@ -16,7 +16,7 @@
 }
 
 .table-head {
-  padding: 10px 12px 12px;
+  /* padding: 10px 12px 12px; */
   border-bottom: 1px solid #ece8f1;
   color: var(--text-secondary);
   font-size: var(--font-caption);
@@ -128,7 +128,7 @@
 
 .transaction-note svg {
   flex-shrink: 0;
-  color: #8d7d9b;
+  color: var(--text-muted);
 }
 
 .transaction-note > span {

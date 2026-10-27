@@ -29,7 +29,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #826398;
+  color: var(--text-accent);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -37,7 +37,7 @@
 
 .notebook-welcome h2 {
   margin-top: 7px;
-  color: #3e304f;
+  color: var(--text-primary);
   font-size: 19px;
   line-height: 1.55;
   letter-spacing: -0.5px;
@@ -65,7 +65,7 @@
 }
 
 .notebook-summary strong {
-  color: #624879;
+  color: var(--text-accent);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -145,7 +145,7 @@
   padding-inline: 4px;
   border-radius: 5px;
   background: #e6dfee;
-  color: #776285;
+  color: var(--text-muted);
   font-size: 10px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -153,7 +153,7 @@
 
 [aria-selected='true'] > .notebook-tab-count {
   background: #f0e9f8;
-  color: #795491;
+  color: var(--text-accent);
 }
 
 .notebook-search {
@@ -167,7 +167,7 @@
   border: 1px solid #e5ddeb;
   border-radius: 9px;
   background: #fff;
-  color: #8b779a;
+  color: var(--text-muted);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease;
@@ -192,7 +192,7 @@
 }
 
 .notebook-search > input::placeholder {
-  color: #82728e;
+  color: var(--text-placeholder);
 }
 
 .notebook-search > button {
@@ -248,7 +248,7 @@
 .notebook-filter.is-active {
   border-color: #dfd2ec;
   background: #eee6f7;
-  color: #73528e;
+  color: var(--text-accent);
   font-weight: 500;
 }
 
@@ -278,7 +278,7 @@
 .notebook-result-count {
   flex-shrink: 0;
   padding-right: 2px;
-  color: #7a6c86;
+  color: var(--text-muted);
   font-size: var(--font-caption);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -299,6 +299,7 @@
   --paper: #fffaf0;
   --paper-edge: #eadfc5;
   --paper-accent: #9a7840;
+  --paper-ink: #806026;
   --paper-line: #eee2c9;
   position: relative;
   display: flex;
@@ -320,6 +321,7 @@
   --paper: #f5f0fc;
   --paper-edge: #e2d6ef;
   --paper-accent: #84619e;
+  --paper-ink: #6b4885;
   --paper-line: #e5daef;
 }
 
@@ -327,6 +329,7 @@
   --paper: #f0f7f2;
   --paper-edge: #d7e6db;
   --paper-accent: #588064;
+  --paper-ink: #3d694a;
   --paper-line: #dce9df;
 }
 
@@ -362,7 +365,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--paper-accent);
+  color: var(--paper-ink);
   font-size: 11px;
 }
 
@@ -375,7 +378,7 @@
   margin-right: 3px;
   border: 1px solid transparent;
   border-radius: 7px;
-  color: var(--paper-accent);
+  color: var(--paper-ink);
   transition:
     background-color 160ms ease,
     border-color 160ms ease;
@@ -418,7 +421,7 @@
   min-height: 0;
   margin-top: 9px;
   margin-bottom: 21px;
-  color: #62596b;
+  color: var(--text-secondary);
   font-size: var(--font-body);
   line-height: 1.85;
   -webkit-line-clamp: 4;
@@ -439,7 +442,7 @@
   margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid var(--paper-line);
-  color: #776a7f;
+  color: var(--text-muted);
   font-size: 11px;
 }
 
@@ -449,7 +452,7 @@
 }
 
 .notebook-card-footer .notebook-edit {
-  color: var(--paper-accent);
+  color: var(--paper-ink);
   white-space: nowrap;
 }
 
@@ -485,7 +488,7 @@
   border: 1px solid #e4d9ee;
   border-radius: 12px;
   background: #f1eaf8;
-  color: #8866a4;
+  color: var(--text-accent);
   transform: rotate(-6deg);
   transition: transform 180ms ease;
 }
@@ -495,13 +498,13 @@
 }
 
 .notebook-new-card > strong {
-  color: #665174;
+  color: var(--text-secondary);
   font-size: var(--font-body);
   font-weight: 500;
 }
 
 .notebook-new-card > span:not(.notebook-new-icon) {
-  color: #7c6b89;
+  color: var(--text-muted);
   font-size: var(--font-caption);
   line-height: 1.7;
 }
@@ -563,14 +566,14 @@
 }
 
 .notebook-transaction-heading time {
-  color: #7e7189;
+  color: var(--text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
 .notebook-transaction-arrow {
   flex-shrink: 0;
-  color: #9b82b0;
+  color: var(--text-accent);
 }
 
 .notebook-transaction-copy {
@@ -602,7 +605,7 @@
   margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid #f0ebf5;
-  color: #826f91;
+  color: var(--text-muted);
   font-size: 10px;
 }
 
@@ -643,11 +646,11 @@
   border: 1px solid #e6dbee;
   border-radius: 19px;
   background: #f1eaf8;
-  color: #977bad;
+  color: var(--text-accent);
 }
 
 .notebook-empty h3 {
-  color: #554361;
+  color: var(--text-primary);
   font-size: var(--font-section);
   line-height: 1.6;
 }

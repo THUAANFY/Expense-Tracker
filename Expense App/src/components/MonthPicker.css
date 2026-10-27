@@ -157,7 +157,7 @@
 }
 
 .month-year-toggle > svg {
-  color: #9374b0;
+  color: var(--text-accent);
 }
 
 .month-year-toggle:hover {

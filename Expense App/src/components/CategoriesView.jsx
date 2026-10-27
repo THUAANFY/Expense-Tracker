@@ -4,6 +4,7 @@ import {
   ArrowDownWideNarrow,
   ArrowUpRight,
   Check,
+  ChevronDown,
   CircleAlert,
   FileText,
   PencilLine,
@@ -41,12 +42,59 @@ function BudgetProgress({ spent, budget, label, color }) {
   )
 }
 
-function CategoryBudgetCard({ category, budget, count, onEdit, onView }) {
+function BudgetOrbit({ spent, budget }) {
+  const percent = Math.round((spent / budget) * 100)
+  const circumference = 2 * Math.PI * 43
+  return (
+    <div
+      className="category-budget-orbit"
+      role="progressbar"
+      aria-label="Ngân sách tổng đã sử dụng"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.min(100, percent)}
+      aria-valuetext={`${percent}% — đã chi ${money(spent)} trên ngân sách ${money(budget)}`}
+    >
+      <svg viewBox="0 0 104 104" fill="none" aria-hidden="true">
+        <circle
+          cx="52"
+          cy="52"
+          r="50"
+          stroke="currentColor"
+          strokeOpacity=".15"
+          strokeDasharray="1 5"
+        />
+        <circle cx="52" cy="52" r="43" stroke="currentColor" strokeOpacity=".13" strokeWidth="7" />
+        <circle
+          className="category-budget-orbit-fill"
+          cx="52"
+          cy="52"
+          r="43"
+          stroke="currentColor"
+          strokeWidth="7"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference * (1 - Math.min(1, spent / budget))}
+          transform="rotate(-90 52 52)"
+        />
+      </svg>
+      <span aria-hidden="true">
+        <strong>
+          {percent.toLocaleString('vi-VN')}
+          <small>%</small>
+        </strong>
+        <span>đã dùng</span>
+      </span>
+    </div>
+  )
+}
+
+function CategoryBudgetCard({ category, budget, count, number, onEdit, onView }) {
   const titleId = useId()
   const state = getState(category.spent, budget)
   const remaining = budget - category.spent
   const percent = Math.round((category.spent / budget) * 100)
-  const progressColor = state === 'over' ? '#cf777d' : state === 'near' ? '#d0a063' : category.color
+  const progressColor = state === 'over' ? '#bb5265' : state === 'near' ? '#bb843f' : category.color
   return (
     <motion.article
       layout="position"
@@ -55,11 +103,19 @@ function CategoryBudgetCard({ category, budget, count, onEdit, onView }) {
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.2 }}
       className={`budget-category-card is-${state}`}
+      style={{
+        '--category-tint': category.background,
+        '--category-accent': category.color,
+        '--category-ink': category.textColor,
+      }}
       aria-labelledby={titleId}
     >
       <div className="budget-category-heading">
-        <span className="budget-category-symbol" style={{ background: category.background }}>
-          <CategoryArt category={category.id} size={49} />
+        <span className="budget-category-symbol">
+          <CategoryArt category={category.id} size={58} />
+          <span className="budget-category-number" aria-hidden="true">
+            {String(number).padStart(2, '0')}
+          </span>
         </span>
         <div>
           <h3 id={titleId}>{category.name}</h3>
@@ -75,34 +131,36 @@ function CategoryBudgetCard({ category, budget, count, onEdit, onView }) {
           <PencilLine size={15} />
         </button>
       </div>
-      <div className="budget-category-spent">
-        <span>Đã chi trong tháng</span>
-        <span className={`budget-state is-${state}`}>
-          <span aria-hidden="true" />
-          {category.spent === budget ? 'Đã dùng hết' : stateLabels[state]}
-        </span>
-        <strong>{money(category.spent)}</strong>
+      <div className="budget-category-main">
+        <div className="budget-category-spent">
+          <span>Đã chi trong tháng</span>
+          <span className={`budget-state is-${state}`}>
+            <span aria-hidden="true" />
+            {category.spent === budget ? 'Đã dùng hết' : stateLabels[state]}
+          </span>
+          <strong>{money(category.spent)}</strong>
+        </div>
+        <div className="budget-category-limit">
+          <span>
+            Hạn mức <strong>{money(budget)}</strong>
+          </span>
+          <span>{percent.toLocaleString('vi-VN')}%</span>
+        </div>
+        <BudgetProgress
+          spent={category.spent}
+          budget={budget}
+          label={`Ngân sách ${category.name}`}
+          color={progressColor}
+        />
+        <p className={`budget-category-remaining ${state === 'over' ? 'is-over' : ''}`}>
+          {remaining < 0 ? (
+            <CircleAlert size={12} />
+          ) : (
+            <span className="budget-remaining-dot" aria-hidden="true" />
+          )}
+          {remaining < 0 ? 'Vượt' : 'Còn'} <strong>{money(Math.abs(remaining))}</strong>
+        </p>
       </div>
-      <div className="budget-category-limit">
-        <span>
-          Hạn mức <strong>{money(budget)}</strong>
-        </span>
-        <span>{percent.toLocaleString('vi-VN')}%</span>
-      </div>
-      <BudgetProgress
-        spent={category.spent}
-        budget={budget}
-        label={`Ngân sách ${category.name}`}
-        color={progressColor}
-      />
-      <p className={`budget-category-remaining ${state === 'over' ? 'is-over' : ''}`}>
-        {remaining < 0 ? (
-          <CircleAlert size={12} />
-        ) : (
-          <span className="budget-remaining-dot" aria-hidden="true" />
-        )}
-        {remaining < 0 ? 'Vượt' : 'Còn'} <strong>{money(Math.abs(remaining))}</strong>
-      </p>
       <div className="budget-category-footer">
         <span>
           <FileText size={12} />
@@ -133,6 +191,8 @@ export default function CategoriesView({
 }) {
   const [filter, setFilter] = useState('all')
   const [sortBySpent, setSortBySpent] = useState(false)
+  const [limitsExpanded, setLimitsExpanded] = useState(false)
+  const limitsPanelId = useId()
   const totalLimits = categories.reduce((sum, category) => sum + budgets[category.id], 0)
   const near = categories.filter(
     (category) => getState(category.spent, budgets[category.id]) === 'near',
@@ -142,7 +202,6 @@ export default function CategoriesView({
   ).length
   const activeCount = categories.filter((category) => category.spent > 0).length
   const remaining = totalBudget - spent
-  const totalPercent = Math.round((spent / totalBudget) * 100)
   const counts = new Map()
   for (const transaction of transactions)
     counts.set(transaction.category, (counts.get(transaction.category) || 0) + 1)
@@ -173,19 +232,33 @@ export default function CategoriesView({
               <SlidersHorizontal size={16} />
             </button>
           </div>
-          <div className="category-overview-remaining">
-            <span>{remaining < 0 ? 'Đã vượt ngân sách' : 'Còn trong ngân sách'}</span>
-            <strong>{money(Math.abs(remaining))}</strong>
+          <div className="category-overview-balance">
+            <div className="category-overview-remaining">
+              <span>{remaining < 0 ? 'Đã vượt ngân sách' : 'Còn trong ngân sách'}</span>
+              <strong>{money(Math.abs(remaining))}</strong>
+            </div>
+            <BudgetOrbit spent={spent} budget={totalBudget} />
           </div>
           <div className="category-overview-usage">
             <span>
-              Đã chi <strong>{money(spent)}</strong> / {money(totalBudget)}
+              Đã chi <strong>{money(spent)}</strong>
             </span>
-            <span>{totalPercent.toLocaleString('vi-VN')}%</span>
+            <span>
+              Ngân sách tháng <strong>{money(totalBudget)}</strong>
+            </span>
           </div>
-          <BudgetProgress spent={spent} budget={totalBudget} label="Ngân sách tổng đã sử dụng" />
         </div>
-        <div className="category-limits-summary">
+        <div className={`category-limits-summary ${limitsExpanded ? 'is-expanded' : ''}`}>
+          <button
+            type="button"
+            className="category-limits-toggle"
+            aria-label="Chi tiết hạn mức danh mục"
+            aria-expanded={limitsExpanded}
+            aria-controls={limitsPanelId}
+            onClick={() => setLimitsExpanded(!limitsExpanded)}
+          >
+            <ChevronDown size={16} />
+          </button>
           <span className="category-limits-eyebrow">
             <Tags size={13} /> HẠN MỨC THEO DANH MỤC
           </span>
@@ -193,34 +266,45 @@ export default function CategoriesView({
             <strong>{money(totalLimits)}</strong>
             <span>{categories.length} danh mục</span>
           </div>
-          <div
-            className="category-limits-distribution"
-            role="img"
-            aria-label={`Tổng hạn mức ${money(totalLimits)}. ${categories.map((category) => `${category.name}: ${money(budgets[category.id])}`).join(', ')}`}
-          >
-            {categories.map((category) => (
-              <span
-                key={category.id}
-                style={{ flex: budgets[category.id], background: category.color }}
-                title={`${category.name}: ${money(budgets[category.id])}`}
-              />
-            ))}
+          <div className="category-limits-details" id={limitsPanelId}>
+            <div
+              className="category-limits-distribution"
+              role="img"
+              aria-label={`Tổng hạn mức ${money(totalLimits)}. ${categories.map((category) => `${category.name}: ${money(budgets[category.id])}`).join(', ')}`}
+            >
+              {categories.map((category) => (
+                <span
+                  key={category.id}
+                  style={{ flex: budgets[category.id], background: category.color }}
+                  title={`${category.name}: ${money(budgets[category.id])}`}
+                />
+              ))}
+            </div>
+            <div className="category-limits-status">
+              <span className="is-active">
+                <strong>{activeCount.toString().padStart(2, '0')}</strong>
+                <span>
+                  <span className="category-status-dot green" />
+                  Có chi tiêu
+                </span>
+              </span>
+              <span className="is-near">
+                <strong>{near.toString().padStart(2, '0')}</strong>
+                <span>
+                  <span className="category-status-dot amber" />
+                  Gần hạn mức
+                </span>
+              </span>
+              <span className="is-over">
+                <strong>{over.toString().padStart(2, '0')}</strong>
+                <span>
+                  <span className="category-status-dot red" />
+                  Đã vượt
+                </span>
+              </span>
+            </div>
+            <p>Ngân sách tổng và hạn mức danh mục được đặt riêng.</p>
           </div>
-          <div className="category-limits-status">
-            <span>
-              <span className="category-status-dot green" />
-              {activeCount} có chi tiêu
-            </span>
-            <span>
-              <span className="category-status-dot amber" />
-              {near} gần hạn mức
-            </span>
-            <span>
-              <span className="category-status-dot red" />
-              {over} đã vượt
-            </span>
-          </div>
-          <p>Ngân sách tổng và hạn mức danh mục được đặt riêng.</p>
         </div>
       </section>
 
@@ -228,15 +312,16 @@ export default function CategoriesView({
         <div className="category-library-heading">
           <div>
             <h2 id="category-budget-library-title">
-              Danh mục của bạn <span>{categories.length}</span>
+              Phong bì của bạn <span>{categories.length}</span>
             </h2>
-            <p>Mỗi khoản chi có một chỗ riêng.</p>
+            <p>Một danh mục, một hạn mức. Gọn gàng từng khoản chi.</p>
           </div>
           <button
             type="button"
             className={`category-sort-button ${sortBySpent ? 'is-active' : ''}`}
             aria-label="Sắp xếp theo mức chi"
             aria-pressed={sortBySpent}
+            title={sortBySpent ? 'Trở về thứ tự mặc định' : 'Sắp xếp theo mức chi'}
             onClick={() => setSortBySpent(!sortBySpent)}
           >
             <ArrowDownWideNarrow size={15} />
@@ -280,6 +365,7 @@ export default function CategoriesView({
                   category={category}
                   budget={budgets[category.id]}
                   count={counts.get(category.id) || 0}
+                  number={categories.findIndex((item) => item.id === category.id) + 1}
                   onEdit={onEditBudget}
                   onView={onViewTransactions}
                 />

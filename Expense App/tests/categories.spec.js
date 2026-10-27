@@ -121,6 +121,16 @@ test.describe('small touch screen budgets', () => {
     page,
   }) => {
     await seedCategories(page)
+    const limitsToggle = page.getByRole('button', {
+      name: 'Chi tiết hạn mức danh mục',
+      exact: true,
+    })
+    await expect(limitsToggle).toHaveAttribute('aria-expanded', 'false')
+    await limitsToggle.tap()
+    await expect(page.locator('.category-limits-status')).toBeVisible()
+    await expect(page.locator('.category-limits-status')).toContainText('Đã vượt')
+    await limitsToggle.tap()
+    await expect(page.locator('.category-limits-status')).not.toBeVisible()
     await page.getByRole('button', { name: 'Chỉnh ngân sách Ăn uống', exact: true }).tap()
     const dialog = page.locator('.budget-dialog')
     const input = dialog.getByRole('spinbutton')

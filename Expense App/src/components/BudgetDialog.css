@@ -1,5 +1,5 @@
 .dialog.budget-dialog {
-  --budget-muted: #776383;
+  --budget-muted: var(--text-secondary);
   --budget-dialog-height: min(740px, calc(100dvh - 32px));
   width: 500px;
   max-width: calc(100vw - 24px);
@@ -164,7 +164,7 @@
   align-items: center;
   gap: 4px;
   padding: 3px 0 3px 4px;
-  color: #85659b;
+  color: #604271;
   font-size: 11px;
 }
 .budget-editor-presets {
@@ -207,7 +207,7 @@
 .budget-editor-presets button[aria-pressed='true'] {
   border-color: #c5acda;
   background: #f1e9fa;
-  color: #76558e;
+  color: #4f3265;
 }
 .budget-editor-preview {
   min-width: 0;
@@ -229,7 +229,7 @@
 }
 .budget-preview-heading > span:first-child {
   gap: 5px;
-  color: #846c96;
+  color: #5d456d;
   font-size: 11px;
 }
 .budget-preview-heading > span:last-child {
@@ -241,17 +241,17 @@
   flex-wrap: wrap;
   gap: 5px 10px;
   margin-top: 8px;
-  color: #85728f;
+  color: #5b4568;
   font-size: var(--font-control-label);
 }
 .budget-preview-row strong {
-  color: #705a80;
+  color: #4f365f;
   font-size: var(--font-control);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 .budget-preview-remaining strong {
-  color: #76578e;
+  color: #563268;
   font-weight: 600;
 }
 .budget-preview-track {
