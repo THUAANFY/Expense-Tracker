@@ -5,7 +5,8 @@ async function navigateToNotes(page) {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   const menu = page.getByRole('button', { name: 'Mở menu', exact: true })
   if (await menu.isVisible()) await menu.click()
-  await page.locator('.sidebar').getByRole('button', { name: 'Sổ ghi chú', exact: true }).click()
+  await page.locator('.sidebar').getByRole('button', { name: 'Túi chi tiêu', exact: true }).click()
+  await page.getByRole('button', { name: 'Ghi chú đã lưu', exact: true }).click()
   await expect(page.getByRole('tab', { name: /Ghi chú của tôi/ })).toBeVisible()
 }
 

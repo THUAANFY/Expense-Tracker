@@ -3,10 +3,8 @@ import { AnimatePresence, motion, MotionConfig } from 'motion/react'
 import {
   ArrowDownLeft,
   ArrowDownWideNarrow,
-  ArrowDownToLine,
   ArrowRight,
   ArrowUpRight,
-  Bell,
   BookOpen,
   CalendarDays,
   Check,
@@ -26,10 +24,10 @@ import {
   LayoutDashboard,
   Menu,
   PencilLine,
-  Pin,
   Plus,
   Search,
   Settings2,
+  ShoppingBag,
   SlidersHorizontal,
   Sparkles,
   Sun,
@@ -43,15 +41,23 @@ import CategoryArt from './components/CategoryArt'
 import SpendingChart from './components/SpendingChart'
 import MonthPicker from './components/MonthPicker'
 import NotesView from './components/NotesView'
+import WorthView from './components/WorthView'
+import BagsView from './components/BagsView'
+import BagArt from './components/BagArt'
 import CategoriesView from './components/CategoriesView'
 import FilterSelect from './components/FilterSelect'
 import HistoryOverview from './components/HistoryOverview'
 import HistoryArt from './components/HistoryArt'
 import OverviewArt from './components/OverviewArt'
 import SidebarArt from './components/SidebarArt'
+import NotificationCenter from './components/NotificationCenter'
+import SettingsView from './components/SettingsView'
 import Dialog from './components/dialogs/Dialog'
 import TransactionDialog from './components/dialogs/TransactionDialog'
 import NoteDialog from './components/dialogs/NoteDialog'
+import ReviewDialog from './components/dialogs/ReviewDialog'
+import BagDialog from './components/dialogs/BagDialog'
+import BagTransactionsDialog from './components/dialogs/BagTransactionsDialog'
 import BudgetDialog from './components/dialogs/BudgetDialog'
 import WelcomeDialog from './components/dialogs/WelcomeDialog'
 import {
@@ -59,15 +65,15 @@ import {
   STORAGE_KEY,
   compactMoney,
   dateKey,
-  downloadFile,
   exportCSV,
   formatDate,
   getCategory,
-  isValidData,
   money,
   monthKey,
   readData,
 } from './data'
+import { getReviewOption, withReview } from './reviews'
+import { linkBagTransactions, removeBag, setTransactionBag } from './bags'
 import './App.css'
 import './components/TransactionList.css'
 import './components/HistoryView.css'
@@ -78,7 +84,7 @@ const NAVIGATION = [
   { id: 'overview', label: 'Tổng quan', icon: LayoutDashboard },
   { id: 'transactions', label: 'Lịch sử giao dịch', icon: Wallet },
   { id: 'categories', label: 'Danh mục & ngân sách', icon: Tags },
-  { id: 'notes', label: 'Sổ ghi chú', icon: BookOpen },
+  { id: 'bags', label: 'Túi chi tiêu', icon: ShoppingBag },
 ]
 const CATEGORY_FILTER_OPTIONS = [
   { value: 'all', label: 'Mọi danh mục', icon: Tags },
@@ -103,7 +109,9 @@ const TITLES = {
   overview: ['Gọn chi tiêu. Nhẹ cuộc sống.', 'Một góc nhìn rõ ràng hơn về tài chính của bạn.'],
   transactions: ['Mỗi khoản chi, một câu chuyện.', 'Lưu lại những điều nhỏ, hiểu hơn về mỗi ngày.'],
   categories: ['Chi tiêu có một chỗ riêng.', 'Một ngân sách vừa vặn cho từng điều bạn quan tâm.'],
-  notes: ['Những điều muốn nhớ.', 'Kế hoạch nhỏ hôm nay, niềm vui lớn ngày mai.'],
+  reviews: ['Đáng tiền không?', 'Nhìn lại một khoản chi, hiểu thêm điều mình cần.'],
+  bags: ['Túi chi tiêu theo dịp', 'Một chiếc túi nhỏ cho mỗi câu chuyện chi tiêu.'],
+  notes: ['Ghi chú đã lưu.', 'Những dòng ghi chép của bạn vẫn ở đây.'],
   settings: ['Theo cách của bạn.', 'Một vài điều chỉnh để mây gần gũi với bạn hơn.'],
 }
 const ease = [0.22, 1, 0.36, 1]
@@ -505,192 +513,6 @@ function TransactionList({
   )
 }
 
-function NoteCard({ note, onEdit, onPin }) {
-  return (
-    <article className={`note-card ${note.color}`}>
-      <div className="note-card-top">
-        <span>
-          <span className="note-dot" /> GÓC GHI CHÚ
-        </span>
-        <button
-          aria-label={note.pinned ? 'Bỏ ghim ghi chú' : 'Ghim ghi chú'}
-          aria-pressed={Boolean(note.pinned)}
-          className={`pin-button ${note.pinned ? 'pinned' : ''}`}
-          onClick={() => onPin(note.id)}
-        >
-          <Pin size={14} />
-        </button>
-      </div>
-      <button className="note-body" onClick={() => onEdit(note)}>
-        <h3>{note.title}</h3>
-        <p>{note.content}</p>
-        <span className="note-bottom">
-          {formatDate(note.date, { day: '2-digit', month: '2-digit' })}
-          <span>
-            Chỉnh sửa <PencilLine size={12} />
-          </span>
-        </span>
-      </button>
-    </article>
-  )
-}
-
-function SettingsView({ data, onSave, onStart, notify }) {
-  const [name, setName] = useState(data.profile.name)
-  const [budget, setBudget] = useState(data.profile.budget)
-  const fileInput = useRef(null)
-  const [pendingImport, setPendingImport] = useState(null)
-  const [importError, setImportError] = useState('')
-  async function importData(event) {
-    const file = event.target.files?.[0]
-    if (!file) return
-    try {
-      if (file.size > 5000000) throw new Error('Tệp quá lớn. Vui lòng chọn bản sao lưu dưới 5 MB.')
-      const parsed = JSON.parse(await file.text())
-      if (!isValidData(parsed)) throw new Error('Tệp không đúng định dạng bản sao lưu của mây.')
-      setPendingImport(parsed)
-      setImportError('')
-    } catch (error) {
-      setImportError(error.message)
-    }
-    event.target.value = ''
-  }
-  return (
-    <div className="settings-grid">
-      <section className="panel settings-panel">
-        <div className="panel-heading">
-          <h2>Một chút về bạn</h2>
-          <Settings2 size={18} />
-        </div>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault()
-            if (
-              name.trim() &&
-              Number.isSafeInteger(Number(budget)) &&
-              Number(budget) > 0 &&
-              Number(budget) <= 1e12
-            )
-              onSave({ ...data, profile: { name: name.trim(), budget: Number(budget) } })
-          }}
-        >
-          <label className="field">
-            Mây có thể gọi bạn là
-            <input
-              required
-              value={name}
-              maxLength="40"
-              onChange={(event) => setName(event.target.value)}
-            />
-          </label>
-          <label className="field">
-            Ngân sách chi tiêu mỗi tháng (VND)
-            <input
-              required
-              type="number"
-              min="1"
-              max="1000000000000"
-              step="1"
-              value={budget}
-              onChange={(event) => setBudget(event.target.value)}
-            />
-          </label>
-          <p className="field-description">
-            Ngân sách tổng được dùng để theo dõi tiến độ chi tiêu. Bạn có thể điều chỉnh từng nhóm
-            trong Danh mục & ngân sách.
-          </p>
-          <button type="submit" className="button primary">
-            <Check size={16} /> Lưu thay đổi
-          </button>
-        </form>
-      </section>
-      <section className="panel settings-panel">
-        <div className="panel-heading">
-          <h2>Dữ liệu của bạn</h2>
-          <Cloud size={18} />
-        </div>
-        <div className="local-info">
-          <span className="local-info-icon">
-            <CheckCheck size={21} />
-          </span>
-          <div>
-            <strong>Lưu ngay trên thiết bị</strong>
-            <p>
-              Giao dịch và ghi chú nằm trong trình duyệt này. Xuất bản sao lưu để giữ lại hoặc
-              chuyển sang thiết bị khác.
-            </p>
-          </div>
-        </div>
-        <div className="settings-buttons">
-          <button
-            className="button secondary"
-            onClick={() => {
-              downloadFile(
-                JSON.stringify(data, null, 2),
-                `may-backup-${dateKey()}.json`,
-                'application/json',
-              )
-              notify('Đã xuất bản sao lưu của bạn')
-            }}
-          >
-            <Download size={16} /> Xuất bản sao lưu
-          </button>
-          <button className="button secondary" onClick={() => fileInput.current.click()}>
-            <ArrowDownToLine size={16} /> Nhập bản sao lưu
-          </button>
-          <input
-            ref={fileInput}
-            hidden
-            type="file"
-            accept=".json,application/json"
-            onChange={importData}
-          />
-        </div>
-        {importError && (
-          <p className="form-error" role="alert">
-            {importError}
-          </p>
-        )}
-        {data.isDemo && (
-          <div className="demo-settings">
-            <span>Đang hiển thị dữ liệu mẫu</span>
-            <button className="text-button" onClick={onStart}>
-              Tạo sổ của tôi <ArrowRight size={14} />
-            </button>
-          </div>
-        )}
-      </section>
-      {pendingImport && (
-        <Dialog
-          title="Khôi phục bản sao lưu?"
-          subtitle={`${pendingImport.transactions.length} giao dịch và ${pendingImport.notes.length} ghi chú sẽ thay thế dữ liệu hiện tại.`}
-          onClose={() => setPendingImport(null)}
-        >
-          <p className="welcome-copy">
-            Hãy xuất bản sao lưu dữ liệu hiện tại nếu bạn muốn giữ lại trước khi thay thế.
-          </p>
-          <div className="dialog-actions">
-            <button className="button secondary" onClick={() => setPendingImport(null)}>
-              Hủy
-            </button>
-            <button
-              className="button primary"
-              onClick={() => {
-                onSave(pendingImport)
-                setName(pendingImport.profile.name)
-                setBudget(pendingImport.profile.budget)
-                setPendingImport(null)
-              }}
-            >
-              Khôi phục dữ liệu
-            </button>
-          </div>
-        </Dialog>
-      )}
-    </div>
-  )
-}
-
 export default function App() {
   const [initial] = useState(readData)
   const [data, setData] = useState(initial.data)
@@ -703,12 +525,11 @@ export default function App() {
   const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
   const [modal, setModal] = useState(null)
+  const [selectedBagId, setSelectedBagId] = useState(null)
   const [mobileMenu, setMobileMenu] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 760px)').matches)
-  const [notifications, setNotifications] = useState(false)
   const [toast, setToast] = useState('')
   const searchRef = useRef(null)
-  const notificationRef = useRef(null)
   const toastTimer = useRef(null)
   useEffect(() => {
     const query = window.matchMedia('(max-width: 760px)')
@@ -765,21 +586,6 @@ export default function App() {
       clearTimeout(toastTimer.current)
     }
   }, [])
-  useEffect(() => {
-    if (!notifications) return
-    const outside = (event) => {
-      if (!notificationRef.current?.contains(event.target)) setNotifications(false)
-    }
-    const escape = (event) => {
-      if (event.key === 'Escape') setNotifications(false)
-    }
-    document.addEventListener('pointerdown', outside)
-    document.addEventListener('keydown', escape)
-    return () => {
-      document.removeEventListener('pointerdown', outside)
-      document.removeEventListener('keydown', escape)
-    }
-  }, [notifications])
 
   function notify(message) {
     setToast(message)
@@ -801,10 +607,18 @@ export default function App() {
   }
   function navigate(id) {
     setView(id)
+    if (id === 'bags') setSelectedBagId(null)
     setMobileMenu(false)
     setSearch('')
     setPage(1)
-    setNotifications(false)
+  }
+  function openNotification(target) {
+    navigate(target.view)
+    if (target.month) setMonth(target.month)
+    setFilterCategory(target.category || 'all')
+    setFilterType(target.category ? 'expense' : 'all')
+    setSort('newest')
+    if (target.add) setModal({ type: 'transaction' })
   }
   function categoryFilter(id) {
     setFilterCategory(id)
@@ -816,6 +630,21 @@ export default function App() {
   const addTransaction = () => setModal({ type: 'transaction' })
   const editTransaction = (transaction) => setModal({ type: 'transaction', transaction })
   const editNote = (note) => setModal({ type: 'note', note })
+  const createBag = () => setModal({ type: 'bag' })
+  const bags = data.bags || []
+  function rateTransaction(id, review) {
+    const transaction = data.transactions.find((item) => item.id === id)
+    if (!transaction || transaction.type !== 'expense') return
+    saveData(
+      {
+        ...data,
+        transactions: data.transactions.map((item) =>
+          item.id === id ? withReview(item, review) : item,
+        ),
+      },
+      review ? `Đã lưu cảm nhận: ${getReviewOption(review.rating).label}` : 'Đã bỏ đánh giá',
+    )
+  }
   function pinNote(id) {
     saveData(
       {
@@ -829,7 +658,7 @@ export default function App() {
   }
   function startOwnBook() {
     saveData(
-      { ...data, transactions: [], notes: [], isDemo: false },
+      { ...data, transactions: [], notes: [], bags: [], isDemo: false },
       'Sổ chi tiêu của bạn đã sẵn sàng',
     )
     setModal(null)
@@ -868,12 +697,14 @@ export default function App() {
   if (sort === 'oldest') filtered.reverse()
   if (sort === 'highest') filtered.sort((a, b) => b.amount - a.amount)
   const currentPage = Math.min(page, Math.max(1, Math.ceil(filtered.length / 8)))
-  const sortedNotes = [...data.notes].sort(
-    (a, b) => Number(b.pinned) - Number(a.pinned) || b.date.localeCompare(a.date),
-  )
   const budgetPercent = Math.round((expense / data.profile.budget) * 100)
   const remaining = data.profile.budget - expense
-  const viewLabel = NAVIGATION.find((item) => item.id === view)?.label || 'Cài đặt'
+  const viewLabel =
+    view === 'notes'
+      ? 'Ghi chú đã lưu'
+      : view === 'reviews'
+        ? 'Cảm nhận đã lưu'
+        : NAVIGATION.find((item) => item.id === view)?.label || 'Cài đặt'
   const today = new Intl.DateTimeFormat('vi-VN', {
     weekday: 'long',
     day: '2-digit',
@@ -923,14 +754,18 @@ export default function App() {
             {NAVIGATION.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
-                className={`nav-item ${view === id ? 'active' : ''}`}
+                className={`nav-item ${view === id || (['notes', 'reviews'].includes(view) && id === 'bags') ? 'active' : ''}`}
                 data-section={id}
                 title={label}
                 onClick={() => navigate(id)}
                 aria-label={label}
-                aria-current={view === id ? 'page' : undefined}
+                aria-current={
+                  view === id || (['notes', 'reviews'].includes(view) && id === 'bags')
+                    ? 'page'
+                    : undefined
+                }
               >
-                {view === id && (
+                {(view === id || (['notes', 'reviews'].includes(view) && id === 'bags')) && (
                   <motion.span
                     className="nav-active-bg"
                     layoutId="nav-active"
@@ -941,8 +776,10 @@ export default function App() {
                   <Icon size={18} strokeWidth={1.8} />
                 </span>
                 <span className="nav-label">{label}</span>
-                {id === 'notes' && data.notes.length > 0 && (
-                  <span className="nav-count">{data.notes.length}</span>
+                {id === 'bags' && bags.some((bag) => bag.status === 'active') && (
+                  <span className="nav-count" aria-hidden="true" title="Túi chi tiêu đang mở">
+                    {bags.filter((bag) => bag.status === 'active').length}
+                  </span>
                 )}
               </button>
             ))}
@@ -1019,42 +856,11 @@ export default function App() {
                 />
                 <kbd>/</kbd>
               </label>
-              <div className="notification-container" ref={notificationRef}>
-                <button
-                  className={`icon-button notification-button ${notifications ? 'selected' : ''}`}
-                  aria-label="Thông báo ngân sách"
-                  aria-expanded={notifications}
-                  onClick={() => setNotifications(!notifications)}
-                >
-                  <Bell size={19} />
-                  <span />
-                </button>
-                <AnimatePresence>
-                  {notifications && (
-                    <motion.div
-                      className="notification-popover"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 5 }}
-                    >
-                      <div>
-                        <strong>Nhắc bạn một chút</strong>
-                        <Sparkles size={16} />
-                      </div>
-                      <p>
-                        {expense === 0
-                          ? 'Thêm giao dịch đầu tiên để bắt đầu theo dõi ngân sách tháng này.'
-                          : remaining >= 0
-                            ? `Bạn đã dùng ${budgetPercent}% ngân sách. Còn ${money(remaining)} cho tháng ${monthNumber}.`
-                            : `Bạn đã vượt ngân sách tháng ${monthNumber} ${money(-remaining)}. Hãy xem lại các khoản chi nhé.`}
-                      </p>
-                      <button className="text-button" onClick={() => navigate('categories')}>
-                        Xem ngân sách <ArrowRight size={14} />
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <NotificationCenter
+                data={data}
+                storageError={storageError}
+                onNavigate={openNotification}
+              />
               <span className="topbar-divider" />
               <button
                 className="profile-button"
@@ -1077,7 +883,13 @@ export default function App() {
                     ? 'page-heading history-page-heading'
                     : view === 'overview'
                       ? 'page-heading overview-page-heading'
-                      : 'page-heading'
+                      : view === 'settings'
+                        ? 'page-heading settings-page-heading'
+                        : view === 'bags'
+                          ? `page-heading bags-page-heading ${bags.some((bag) => bag.id === selectedBagId) ? 'is-bag-detail' : ''}`
+                          : view === 'reviews'
+                            ? 'page-heading worth-page-heading'
+                            : 'page-heading'
               }
             >
               <div>
@@ -1094,7 +906,7 @@ export default function App() {
                 <p>{TITLES[view][1]}</p>
               </div>
               <div className="page-actions">
-                {view !== 'notes' && view !== 'settings' && (
+                {!['notes', 'settings', 'bags'].includes(view) && (
                   <MonthPicker
                     value={month}
                     onChange={(value) => {
@@ -1105,11 +917,29 @@ export default function App() {
                 )}
                 <button
                   className="button primary add-button"
-                  aria-label={view === 'notes' ? 'Viết ghi chú' : 'Thêm giao dịch'}
-                  onClick={view === 'notes' ? () => setModal({ type: 'note' }) : addTransaction}
+                  aria-label={
+                    view === 'notes'
+                      ? 'Viết ghi chú'
+                      : view === 'bags'
+                        ? 'Tạo túi'
+                        : 'Thêm giao dịch'
+                  }
+                  onClick={
+                    view === 'notes'
+                      ? () => setModal({ type: 'note' })
+                      : view === 'bags'
+                        ? createBag
+                        : addTransaction
+                  }
                 >
                   <Plus size={17} />
-                  <span>{view === 'notes' ? 'Viết ghi chú' : 'Thêm giao dịch'}</span>
+                  <span>
+                    {view === 'notes'
+                      ? 'Viết ghi chú'
+                      : view === 'bags'
+                        ? 'Tạo túi'
+                        : 'Thêm giao dịch'}
+                  </span>
                 </button>
               </div>
             </div>
@@ -1279,28 +1109,18 @@ export default function App() {
                             )}
                           </p>
                         </section>
-                        <div className="side-note-heading">
-                          <h2>Ghi chú nhỏ</h2>
-                          <button
-                            className="icon-button"
-                            aria-label="Thêm ghi chú"
-                            onClick={() => setModal({ type: 'note' })}
-                          >
-                            <Plus size={17} />
-                          </button>
-                        </div>
-                        {sortedNotes.length ? (
-                          <NoteCard note={sortedNotes[0]} onEdit={editNote} onPin={pinNote} />
-                        ) : (
-                          <button
-                            className="new-note-tile"
-                            onClick={() => setModal({ type: 'note' })}
-                          >
-                            <PencilLine size={24} />
-                            <span>Viết vài dòng cho chính mình</span>
-                            <Plus size={16} />
-                          </button>
-                        )}
+                        <button className="overview-bags-card" onClick={() => navigate('bags')}>
+                          <BagArt />
+                          <span>
+                            <strong>Túi chi tiêu</strong>
+                            <span>
+                              {bags.some((bag) => bag.status === 'active')
+                                ? `${bags.filter((bag) => bag.status === 'active').length} dịp đang được chăm chút`
+                                : 'Gom khoản chi cho từng dịp riêng'}
+                            </span>
+                          </span>
+                          <ArrowUpRight size={16} />
+                        </button>
                         <div className="little-message">
                           <OverviewArt variant="flower" className="overview-message-art" />
                           <p>
@@ -1464,6 +1284,72 @@ export default function App() {
                     onViewTransactions={categoryFilter}
                   />
                 )}
+                {view === 'bags' && (
+                  <BagsView
+                    bags={bags}
+                    isMobile={isMobile}
+                    transactions={data.transactions}
+                    selectedId={selectedBagId}
+                    onSelect={setSelectedBagId}
+                    onCreate={createBag}
+                    onEdit={(bag) => setModal({ type: 'bag', bag })}
+                    onStatus={(bag) =>
+                      saveData(
+                        {
+                          ...data,
+                          bags: bags.map((item) =>
+                            item.id === bag.id
+                              ? { ...item, status: item.status === 'active' ? 'done' : 'active' }
+                              : item,
+                          ),
+                        },
+                        bag.status === 'active' ? 'Đã khép lại dịp này' : 'Đã mở lại túi',
+                      )
+                    }
+                    onPick={(bag) => setModal({ type: 'bag-transactions', bag })}
+                    onAddExpense={(bag) => setModal({ type: 'transaction', bagId: bag.id })}
+                    onEditTransaction={editTransaction}
+                    onUnlink={(transaction) =>
+                      saveData(
+                        {
+                          ...data,
+                          transactions: data.transactions.map((item) =>
+                            item.id === transaction.id ? setTransactionBag(item, null) : item,
+                          ),
+                        },
+                        'Đã bỏ khỏi túi, giao dịch vẫn được giữ',
+                      )
+                    }
+                    onOpenNotes={() => navigate('notes')}
+                    onOpenReviews={() => navigate('reviews')}
+                  />
+                )}
+                {view === 'reviews' && (
+                  <div className="worth-notes-back">
+                    <button onClick={() => navigate('bags')}>
+                      <ChevronLeft size={14} /> Túi chi tiêu
+                    </button>
+                  </div>
+                )}
+                {view === 'reviews' && (
+                  <WorthView
+                    key={month}
+                    transactions={monthTransactions}
+                    month={month}
+                    onRate={rateTransaction}
+                    onReason={(transaction) => setModal({ type: 'review', transaction })}
+                    onEditTransaction={editTransaction}
+                    onAdd={addTransaction}
+                    onOpenNotes={() => navigate('notes')}
+                  />
+                )}
+                {view === 'notes' && (
+                  <div className="worth-notes-back">
+                    <button onClick={() => navigate('bags')}>
+                      <ChevronLeft size={14} /> Túi chi tiêu
+                    </button>
+                  </div>
+                )}
                 {view === 'notes' && (
                   <NotesView
                     notes={data.notes}
@@ -1481,6 +1367,7 @@ export default function App() {
                     data={data}
                     onSave={saveData}
                     onStart={() => setModal({ type: 'welcome' })}
+                    onCategories={() => navigate('categories')}
                     notify={notify}
                   />
                 )}
@@ -1513,6 +1400,8 @@ export default function App() {
         <TransactionDialog
           transaction={modal.transaction}
           initialCategory={modal.category}
+          initialBagId={modal.bagId}
+          bags={bags}
           onClose={() => setModal(null)}
           onSave={(transaction) => {
             const existing = data.transactions.some((item) => item.id === transaction.id)
@@ -1535,6 +1424,59 @@ export default function App() {
               { ...data, transactions: data.transactions.filter((item) => item.id !== id) },
               'Đã xóa giao dịch',
             )
+            setModal(null)
+          }}
+        />
+      )}
+      {modal?.type === 'bag' && (
+        <BagDialog
+          bag={modal.bag}
+          onClose={() => setModal(null)}
+          onSave={(bag) => {
+            saveData(
+              {
+                ...data,
+                bags: bags.some((item) => item.id === bag.id)
+                  ? bags.map((item) => (item.id === bag.id ? bag : item))
+                  : [bag, ...bags],
+              },
+              modal.bag ? 'Đã cập nhật chiếc túi' : 'Chiếc túi mới đã sẵn sàng',
+            )
+            setSelectedBagId(bag.id)
+            setView('bags')
+            setModal(null)
+          }}
+          onDelete={(id) => {
+            saveData(removeBag(data, id), 'Đã xóa túi, các giao dịch vẫn được giữ')
+            setSelectedBagId(null)
+            setModal(null)
+          }}
+        />
+      )}
+      {modal?.type === 'bag-transactions' && (
+        <BagTransactionsDialog
+          bag={modal.bag}
+          transactions={data.transactions}
+          onClose={() => setModal(null)}
+          onSave={(ids) => {
+            saveData(
+              { ...data, transactions: linkBagTransactions(data.transactions, modal.bag.id, ids) },
+              'Đã cập nhật các khoản trong túi',
+            )
+            setModal(null)
+          }}
+        />
+      )}
+      {modal?.type === 'review' && (
+        <ReviewDialog
+          transaction={modal.transaction}
+          onClose={() => setModal(null)}
+          onSave={(review) => {
+            rateTransaction(modal.transaction.id, review)
+            setModal(null)
+          }}
+          onClear={() => {
+            rateTransaction(modal.transaction.id, null)
             setModal(null)
           }}
         />
@@ -1602,9 +1544,9 @@ export default function App() {
                 'Điều chỉnh giới hạn cho từng danh mục và theo dõi tiến độ hàng tháng.',
               ],
               [
-                BookOpen,
-                'Giữ lại điều muốn nhớ',
-                'Sổ ghi chú dành cho dự định, lời nhắc và những mục tiêu của riêng bạn.',
+                ShoppingBag,
+                'Một chiếc túi cho từng dịp',
+                'Tạo túi cho chuyến đi, quà tặng hoặc góc nhà rồi gom những khoản chi liên quan để theo dõi ngân sách.',
               ],
             ].map(([Icon, title, description]) => (
               <div key={title}>

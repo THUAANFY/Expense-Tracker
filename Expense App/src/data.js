@@ -1,3 +1,6 @@
+import { isValidReview } from './reviews.js'
+import { isValidBag } from './bags.js'
+
 export const CATEGORIES = [
   {
     id: 'food',
@@ -206,8 +209,47 @@ export function createDemoData() {
       createdAt: Date.now() - 23000,
     },
   )
+  const bags = [
+    {
+      id: 'demo-weekend',
+      name: 'Một cuối tuần thật vui',
+      description: 'Ăn ngon, đi chơi và dành chút thời gian cho mình.',
+      budget: 1500000,
+      style: 'trip',
+      color: 'lilac',
+      status: 'active',
+      createdAt: Date.now(),
+    },
+    {
+      id: 'demo-corner',
+      name: 'Chăm chút góc nhỏ',
+      description: 'Những món nhỏ làm ngày thường dễ chịu hơn.',
+      budget: 800000,
+      style: 'home',
+      color: 'mint',
+      status: 'active',
+      createdAt: Date.now() - 1000,
+    },
+    {
+      id: 'demo-tech',
+      name: 'Góc làm việc mới',
+      description: 'Một khoản mua sắm đã hoàn tất.',
+      budget: 1500000,
+      style: 'tech',
+      color: 'peach',
+      status: 'done',
+      createdAt: Date.now() - 2000,
+    },
+  ]
+  for (const transaction of transactions) {
+    if (['Bữa tối cùng bạn bè', 'Vé xem phim'].includes(transaction.title))
+      transaction.bagId = bags[0].id
+    if (transaction.title === 'Mua đồ dùng trong nhà') transaction.bagId = bags[1].id
+    if (transaction.title === 'Tai nghe mới') transaction.bagId = bags[2].id
+  }
   return {
     transactions,
+    bags,
     notes: [
       {
         id: uid(),
@@ -252,6 +294,10 @@ export function isValidData(data) {
     data &&
     Array.isArray(data.transactions) &&
     Array.isArray(data.notes) &&
+    (data.bags === undefined ||
+      (Array.isArray(data.bags) &&
+        data.bags.every(isValidBag) &&
+        new Set(data.bags.map((bag) => bag.id)).size === data.bags.length)) &&
     data.profile &&
     typeof data.profile.name === 'string' &&
     data.profile.name.trim().length > 0 &&
@@ -283,7 +329,12 @@ export function isValidData(data) {
         typeof item.note === 'string' &&
         ['Chuyển khoản', 'Tiền mặt', 'Thẻ ngân hàng'].includes(item.wallet) &&
         item.title.length <= 100 &&
-        item.note.length <= 1000,
+        item.note.length <= 1000 &&
+        (item.review === undefined || (item.type === 'expense' && isValidReview(item.review))) &&
+        (item.bagId === undefined ||
+          (item.type === 'expense' &&
+            typeof item.bagId === 'string' &&
+            (data.bags || []).some((bag) => bag.id === item.bagId))),
     ) &&
     data.notes.every(
       (note) =>

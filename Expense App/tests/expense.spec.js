@@ -30,7 +30,12 @@ test('development CSS and Vietnamese fonts load without a Vite error overlay', a
 })
 
 async function navigate(page, label) {
-  await page.locator('.sidebar').getByRole('button', { name: label, exact: true }).click()
+  await page
+    .locator('.sidebar')
+    .getByRole('button', { name: label === 'Sổ ghi chú' ? 'Túi chi tiêu' : label, exact: true })
+    .click()
+  if (label === 'Sổ ghi chú')
+    await page.getByRole('button', { name: 'Ghi chú đã lưu', exact: true }).click()
   await expect(page.locator('.page-content')).toBeVisible()
 }
 
@@ -131,7 +136,10 @@ test('category budget and profile persist; creating a personal book clears demo 
   await dialog.getByRole('button', { name: 'Lưu ngân sách' }).click()
   await navigate(page, 'Cài đặt')
   await page.getByRole('textbox', { name: 'Mây có thể gọi bạn là' }).fill('An')
-  await page.getByRole('spinbutton', { name: 'Ngân sách chi tiêu mỗi tháng' }).fill('15000000')
+  await page.getByRole('button', { name: '15 triệu', exact: true }).click()
+  await expect(page.getByRole('spinbutton', { name: 'Ngân sách chi tiêu mỗi tháng' })).toHaveValue(
+    '15000000',
+  )
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click()
   await page.reload()
   await expect(page.locator('.greeting')).toContainText('Chào An')
@@ -182,6 +190,11 @@ test('backup restore requires confirmation and rejects an impossible calendar da
     buffer: Buffer.from(backup),
   })
   await expect(page.getByRole('dialog')).toContainText('Khôi phục bản sao lưu?')
+  await expect(page.locator('.settings-import-preview')).toContainText('backup.json')
+  await expect(page.locator('.settings-import-preview')).toContainText('Bình')
+  await expect(page.locator('.settings-import-preview')).toContainText(
+    `${JSON.parse(backup).transactions.length} giao dịch`,
+  )
   await expect(page.locator('.greeting')).toContainText('Chào Châu')
   await page.getByRole('dialog').getByRole('button', { name: 'Khôi phục dữ liệu' }).click()
   await expect(page.locator('.greeting')).toContainText('Chào Bình')
@@ -239,7 +252,7 @@ for (const width of [320, 390, 768, 1024, 1440, 1920, 2560]) {
       'Tổng quan',
       'Lịch sử giao dịch',
       'Danh mục & ngân sách',
-      'Sổ ghi chú',
+      'Túi chi tiêu',
       'Cài đặt',
     ]) {
       if (width <= 760) await page.getByRole('button', { name: 'Mở menu' }).click()

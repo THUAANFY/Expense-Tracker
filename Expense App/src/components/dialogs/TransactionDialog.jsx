@@ -1,14 +1,17 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { ArrowDownLeft, ArrowUpRight, Check, Trash2 } from 'lucide-react'
+import { ArrowDownLeft, ArrowUpRight, Check, ShoppingBag, Trash2 } from 'lucide-react'
 import Dialog from './Dialog'
 import CategoryArt from '../CategoryArt'
 import DatePicker from '../DatePicker'
 import PaymentSelect from '../PaymentSelect'
+import FilterSelect from '../FilterSelect'
 import { CATEGORIES, dateKey, isValidDate, money, uid } from '../../data'
 
 export default function TransactionDialog({
   transaction,
   initialCategory,
+  initialBagId,
+  bags = [],
   onSave,
   onClose,
   onDelete,
@@ -24,6 +27,7 @@ export default function TransactionDialog({
       date: dateKey(),
       wallet: 'Chuyển khoản',
       note: '',
+      bagId: initialBagId,
     },
   )
   const update = (key, value) => setForm((previous) => ({ ...previous, [key]: value }))
@@ -46,14 +50,17 @@ export default function TransactionDialog({
       setError('Vui lòng nhập tên, ngày và số tiền nguyên dương không quá 1.000 tỷ đồng.')
       return
     }
-    onSave({
+    const saved = {
       ...form,
       title: form.title.trim(),
       note: form.note.trim(),
       amount,
       id: transaction?.id || uid(),
       createdAt: transaction?.createdAt || Date.now(),
-    })
+    }
+    if (saved.type === 'income') delete saved.review
+    if (saved.type !== 'expense' || !bags.some((bag) => bag.id === saved.bagId)) delete saved.bagId
+    onSave(saved)
   }
   return (
     <Dialog
@@ -161,6 +168,28 @@ export default function TransactionDialog({
               />
             </label>
           </div>
+          {form.type === 'expense' && bags.length > 0 && (
+            <div className="field transaction-bag-field">
+              <span className="field-label">
+                Túi chi tiêu <span className="optional">Tùy chọn</span>
+              </span>
+              <FilterSelect
+                label="Túi chi tiêu của giao dịch"
+                caption="GOM VÀO TÚI"
+                value={form.bagId || ''}
+                options={[
+                  { value: '', label: 'Không thuộc túi', icon: ShoppingBag },
+                  ...bags.map((bag) => ({
+                    value: bag.id,
+                    label: bag.name,
+                    description: bag.status === 'done' ? 'Đã hoàn tất' : 'Đang mở',
+                    icon: ShoppingBag,
+                  })),
+                ]}
+                onChange={(value) => update('bagId', value)}
+              />
+            </div>
+          )}
           <label className="field">
             <span className="field-label">
               Ghi chú <span className="optional">Tùy chọn</span>
