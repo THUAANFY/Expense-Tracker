@@ -1650,6 +1650,7 @@ button:hover > span > .category-art {
 }
 .storage-alert {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   background: #fff5e7;
@@ -1663,6 +1664,10 @@ button:hover > span > .category-art {
 }
 .storage-alert > svg {
   flex-shrink: 0;
+}
+.storage-alert > span {
+  flex: 1 1 220px;
+  min-width: 0;
 }
 .storage-alert > button {
   margin-left: auto;
@@ -3085,12 +3090,17 @@ button:hover > span > .category-art {
     font-size: var(--font-small);
     padding: 12px;
     flex-wrap: wrap;
+    align-items: flex-start;
   }
   .storage-alert > span {
-    flex: 1;
+    flex: 1 1 calc(100% - 30px);
   }
   .storage-alert > button {
+    margin-left: 26px;
     font-size: var(--font-small);
+  }
+  .storage-alert > button + button {
+    margin-left: 0;
   }
   .empty-state {
     padding: 45px 15px;

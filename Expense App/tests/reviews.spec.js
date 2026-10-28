@@ -246,7 +246,7 @@ test('saved notes stay available through the secondary entry and keep all their 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ghi chú đã lưu.')
   await expect(page.locator('.notebook-grid .note-card')).toHaveCount(data.notes.length)
   expect((await stored(page)).notes).toEqual(data.notes)
-  await page.locator('.worth-notes-back').getByRole('button', { name: 'Túi chi tiêu' }).click()
+  await page.locator('.notes-parent-link').click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Túi chi tiêu theo dịp')
 })
 

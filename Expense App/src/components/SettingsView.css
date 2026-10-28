@@ -597,3 +597,36 @@
     transition: none !important;
   }
 }
+.settings-recovery {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-block: 1px solid #eddbc9;
+  background: #fff8ee;
+}
+.settings-recovery > div {
+  min-width: 0;
+}
+.settings-recovery h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--font-content);
+  font-weight: 600;
+}
+.settings-recovery p {
+  margin: 5px 0 10px;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
+  line-height: 1.7;
+}
+.settings-recovery > div > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.settings-recovery .button {
+  min-height: 36px;
+  padding: 7px 10px;
+  font-size: var(--font-control);
+}

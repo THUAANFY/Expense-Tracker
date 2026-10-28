@@ -1,8 +1,9 @@
-import { useEffect, useId, useRef } from 'react'
+import { useContext, useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
 import '../TransactionDialog.css'
+import { SaveFeedbackContext } from '../useBookData'
 
 export default function Dialog({
   title,
@@ -13,6 +14,7 @@ export default function Dialog({
   className = '',
 }) {
   const ref = useRef(null)
+  const { saveError, saving } = useContext(SaveFeedbackContext)
   const headingId = useId()
   useEffect(() => {
     const dialog = ref.current
@@ -32,6 +34,13 @@ export default function Dialog({
       ref={ref}
       className={`dialog ${wide ? 'wide' : ''} ${className}`}
       aria-labelledby={headingId}
+      aria-busy={saving}
+      onSubmitCapture={(event) => {
+        if (saving) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+      }}
       onCancel={(event) => {
         event.preventDefault()
         onClose()
@@ -56,6 +65,11 @@ export default function Dialog({
             <X size={20} />
           </button>
         </div>
+        {saveError && (
+          <p className="dialog-save-error" role="alert">
+            {saveError}
+          </p>
+        )}
         {children}
       </motion.div>
     </dialog>,

@@ -1,4 +1,19 @@
 /* Native and custom scrolling areas share the app's lilac scrollbar. */
+.dialog-save-error {
+  flex-shrink: 0;
+  margin: 10px 16px;
+  padding: 9px 11px;
+  border: 1px solid #edcfbd;
+  border-radius: 10px;
+  background: #fff5ec;
+  color: var(--text-danger);
+  font-size: var(--font-body);
+  line-height: 1.7;
+}
+.dialog[aria-busy='true'] button[type='submit'] {
+  cursor: progress;
+  opacity: 0.65;
+}
 .dialog,
 .dialog textarea,
 .transaction-form-body {

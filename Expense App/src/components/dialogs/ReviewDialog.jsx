@@ -32,6 +32,7 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
         <strong>{money(transaction.amount)}</strong>
       </div>
       <form
+        className="review-form"
         onSubmit={(event) => {
           event.preventDefault()
           if (!rating) {
@@ -41,42 +42,44 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
           onSave({ rating, note: note.trim() })
         }}
       >
-        <div className="review-dialog-choices" role="group" aria-label="Cảm nhận về khoản chi">
-          {REVIEW_OPTIONS.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              data-mood={option.id}
-              aria-pressed={rating === option.id}
-              onClick={() => {
-                setRating(option.id)
-                setError('')
-              }}
-            >
-              <MoodArt mood={option.id} />
-              <span>{option.label}</span>
-              {rating === option.id && <Check size={12} />}
-            </button>
-          ))}
+        <div className="review-form-body">
+          <div className="review-dialog-choices" role="group" aria-label="Cảm nhận về khoản chi">
+            {REVIEW_OPTIONS.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                data-mood={option.id}
+                aria-pressed={rating === option.id}
+                onClick={() => {
+                  setRating(option.id)
+                  setError('')
+                }}
+              >
+                <MoodArt mood={option.id} />
+                <span>{option.label}</span>
+                {rating === option.id && <Check size={12} />}
+              </button>
+            ))}
+          </div>
+          <label className="review-note-field">
+            <span>
+              Lý do của bạn <span>Tùy chọn · {note.length}/500</span>
+            </span>
+            <textarea
+              aria-label="Lý do của bạn"
+              rows="3"
+              maxLength="500"
+              value={note}
+              placeholder="Điều gì khiến bạn cảm thấy như vậy?"
+              onChange={(event) => setNote(event.target.value)}
+            />
+          </label>
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
         </div>
-        <label className="review-note-field">
-          <span>
-            Lý do của bạn <span>Tùy chọn · {note.length}/500</span>
-          </span>
-          <textarea
-            aria-label="Lý do của bạn"
-            rows="3"
-            maxLength="500"
-            value={note}
-            placeholder="Điều gì khiến bạn cảm thấy như vậy?"
-            onChange={(event) => setNote(event.target.value)}
-          />
-        </label>
-        {error && (
-          <p className="form-error" role="alert">
-            {error}
-          </p>
-        )}
         <div className="dialog-actions">
           {transaction.review && (
             <button type="button" className="text-button review-clear" onClick={onClear}>

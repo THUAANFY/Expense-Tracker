@@ -171,7 +171,9 @@ test('keyboard dialog focus and Escape; storage failure is visible', async ({ pa
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill('10000')
   await dialog.getByRole('textbox', { name: 'Tên giao dịch' }).fill('Khoản chưa lưu')
   await dialog.getByRole('button', { name: 'Lưu giao dịch' }).click()
-  await expect(page.getByRole('alert')).toContainText('Không thể lưu')
+  await expect(dialog.getByRole('alert')).toContainText('Không thể lưu')
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByRole('textbox', { name: 'Tên giao dịch' })).toHaveValue('Khoản chưa lưu')
 })
 
 test('backup restore requires confirmation and rejects an impossible calendar date', async ({

@@ -70,13 +70,14 @@ async function openNotifications(page) {
   await expect(panel).toBeVisible()
   return panel
 }
-async function addExpense(page, amount) {
+async function addExpense(page, amount, { shouldSave = true } = {}) {
   await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
   const dialog = page.locator('.transaction-dialog')
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill(String(amount))
   await dialog.getByRole('textbox', { name: 'Tên giao dịch' }).fill(`Khoản chi ${amount}`)
   await dialog.getByRole('button', { name: 'Lưu giao dịch', exact: true }).click()
-  await expect(dialog).not.toBeVisible()
+  if (shouldSave) await expect(dialog).not.toBeVisible()
+  else await expect(dialog.getByRole('alert')).toContainText('Không thể lưu')
 }
 
 test('rules distinguish budget thresholds and use recording dates for reminders', () => {
@@ -245,7 +246,11 @@ test('a new book has a useful first-entry action and storage failures provide a 
       throw new Error('QuotaExceededError')
     }
   })
-  await addExpense(page, 10000)
+  await addExpense(page, 10000, { shouldSave: false })
+  await expect(dialog.getByRole('textbox', { name: 'Tên giao dịch' })).toHaveValue(
+    'Khoản chi 10000',
+  )
+  await dialog.getByRole('button', { name: 'Đóng', exact: true }).click()
   panel = await openNotifications(page)
   await expect(panel).toContainText('Dữ liệu cần được sao lưu')
   await expect(panel).toContainText('Trạng thái thông báo chưa lưu được')

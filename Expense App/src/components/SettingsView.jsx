@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import {
   ArrowDownToLine,
   ArrowRight,
@@ -16,7 +16,17 @@ import SettingsArt from './SettingsArt'
 import { dateKey, downloadFile, isValidData, money } from '../data'
 import './SettingsView.css'
 
-export default function SettingsView({ data, onSave, onStart, onCategories, notify }) {
+export default function SettingsView({
+  data,
+  dataRaw,
+  storageBlocked,
+  recovery,
+  onSave,
+  onRestore,
+  onStart,
+  onCategories,
+  notify,
+}) {
   const nameId = useId()
   const budgetId = useId()
   const [name, setName] = useState(data.profile.name)
@@ -26,10 +36,20 @@ export default function SettingsView({ data, onSave, onStart, onCategories, noti
   const [importName, setImportName] = useState('')
   const [importError, setImportError] = useState('')
   const fileInput = useRef(null)
+  const formBase = useRef({ data, raw: dataRaw })
+  const importBase = useRef(null)
   const numericBudget = Number(budget)
   const validBudget =
     Number.isSafeInteger(numericBudget) && numericBudget > 0 && numericBudget <= 1e12
   const hasChanges = name.trim() !== data.profile.name || numericBudget !== data.profile.budget
+  useEffect(() => {
+    const previous = formBase.current.data.profile
+    if (name === previous.name && Number(budget) === previous.budget) {
+      setName(data.profile.name)
+      setBudget(data.profile.budget)
+      formBase.current = { data, raw: dataRaw }
+    }
+  }, [data, dataRaw, name, budget])
   async function importData(event) {
     const file = event.target.files?.[0]
     if (!file) return
@@ -38,6 +58,7 @@ export default function SettingsView({ data, onSave, onStart, onCategories, noti
       const parsed = JSON.parse(await file.text())
       if (!isValidData(parsed)) throw new Error('Tệp không đúng định dạng bản sao lưu của mây.')
       setPendingImport(parsed)
+      importBase.current = { data, raw: dataRaw }
       setImportName(file.name)
       setImportError('')
     } catch (error) {
@@ -51,7 +72,7 @@ export default function SettingsView({ data, onSave, onStart, onCategories, noti
         <form
           className="settings-profile-form settings-section"
           aria-label="Thiết lập cá nhân"
-          onSubmit={(event) => {
+          onSubmit={async (event) => {
             event.preventDefault()
             if (!name.trim()) {
               setFormError('Nhập tên gọi để mây có thể chào bạn nhé.')
@@ -62,8 +83,15 @@ export default function SettingsView({ data, onSave, onStart, onCategories, noti
               return
             }
             setFormError('')
-            setName(name.trim())
-            onSave({ ...data, profile: { name: name.trim(), budget: numericBudget } })
+            const saved = await onSave(
+              { ...formBase.current.data, profile: { name: name.trim(), budget: numericBudget } },
+              'Đã lưu thiết lập',
+              { base: formBase.current.data, baseRaw: formBase.current.raw },
+            )
+            if (!saved) return
+            setName(saved.profile.name)
+            setBudget(saved.profile.budget)
+            formBase.current = { data: saved, raw: JSON.stringify(saved) }
           }}
         >
           <div className="settings-section-heading">
@@ -159,13 +187,41 @@ export default function SettingsView({ data, onSave, onStart, onCategories, noti
               </button>
               <div>
                 {hasChanges && <span className="settings-unsaved">Chưa lưu</span>}
-                <button type="submit" className="button primary">
+                <button type="submit" className="button primary" disabled={storageBlocked}>
                   <Check size={15} /> Lưu thay đổi
                 </button>
               </div>
             </div>
           </div>
         </form>
+        {recovery && (
+          <section
+            className="settings-recovery settings-section"
+            aria-label="Bản lưu gốc được bảo vệ"
+          >
+            <span className="settings-section-icon">
+              <HardDrive size={17} aria-hidden="true" />
+            </span>
+            <div>
+              <h2>{recovery.blocked ? 'Bảo vệ bản lưu gốc' : 'Bản gốc đã được giữ riêng'}</h2>
+              <p>
+                {recovery.blocked
+                  ? 'App đang khóa lưu thay đổi. Tải nguyên bản để kiểm tra, hoặc chọn một bản sao lưu hợp lệ để khôi phục.'
+                  : 'Bạn vẫn có thể tải nguyên bản dữ liệu đã được giữ lại trước khi khôi phục.'}
+              </p>
+              <div>
+                <button className="button secondary" onClick={recovery.downloadOriginal}>
+                  <Download size={14} /> Tải bản gốc
+                </button>
+                {recovery.blocked && (
+                  <button className="button primary" onClick={() => fileInput.current.click()}>
+                    <ArrowDownToLine size={14} /> Chọn bản sao lưu
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
         <section
           className="settings-data-section settings-section"
           aria-label="Dữ liệu và bản sao lưu"
@@ -284,10 +340,16 @@ export default function SettingsView({ data, onSave, onStart, onCategories, noti
             </button>
             <button
               className="button primary"
-              onClick={() => {
-                onSave(pendingImport)
-                setName(pendingImport.profile.name)
-                setBudget(pendingImport.profile.budget)
+              onClick={async () => {
+                const saved = await onRestore(
+                  pendingImport,
+                  importBase.current.data,
+                  importBase.current.raw,
+                )
+                if (!saved) return
+                setName(saved.profile.name)
+                setBudget(saved.profile.budget)
+                formBase.current = { data: saved, raw: JSON.stringify(saved) }
                 setFormError('')
                 setPendingImport(null)
               }}

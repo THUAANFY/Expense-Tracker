@@ -355,24 +355,26 @@ export function isValidData(data) {
 }
 
 export function readData() {
+  let raw
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      if (isValidData(parsed)) return { data: parsed, error: '' }
-      return {
-        data: createDemoData(),
-        error:
-          'Dữ liệu đã lưu không hợp lệ. Bản lưu cũ vẫn được giữ lại; hãy kiểm tra trước khi lưu thay đổi.',
-      }
+    raw = localStorage.getItem(STORAGE_KEY)
+    if (raw !== null) {
+      const parsed = JSON.parse(raw)
+      if (isValidData(parsed)) return { data: parsed, raw, blocked: false, error: '' }
+      throw new Error('Invalid saved book')
     }
   } catch {
     return {
-      data: createDemoData(),
-      error: 'Không đọc được bộ nhớ trình duyệt. Dữ liệu hiện tại có thể chưa được lưu.',
+      data: { ...createDemoData(), transactions: [], notes: [], bags: [], isDemo: false },
+      raw,
+      blocked: true,
+      error:
+        typeof raw === 'string'
+          ? 'Dữ liệu đã lưu không hợp lệ. Bản gốc được giữ nguyên và đang khóa lưu thay đổi. Hãy tải bản gốc hoặc khôi phục bản sao lưu trong Cài đặt.'
+          : 'Không đọc được bộ nhớ trình duyệt. Đang khóa lưu để bảo vệ dữ liệu; hãy cho phép bộ nhớ trình duyệt rồi thử lại.',
     }
   }
-  return { data: createDemoData(), error: '' }
+  return { data: createDemoData(), raw: null, blocked: false, error: '' }
 }
 
 export function downloadFile(content, filename, type) {

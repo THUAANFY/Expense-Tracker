@@ -30,13 +30,17 @@ npm run format     # Định dạng mã nguồn
 - Ghi chú và cảm nhận cũ được giữ nguyên ở **Túi chi tiêu → Ghi chú đã lưu / Cảm nhận đã lưu**. Các thao tác tìm kiếm, lọc, thêm/sửa/xóa ghi chú và đánh giá chi tiêu vẫn hoạt động.
 - Cài đặt dạng bảng gọn, chia nhóm cá nhân hóa và dữ liệu bằng đường ngăn nhẹ; ô nhập nhỏ, mức chọn nhanh ngân sách và SVG lưu trữ thu nhỏ. Số giao dịch/ghi chú nằm trên một dòng; xuất bản sao lưu JSON và xem trước tên sổ, ngân sách, số bản ghi trước khi xác nhận khôi phục.
 - Chuông thông báo trong app với cảnh báo ngân sách tổng/danh mục ở mốc 80%, dùng hết 100% và vượt hạn mức; tổng kết tháng trước và lời nhắc sau 3 ngày chưa ghi giao dịch. Có lọc chưa đọc, đọc tất cả, bật/tắt lời nhắc và điều hướng đúng tháng/danh mục. Thông báo đã đọc không lặp lại trong cùng mốc ngân sách.
-- Bố cục rộng linh hoạt, sidebar pastel với icon Lucide dạng sticker và SVG mây bên cuốn sổ. Menu trượt trên điện thoại, thu gọn trang trí khi màn hình thấp; menu và hộp thoại hỗ trợ bàn phím, focus và Escape.
+- Bố cục rộng linh hoạt, sidebar pastel với icon Lucide dạng sticker và SVG mây đeo kính đọc sổ. Mây nhấp nhô, chớp mắt, vẫy tay khi hover/focus; cây đung đưa, hơi trà bay và sao lấp lánh nhẹ. Animation dừng khi menu mobile đóng, hình bị ẩn hoặc thiết bị bật chế độ giảm chuyển động. Menu và hộp thoại hỗ trợ bàn phím, focus và Escape.
 
 Ứng dụng ban đầu hiển thị dữ liệu mẫu để khám phá. Chọn **Dữ liệu mẫu → Tạo sổ của tôi** hoặc vào **Cài đặt → Tạo sổ của tôi** để xóa các bản ghi mẫu và bắt đầu sổ riêng.
 
 ## Lưu trữ
 
 Dữ liệu dùng `localStorage` với khóa `may-expense-tracker-v1`, chỉ lưu trong trình duyệt/thiết bị hiện tại. Chưa có backend, tài khoản hoặc đồng bộ giữa các thiết bị. Dùng **Cài đặt → Xuất bản sao lưu** để lưu hoặc chuyển dữ liệu. Nếu trình duyệt từ chối ghi dữ liệu, ứng dụng hiển thị thông báo và vẫn cho phép xuất bản sao lưu từ trạng thái hiện tại.
+
+Các tab cùng trình duyệt tự cập nhật khi dữ liệu thay đổi. Mỗi lần lưu được tuần tự hóa bằng transaction IndexedDB trong `may-book-writes-v1`; dữ liệu sổ vẫn giữ định dạng localStorage cũ. Thay đổi độc lập được gộp theo bản ghi và từng trường, còn sửa/xóa xung đột sẽ bị chặn và giữ nội dung trong popup. Khôi phục toàn bộ sổ hoặc tạo sổ riêng cũng kiểm tra bản lưu chưa đổi kể từ lúc xác nhận được mở.
+
+Nếu bản lưu không đọc được hoặc không đúng cấu trúc, app khóa ghi và không thay bằng dữ liệu mẫu. Nguyên bản được giữ tại khóa chính và sao chép riêng với tiền tố `may-expense-tracker-v1:recovery:` khi bộ nhớ cho phép. **Cài đặt → Tải bản gốc** xuất đúng nội dung ban đầu, kể cả JSON lỗi. Chỉ xác nhận khôi phục một bản hợp lệ mới được thay khóa chính; nếu không thể giữ bản gốc riêng thì khôi phục cũng bị chặn. Khi lưu thất bại, popup giữ nội dung chưa lưu để thử lại; bản sao lưu thông thường chứa sổ đã lưu thành công.
 
 Trạng thái đã đọc và tùy chọn nhắc ghi chép lưu riêng trong `may-notifications-v1`. Chuông luôn tính theo tháng hiện tại và cập nhật khi mở web, trở lại tab hoặc thay đổi giao dịch/ngân sách. Lời nhắc dựa trên ngày tạo giao dịch, nên ghi một khoản có ngày cũ hôm nay vẫn được tính là vừa ghi chép. Khi cảnh báo không còn phù hợp, mục tương ứng tự biến mất. Đây là thông báo trong app; chưa gửi push khi đóng web. Bản sao lưu JSON chứa dữ liệu chi tiêu, không kèm trạng thái đọc thông báo.
 
@@ -54,10 +58,12 @@ src/
   App.css                      # Bố cục, giao diện và responsive
   index.css                    # Font cục bộ, token màu và reset
   data.js                      # Mẫu dữ liệu, kiểm tra, định dạng, CSV và sao lưu
+  bookStorage.js               # Tuần tự hóa ghi, gộp thay đổi và cách ly bản lưu lỗi
   notifications.js             # Quy tắc cảnh báo, tổng kết và đọc cấu hình thông báo
   reviews.js                   # Mức cảm nhận, kiểm tra dữ liệu và tổng hợp khoản chi
   bags.js                      # Kiểu túi, màu, kiểm tra, tổng hợp và liên kết giao dịch
   components/
+    useBookData.js             # Trạng thái sổ, đồng bộ các tab và phản hồi lỗi lưu
     CategoryArt.jsx            # Chín minh họa SVG (tám nhóm chi + thu nhập)
     SpendingChart.jsx          # Biểu đồ SVG tính từ giao dịch
     CategoriesView.jsx         # Tổng quan ngân sách, thẻ danh mục và lọc hạn mức
@@ -66,7 +72,8 @@ src/
     HistoryArt.jsx             # SVG thỏ ôm sổ, ví tiền và túi mua sắm
     OverviewArt.jsx            # SVG hũ tiết kiệm, thỏ, mây cầu vồng, hoa và hóa đơn
     OverviewView.css           # Giao diện Tổng quan pastel và responsive
-    SidebarArt.jsx             # SVG mây, cuốn sổ, chậu cây và tách trà
+    SidebarArt.jsx             # SVG mây đeo kính đọc sổ, chậu cây, đồng xu và tách trà
+    SidebarArt.css             # Chớp mắt, vẫy tay, lá cây, hơi trà và reduced motion
     Sidebar.css                # Sidebar pastel, trạng thái chọn và menu mobile
     NotificationCenter.jsx     # Chuông, danh sách và thao tác thông báo trong app
     useNotifications.js        # Cập nhật lời nhắc và lưu trạng thái đã đọc

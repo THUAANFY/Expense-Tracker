@@ -5,12 +5,10 @@ import {
   BookOpen,
   CalendarDays,
   Check,
-  FileText,
   PencilLine,
   Pin,
   Plus,
   Search,
-  Sparkles,
   Wallet,
   X,
 } from 'lucide-react'
@@ -106,9 +104,11 @@ function NotebookCard({ note, onEdit, onPin }) {
       aria-labelledby={titleId}
     >
       <div className="notebook-card-top">
-        <span className="notebook-card-kind">
-          {note.pinned ? <Pin size={12} /> : <FileText size={13} />}
-          {note.pinned ? 'Đã ghim' : 'Ghi chú của tôi'}
+        <span className="notebook-card-date">
+          <CalendarDays size={12} aria-hidden="true" />
+          <time dateTime={note.date}>
+            {formatDate(note.date, { day: '2-digit', month: '2-digit', year: 'numeric' })}
+          </time>
         </span>
         <button
           type="button"
@@ -126,20 +126,11 @@ function NotebookCard({ note, onEdit, onPin }) {
         aria-label={`Chỉnh sửa ghi chú ${note.title}`}
         onClick={() => onEdit(note)}
       >
-        <h3 id={titleId}>{note.title}</h3>
-        <p>{note.content}</p>
-        <span className="notebook-card-footer">
-          <span>
-            <CalendarDays size={12} />
-            <time dateTime={note.date}>
-              {formatDate(note.date, { day: '2-digit', month: '2-digit', year: 'numeric' })}
-            </time>
-          </span>
-          <span className="notebook-edit">
-            <PencilLine size={13} />
-            <span>Chỉnh sửa</span>
-          </span>
+        <span className="notebook-title-row">
+          <h3 id={titleId}>{note.title}</h3>
+          <PencilLine size={13} aria-hidden="true" />
         </span>
+        <p>{note.content}</p>
       </button>
     </motion.article>
   )
@@ -202,27 +193,6 @@ export default function NotesView({
 
   return (
     <div className="notes-workspace">
-      <section className="notebook-welcome" aria-label="Sổ ghi chú của bạn">
-        <div className="notebook-welcome-copy">
-          <span className="notebook-eyebrow">
-            <Sparkles size={13} /> MỘT GÓC RIÊNG CỦA BẠN
-          </span>
-          <h2>Ghi lại một chút, nhẹ đầu một chút.</h2>
-          <p>Từ một lời nhắc nhỏ đến kế hoạch cho điều bạn yêu.</p>
-          <div className="notebook-summary">
-            <span>
-              <strong>{notes.length}</strong> ghi chú
-            </span>
-            <span className="notebook-summary-divider" aria-hidden="true" />
-            <span>
-              <Pin size={12} />
-              <strong>{pinnedCount}</strong> đã ghim
-            </span>
-          </div>
-        </div>
-        <NotebookArt />
-      </section>
-
       <section className="notebook-library" aria-label="Thư viện ghi chú">
         <div className="notebook-toolbar">
           <div
@@ -287,6 +257,7 @@ export default function NotesView({
                 <button
                   key={key}
                   type="button"
+                  aria-label={label}
                   aria-pressed={filter === key}
                   className={`notebook-filter ${key} ${filter === key ? 'is-active' : ''}`}
                   onClick={() => setFilter(key)}
@@ -299,13 +270,22 @@ export default function NotesView({
                     </span>
                   ) : null}
                   {label}
+                  {key === 'pinned' && pinnedCount > 0 && (
+                    <span className="notebook-pin-count" aria-hidden="true">
+                      {pinnedCount}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
           ) : (
             <MonthPicker value={month} onChange={onMonthChange} />
           )}
-          <span className="notebook-result-count" role="status" aria-live="polite">
+          <span
+            className={`notebook-result-count ${hasFilters ? '' : 'sr-only'}`}
+            role="status"
+            aria-live="polite"
+          >
             {hasFilters ? `${visibleCount} / ${totalCount}` : totalCount} ghi chú
           </span>
         </div>
@@ -319,18 +299,6 @@ export default function NotesView({
                     <NotebookCard key={note.id} note={note} onEdit={onEdit} onPin={onPin} />
                   ))}
                 </AnimatePresence>
-                {!hasFilters && (
-                  <button className="notebook-new-card" onClick={onAdd}>
-                    <span className="notebook-new-icon">
-                      <Plus size={22} strokeWidth={1.6} />
-                    </span>
-                    <strong>Thêm một điều muốn nhớ</strong>
-                    <span>Một ý nghĩ, một kế hoạch, một lời nhắc.</span>
-                    <span className="notebook-new-link">
-                      Viết ghi chú mới <ArrowUpRight size={14} />
-                    </span>
-                  </button>
-                )}
               </div>
             ) : (
               <div className="notebook-transaction-grid">

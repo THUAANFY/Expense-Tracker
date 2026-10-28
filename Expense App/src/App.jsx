@@ -52,6 +52,7 @@ import OverviewArt from './components/OverviewArt'
 import SidebarArt from './components/SidebarArt'
 import NotificationCenter from './components/NotificationCenter'
 import SettingsView from './components/SettingsView'
+import useBookData, { SaveFeedbackContext } from './components/useBookData'
 import Dialog from './components/dialogs/Dialog'
 import TransactionDialog from './components/dialogs/TransactionDialog'
 import NoteDialog from './components/dialogs/NoteDialog'
@@ -62,7 +63,6 @@ import BudgetDialog from './components/dialogs/BudgetDialog'
 import WelcomeDialog from './components/dialogs/WelcomeDialog'
 import {
   CATEGORIES,
-  STORAGE_KEY,
   compactMoney,
   dateKey,
   exportCSV,
@@ -70,7 +70,6 @@ import {
   getCategory,
   money,
   monthKey,
-  readData,
 } from './data'
 import { getReviewOption, withReview } from './reviews'
 import { linkBagTransactions, removeBag, setTransactionBag } from './bags'
@@ -513,10 +512,15 @@ function TransactionList({
   )
 }
 
+function AppProviders({ saveError, saving, children }) {
+  return (
+    <SaveFeedbackContext.Provider value={{ saveError, saving }}>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </SaveFeedbackContext.Provider>
+  )
+}
+
 export default function App() {
-  const [initial] = useState(readData)
-  const [data, setData] = useState(initial.data)
-  const [storageError, setStorageError] = useState(initial.error)
   const [view, setView] = useState('overview')
   const [month, setMonth] = useState(monthKey())
   const [search, setSearch] = useState('')
@@ -524,13 +528,30 @@ export default function App() {
   const [filterCategory, setFilterCategory] = useState('all')
   const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
-  const [modal, setModal] = useState(null)
+  const [modal, setModalState] = useState(null)
   const [selectedBagId, setSelectedBagId] = useState(null)
   const [mobileMenu, setMobileMenu] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 760px)').matches)
   const [toast, setToast] = useState('')
   const searchRef = useRef(null)
   const toastTimer = useRef(null)
+  const {
+    data,
+    raw,
+    storageError,
+    storageBlocked,
+    saveData,
+    saveError,
+    saving,
+    clearSaveError,
+    recovery,
+  } = useBookData(notify)
+  function setModal(value) {
+    clearSaveError()
+    setModalState(value ? { ...value, base: data, baseRaw: raw } : null)
+  }
+  const saveModalData = (next, message) =>
+    saveData(next, message, { base: modal.base, baseRaw: modal.baseRaw })
   useEffect(() => {
     const query = window.matchMedia('(max-width: 760px)')
     const update = (event) => setIsMobile(event.matches)
@@ -592,19 +613,6 @@ export default function App() {
     clearTimeout(toastTimer.current)
     toastTimer.current = setTimeout(() => setToast(''), 3500)
   }
-  function saveData(next, message = 'Đã lưu thay đổi') {
-    setData(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-      setStorageError('')
-      notify(message)
-    } catch {
-      setStorageError(
-        'Không thể lưu vào trình duyệt. Hãy xuất bản sao lưu trong Cài đặt để giữ thay đổi trước khi đóng trang.',
-      )
-      notify('Thay đổi chưa được lưu trên thiết bị')
-    }
-  }
   function navigate(id) {
     setView(id)
     if (id === 'bags') setSelectedBagId(null)
@@ -632,17 +640,19 @@ export default function App() {
   const editNote = (note) => setModal({ type: 'note', note })
   const createBag = () => setModal({ type: 'bag' })
   const bags = data.bags || []
-  function rateTransaction(id, review) {
-    const transaction = data.transactions.find((item) => item.id === id)
+  function rateTransaction(id, review, options = {}) {
+    const source = options.base || data
+    const transaction = source.transactions.find((item) => item.id === id)
     if (!transaction || transaction.type !== 'expense') return
-    saveData(
+    return saveData(
       {
-        ...data,
-        transactions: data.transactions.map((item) =>
+        ...source,
+        transactions: source.transactions.map((item) =>
           item.id === id ? withReview(item, review) : item,
         ),
       },
       review ? `Đã lưu cảm nhận: ${getReviewOption(review.rating).label}` : 'Đã bỏ đánh giá',
+      options,
     )
   }
   function pinNote(id) {
@@ -656,11 +666,13 @@ export default function App() {
       'Đã cập nhật ghim ghi chú',
     )
   }
-  function startOwnBook() {
-    saveData(
+  async function startOwnBook() {
+    const saved = await saveData(
       { ...data, transactions: [], notes: [], bags: [], isDemo: false },
       'Sổ chi tiêu của bạn đã sẵn sàng',
+      { replace: true, base: modal.base, baseRaw: modal.baseRaw },
     )
+    if (!saved) return
     setModal(null)
     setMonth(monthKey())
     setView('overview')
@@ -713,7 +725,7 @@ export default function App() {
   }).format(new Date())
 
   return (
-    <MotionConfig reducedMotion="user">
+    <AppProviders saveError={saveError} saving={saving}>
       <a className="skip-link" href="#main-content">
         Đến nội dung chính
       </a>
@@ -889,7 +901,9 @@ export default function App() {
                           ? `page-heading bags-page-heading ${bags.some((bag) => bag.id === selectedBagId) ? 'is-bag-detail' : ''}`
                           : view === 'reviews'
                             ? 'page-heading worth-page-heading'
-                            : 'page-heading'
+                            : view === 'notes'
+                              ? 'page-heading notes-page-heading'
+                              : 'page-heading'
               }
             >
               <div>
@@ -903,7 +917,18 @@ export default function App() {
                   )}
                 </div>
                 <h1>{TITLES[view][0]}</h1>
-                <p>{TITLES[view][1]}</p>
+                <p>
+                  {['notes', 'reviews'].includes(view) ? (
+                    <button
+                      className={view === 'notes' ? 'notes-parent-link' : 'worth-parent-link'}
+                      onClick={() => navigate('bags')}
+                    >
+                      <ChevronLeft size={13} /> Túi chi tiêu
+                    </button>
+                  ) : (
+                    TITLES[view][1]
+                  )}
+                </p>
               </div>
               <div className="page-actions">
                 {!['notes', 'settings', 'bags'].includes(view) && (
@@ -917,6 +942,7 @@ export default function App() {
                 )}
                 <button
                   className="button primary add-button"
+                  disabled={storageBlocked}
                   aria-label={
                     view === 'notes'
                       ? 'Viết ghi chú'
@@ -943,11 +969,18 @@ export default function App() {
                 </button>
               </div>
             </div>
-            {storageError && (
+            {(storageError || saveError) && (
               <div className="storage-alert" role="alert">
                 <CircleHelp size={18} />
-                <span>{storageError}</span>
-                <button onClick={() => navigate('settings')}>Sao lưu dữ liệu</button>
+                <span>{storageError || saveError}</span>
+                {recovery && storageBlocked && (
+                  <button onClick={recovery.downloadOriginal}>Tải bản gốc</button>
+                )}
+                {storageError ? (
+                  <button onClick={() => navigate('settings')}>Sao lưu dữ liệu</button>
+                ) : (
+                  <button onClick={clearSaveError}>Đã hiểu</button>
+                )}
               </div>
             )}
             <AnimatePresence mode="wait">
@@ -1325,13 +1358,6 @@ export default function App() {
                   />
                 )}
                 {view === 'reviews' && (
-                  <div className="worth-notes-back">
-                    <button onClick={() => navigate('bags')}>
-                      <ChevronLeft size={14} /> Túi chi tiêu
-                    </button>
-                  </div>
-                )}
-                {view === 'reviews' && (
                   <WorthView
                     key={month}
                     transactions={monthTransactions}
@@ -1342,13 +1368,6 @@ export default function App() {
                     onAdd={addTransaction}
                     onOpenNotes={() => navigate('notes')}
                   />
-                )}
-                {view === 'notes' && (
-                  <div className="worth-notes-back">
-                    <button onClick={() => navigate('bags')}>
-                      <ChevronLeft size={14} /> Túi chi tiêu
-                    </button>
-                  </div>
                 )}
                 {view === 'notes' && (
                   <NotesView
@@ -1365,7 +1384,18 @@ export default function App() {
                 {view === 'settings' && (
                   <SettingsView
                     data={data}
+                    dataRaw={raw}
+                    storageBlocked={storageBlocked}
+                    recovery={recovery}
                     onSave={saveData}
+                    onRestore={(restored, base, baseRaw) =>
+                      saveData(restored, 'Đã khôi phục dữ liệu', {
+                        replace: true,
+                        recover: storageBlocked,
+                        base,
+                        baseRaw,
+                      })
+                    }
                     onStart={() => setModal({ type: 'welcome' })}
                     onCategories={() => navigate('categories')}
                     notify={notify}
@@ -1403,9 +1433,9 @@ export default function App() {
           initialBagId={modal.bagId}
           bags={bags}
           onClose={() => setModal(null)}
-          onSave={(transaction) => {
+          onSave={async (transaction) => {
             const existing = data.transactions.some((item) => item.id === transaction.id)
-            saveData(
+            const saved = await saveModalData(
               {
                 ...data,
                 transactions: existing
@@ -1416,14 +1446,17 @@ export default function App() {
               },
               existing ? 'Đã cập nhật giao dịch' : 'Đã lưu một giao dịch mới',
             )
-            setMonth(transaction.date.slice(0, 7))
+            if (!saved) return
+            const savedTransaction = saved.transactions.find((item) => item.id === transaction.id)
+            if (savedTransaction) setMonth(savedTransaction.date.slice(0, 7))
             setModal(null)
           }}
-          onDelete={(id) => {
-            saveData(
+          onDelete={async (id) => {
+            const saved = await saveModalData(
               { ...data, transactions: data.transactions.filter((item) => item.id !== id) },
               'Đã xóa giao dịch',
             )
+            if (!saved) return
             setModal(null)
           }}
         />
@@ -1432,8 +1465,8 @@ export default function App() {
         <BagDialog
           bag={modal.bag}
           onClose={() => setModal(null)}
-          onSave={(bag) => {
-            saveData(
+          onSave={async (bag) => {
+            const saved = await saveModalData(
               {
                 ...data,
                 bags: bags.some((item) => item.id === bag.id)
@@ -1442,12 +1475,17 @@ export default function App() {
               },
               modal.bag ? 'Đã cập nhật chiếc túi' : 'Chiếc túi mới đã sẵn sàng',
             )
+            if (!saved) return
             setSelectedBagId(bag.id)
             setView('bags')
             setModal(null)
           }}
-          onDelete={(id) => {
-            saveData(removeBag(data, id), 'Đã xóa túi, các giao dịch vẫn được giữ')
+          onDelete={async (id) => {
+            const saved = await saveModalData(
+              removeBag(data, id),
+              'Đã xóa túi, các giao dịch vẫn được giữ',
+            )
+            if (!saved) return
             setSelectedBagId(null)
             setModal(null)
           }}
@@ -1458,11 +1496,15 @@ export default function App() {
           bag={modal.bag}
           transactions={data.transactions}
           onClose={() => setModal(null)}
-          onSave={(ids) => {
-            saveData(
-              { ...data, transactions: linkBagTransactions(data.transactions, modal.bag.id, ids) },
+          onSave={async (ids) => {
+            const saved = await saveModalData(
+              {
+                ...data,
+                transactions: linkBagTransactions(data.transactions, modal.bag.id, ids),
+              },
               'Đã cập nhật các khoản trong túi',
             )
+            if (!saved) return
             setModal(null)
           }}
         />
@@ -1471,12 +1513,20 @@ export default function App() {
         <ReviewDialog
           transaction={modal.transaction}
           onClose={() => setModal(null)}
-          onSave={(review) => {
-            rateTransaction(modal.transaction.id, review)
+          onSave={async (review) => {
+            const saved = await rateTransaction(modal.transaction.id, review, {
+              base: modal.base,
+              baseRaw: modal.baseRaw,
+            })
+            if (!saved) return
             setModal(null)
           }}
-          onClear={() => {
-            rateTransaction(modal.transaction.id, null)
+          onClear={async () => {
+            const saved = await rateTransaction(modal.transaction.id, null, {
+              base: modal.base,
+              baseRaw: modal.baseRaw,
+            })
+            if (!saved) return
             setModal(null)
           }}
         />
@@ -1485,8 +1535,8 @@ export default function App() {
         <NoteDialog
           note={modal.note}
           onClose={() => setModal(null)}
-          onSave={(note) => {
-            saveData(
+          onSave={async (note) => {
+            const saved = await saveModalData(
               {
                 ...data,
                 notes: data.notes.some((item) => item.id === note.id)
@@ -1495,13 +1545,15 @@ export default function App() {
               },
               'Đã lưu ghi chú của bạn',
             )
+            if (!saved) return
             setModal(null)
           }}
-          onDelete={(id) => {
-            saveData(
+          onDelete={async (id) => {
+            const saved = await saveModalData(
               { ...data, notes: data.notes.filter((item) => item.id !== id) },
               'Đã xóa ghi chú',
             )
+            if (!saved) return
             setModal(null)
           }}
         />
@@ -1513,11 +1565,12 @@ export default function App() {
           spent={totals.find((category) => category.id === modal.category.id)?.spent || 0}
           month={month}
           onClose={() => setModal(null)}
-          onSave={(budget) => {
-            saveData(
+          onSave={async (budget) => {
+            const saved = await saveModalData(
               { ...data, budgets: { ...data.budgets, [modal.category.id]: budget } },
               'Đã cập nhật ngân sách danh mục',
             )
+            if (!saved) return
             setModal(null)
           }}
         />
@@ -1593,6 +1646,6 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-    </MotionConfig>
+    </AppProviders>
   )
 }

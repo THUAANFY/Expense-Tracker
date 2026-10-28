@@ -4,6 +4,8 @@ import {
   BookOpen,
   ChevronLeft,
   ChevronRight,
+  Check,
+  Heart,
   MessageCircle,
   PencilLine,
   Plus,
@@ -52,6 +54,7 @@ export default function WorthView({
     (item) => item.type === 'expense' && item.date.startsWith(month),
   )
   const summary = summarizeReviews(expenses)
+  const progress = summary.total ? (summary.reviewed / summary.total) * 100 : 0
   const selectFilter = (value) => {
     setFilter(value)
     setPage(1)
@@ -89,39 +92,38 @@ export default function WorthView({
             aria-pressed={filter === option.id}
             onClick={() => selectFilter(filter === option.id ? 'all' : option.id)}
           >
-            <MoodArt mood={option.id} />
-            <span className="worth-summary-name">{option.label}</span>
-            <strong>
-              {summary[option.id].count}
-              <small> khoản</small>
-            </strong>
+            <span className="worth-summary-sticker">
+              <MoodArt mood={option.id} />
+            </span>
+            <span className="worth-summary-copy">
+              <span className="worth-summary-name">{option.label}</span>
+              <span className="worth-summary-tally">
+                <strong>{summary[option.id].count}</strong>
+                <span>khoản chi</span>
+              </span>
+            </span>
             <span className="worth-summary-amount" title={money(summary[option.id].amount)}>
-              {compactMoney(summary[option.id].amount)}
+              <span>{compactMoney(summary[option.id].amount)}</span>
+              <ArrowUpRight size={13} aria-hidden="true" />
+            </span>
+            <span className="worth-summary-check" aria-hidden="true">
+              <Check size={11} />
             </span>
           </button>
         ))}
       </div>
       <section className="worth-library" aria-label="Cảm nhận về các khoản chi">
-        <div className="worth-toolbar">
-          <div className="worth-status-row">
-            <div className="worth-status-tabs" role="group" aria-label="Trạng thái đánh giá">
-              {[
-                ['all', 'Tất cả', summary.total],
-                ['pending', 'Chưa đánh giá', summary.pending],
-                ['reviewed', 'Đã đánh giá', summary.reviewed],
-              ].map(([id, label, count]) => (
-                <button
-                  key={id}
-                  aria-pressed={
-                    id === 'reviewed' ? !['all', 'pending'].includes(filter) : filter === id
-                  }
-                  onClick={() => selectFilter(id)}
-                >
-                  {label}
-                  <span aria-hidden="true">{count}</span>
-                </button>
-              ))}
+        <div className="worth-library-heading">
+          <div className="worth-library-title">
+            <span aria-hidden="true">
+              <Heart size={17} />
+            </span>
+            <div>
+              <h2>Góc nhìn lại</h2>
+              <p>Một chạm, một cảm nhận của bạn.</p>
             </div>
+          </div>
+          <div className="worth-progress">
             <span className="worth-progress-label">
               Đã nhìn lại{' '}
               <strong>
@@ -129,6 +131,37 @@ export default function WorthView({
               </strong>{' '}
               khoản chi
             </span>
+            <span
+              className="worth-progress-track"
+              role="progressbar"
+              aria-label="Số khoản chi đã đánh giá"
+              aria-valuemin={0}
+              aria-valuemax={Math.max(1, summary.total)}
+              aria-valuenow={summary.reviewed}
+              aria-valuetext={`${summary.reviewed} trên ${summary.total} khoản chi`}
+            >
+              <span style={{ width: `${progress}%` }} />
+            </span>
+          </div>
+        </div>
+        <div className="worth-toolbar">
+          <div className="worth-status-tabs" role="group" aria-label="Trạng thái đánh giá">
+            {[
+              ['all', 'Tất cả', summary.total],
+              ['pending', 'Chưa đánh giá', summary.pending],
+              ['reviewed', 'Đã đánh giá', summary.reviewed],
+            ].map(([id, label, count]) => (
+              <button
+                key={id}
+                aria-pressed={
+                  id === 'reviewed' ? !['all', 'pending'].includes(filter) : filter === id
+                }
+                onClick={() => selectFilter(id)}
+              >
+                {label}
+                <span aria-hidden="true">{count}</span>
+              </button>
+            ))}
           </div>
           <div className="worth-tools">
             <div className="worth-search">
@@ -166,9 +199,6 @@ export default function WorthView({
                 }}
               />
             </div>
-            <button className="worth-archive-button" onClick={onOpenNotes}>
-              <BookOpen size={13} /> Ghi chú đã lưu
-            </button>
           </div>
         </div>
         {filtered.length ? (
@@ -183,6 +213,7 @@ export default function WorthView({
                       className="worth-row"
                       key={item.id}
                       data-transaction-id={item.id}
+                      data-mood={item.review?.rating || 'pending'}
                       aria-label={`${item.title}, ${money(item.amount)}, ${formatDate(item.date)}`}
                     >
                       <div className="worth-transaction">
@@ -238,6 +269,13 @@ export default function WorthView({
                             >
                               <MoodArt mood={option.id} />
                               <span>{option.label}</span>
+                              {item.review?.rating === option.id && (
+                                <Check
+                                  className="worth-rating-check"
+                                  size={10}
+                                  aria-hidden="true"
+                                />
+                              )}
                             </button>
                           ))}
                         </div>
@@ -312,6 +350,15 @@ export default function WorthView({
             )}
           </div>
         )}
+        <div className="worth-library-footer">
+          <span>
+            <PencilLine size={13} aria-hidden="true" /> Thêm lý do bằng nút bút chì
+          </span>
+          <button className="worth-archive-button" onClick={onOpenNotes}>
+            <BookOpen size={14} aria-hidden="true" /> Ghi chú đã lưu{' '}
+            <ChevronRight size={13} aria-hidden="true" />
+          </button>
+        </div>
       </section>
     </div>
   )

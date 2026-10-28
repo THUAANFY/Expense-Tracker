@@ -1,6 +1,19 @@
 .page-heading.worth-page-heading {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 14px;
-  margin-bottom: 17px;
+  margin-bottom: 14px;
+}
+.worth-page-heading > div:first-child {
+  flex: 1;
+  min-width: min(230px, 100%);
+}
+.worth-page-heading .page-actions {
+  flex-shrink: 0;
+  width: auto;
+  margin-left: auto;
+  padding-top: 0;
 }
 .worth-page-heading .greeting {
   display: none;
@@ -10,18 +23,54 @@
   line-height: 1.4;
 }
 .worth-page-heading p {
-  margin-top: 4px;
-  font-size: 12px;
+  margin-top: 3px;
+  line-height: 1.6;
+}
+.worth-parent-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  color: var(--text-accent);
+  font-size: var(--font-caption);
 }
 .worth-page-heading .page-actions .button {
   min-height: 38px;
-  padding: 9px 12px;
-  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: var(--font-control);
 }
 .worth-workspace {
+  container: worth / inline-size;
   display: grid;
-  gap: 15px;
+  gap: 16px;
   min-width: 0;
+  color: var(--text-primary);
+  font-size: var(--font-body);
+}
+:is(.worth-workspace, .review-dialog) [data-mood='happy'] {
+  --mood-paper: #f0f7e9;
+  --mood-border: #cadcba;
+  --mood-fill: #b6cfa1;
+  --mood-ink: var(--text-success);
+}
+:is(.worth-workspace, .review-dialog) [data-mood='neutral'] {
+  --mood-paper: #f4edfb;
+  --mood-border: #d9c5e8;
+  --mood-fill: #c4a9db;
+  --mood-ink: var(--text-accent);
+}
+:is(.worth-workspace, .review-dialog) [data-mood='regret'] {
+  --mood-paper: #fff1e6;
+  --mood-border: #edceb9;
+  --mood-fill: #e9b89b;
+  --mood-ink: var(--text-warning);
+}
+.mood-art {
+  display: block;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
 }
 .worth-summary {
   display: grid;
@@ -29,192 +78,303 @@
   gap: 12px;
 }
 .worth-summary > button {
+  position: relative;
   display: grid;
-  grid-template-columns: 45px minmax(0, 1fr) auto;
+  grid-template-columns: 66px minmax(0, 1fr);
   align-items: center;
-  column-gap: 10px;
+  gap: 8px 13px;
   min-width: 0;
-  padding: 12px 15px;
-  border: 1px solid #dde7d3;
-  border-radius: 15px;
-  background: #f2f8ec;
-  color: #4f6c43;
+  padding: 12px 15px 9px;
+  border: 1px solid var(--mood-border);
+  border-radius: 17px;
+  background: linear-gradient(125deg, #fffdfb 5%, var(--mood-paper) 100%);
+  color: var(--text-primary);
   text-align: left;
+  box-shadow: 0 3px 0 var(--mood-paper);
   transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 }
-.worth-summary > button[data-mood='neutral'] {
-  border-color: #e4d7ef;
-  background: #f5effb;
-  color: #75528a;
+.worth-summary > button::before {
+  position: absolute;
+  top: -4px;
+  left: 24px;
+  width: 32px;
+  height: 8px;
+  border: 1px solid var(--mood-border);
+  border-radius: 2px;
+  background: var(--mood-paper);
+  content: '';
+  transform: rotate(-5deg);
 }
-.worth-summary > button[data-mood='regret'] {
-  border-color: #eedbce;
-  background: #fff3eb;
-  color: #96624b;
-}
-.worth-summary > button[aria-pressed='true'] {
-  border-color: currentColor;
-  box-shadow:
-    0 0 0 2px #fff inset,
-    0 3px 0 #d7c6e64d;
-}
-.mood-art {
-  display: block;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-}
-.overview-worth-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #dfd2e9;
-  border-radius: 16px;
-  background: #fbf6ff;
-  color: #745087;
-  text-align: left;
-  box-shadow: 0 3px 0 #e8ddef55;
-}
-.overview-worth-card > .mood-art {
-  width: 45px;
-  height: 45px;
-}
-.overview-worth-card > span {
+.worth-summary-sticker {
+  position: relative;
   display: grid;
-  flex: 1;
-  gap: 5px;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border: 1px solid var(--mood-border);
+  border-radius: 19px 22px 18px 23px;
+  background: #fffdfb;
+  box-shadow: 2px 2px 0 var(--mood-paper);
+  transform: rotate(-5deg);
+  transition: transform 220ms ease;
+}
+.worth-summary-sticker::before {
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed var(--mood-border);
+  border-radius: 14px 18px 14px 18px;
+  content: '';
+}
+.worth-summary-sticker .mood-art {
+  position: relative;
+  width: 59px;
+  height: 59px;
+  transform: rotate(5deg);
+}
+.worth-summary > button[data-mood='neutral'] .worth-summary-sticker {
+  transform: rotate(4deg);
+}
+.worth-summary > button[data-mood='neutral'] .mood-art {
+  transform: rotate(-4deg);
+}
+.worth-summary-copy {
+  display: grid;
+  gap: 3px;
   min-width: 0;
-}
-.overview-worth-card strong {
-  font-size: 13px;
-  font-weight: 600;
-}
-.overview-worth-card > span > span {
-  color: #796084;
-  font-size: 11px;
-  line-height: 1.7;
-}
-.overview-worth-card > svg:last-child {
-  flex-shrink: 0;
-}
-.worth-summary .mood-art {
-  grid-row: 1 / 3;
-  width: 45px;
-  height: 45px;
 }
 .worth-summary-name {
-  min-width: 0;
-  font-size: 12px;
-  font-weight: 500;
-}
-.worth-summary > button > strong {
-  grid-column: 3;
-  grid-row: 1 / 3;
-  font-size: 21px;
+  font-size: var(--font-content);
   font-weight: 600;
+  line-height: 1.6;
   white-space: nowrap;
 }
-.worth-summary > button > strong > small {
-  font-size: 10px;
-  font-weight: 400;
+.worth-summary-tally {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px;
+  line-height: 1.5;
+}
+.worth-summary-tally strong {
+  color: var(--mood-ink);
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.worth-summary-tally > span {
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
 }
 .worth-summary-amount {
-  grid-column: 2;
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
   min-width: 0;
-  overflow: hidden;
-  font-size: 11px;
-  line-height: 1.7;
-  text-overflow: ellipsis;
+  padding-top: 7px;
+  border-top: 1px dashed var(--mood-border);
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.worth-library {
+.worth-summary-amount > svg {
+  flex-shrink: 0;
+  color: var(--mood-ink);
+}
+.worth-summary-amount > span {
   min-width: 0;
-  border: 1px solid #e2d8eb;
-  border-radius: 17px;
-  background: #fffdfb;
-  box-shadow: 0 5px 24px #4e365e05;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.worth-toolbar {
-  padding: 14px 16px;
-  border-bottom: 1px solid #eee5f3;
-  border-radius: 17px 17px 0 0;
-  background: #fff;
+.worth-summary-check {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--mood-ink);
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
 }
-.worth-status-row {
+.worth-summary > button[aria-pressed='true'] {
+  border-color: var(--mood-ink);
+  box-shadow:
+    0 0 0 2px #fff inset,
+    0 3px 0 var(--mood-border);
+}
+.worth-summary > button[aria-pressed='true'] .worth-summary-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.worth-library {
+  container: worth-library / inline-size;
+  min-width: 0;
+  border: 1px solid #e2d5ec;
+  border-radius: 18px;
+  background: #fffcf8;
+  box-shadow:
+    0 4px 0 #e9dff04d,
+    0 8px 24px #4e365e04;
+}
+.worth-library-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  padding: 15px 18px;
+  border-bottom: 1px dashed #e5d9ed;
+  border-radius: 18px 18px 0 0;
+  background: linear-gradient(110deg, #fffaf1, #fffafc 70%, #f9f3fe);
+}
+.worth-library-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.worth-library-title > span {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e7cbdc;
+  border-radius: 11px 13px 11px 14px;
+  background: #fceaf1;
+  color: var(--text-accent);
+  transform: rotate(-6deg);
+}
+.worth-library-title > span svg {
+  transform: rotate(6deg);
+}
+.worth-library-title h2 {
+  margin: 0;
+  font-size: var(--font-section);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.worth-library-title p {
+  margin: 3px 0 0;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  line-height: 1.6;
+}
+.worth-progress {
+  display: grid;
+  gap: 7px;
+  flex-shrink: 0;
+  min-width: 180px;
+}
+.worth-progress-label {
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  line-height: 1.5;
+}
+.worth-progress-label strong {
+  color: var(--text-accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.worth-progress-track {
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border: 1px solid #e5d9ee;
+  border-radius: 10px;
+  background: #f4edf9;
+}
+.worth-progress-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: repeating-linear-gradient(120deg, #bda0d5 0 7px, #cbb3df 7px 13px);
+  transition: width 260ms ease;
+}
+.worth-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
   gap: 12px;
+  padding: 13px 16px;
+  border-bottom: 1px solid #eee5f1;
+  background: #fffdfc;
 }
 .worth-status-tabs {
   display: flex;
   gap: 3px;
   padding: 3px;
-  border: 1px solid #e9def0;
-  border-radius: 10px;
-  background: #f8f3fc;
+  border: 1px solid #e8dbf0;
+  border-radius: 11px;
+  background: #f5eef9;
 }
 .worth-status-tabs > button {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-  min-height: 28px;
-  padding: 5px 9px;
+  min-height: 32px;
+  padding: 6px 9px;
   border: 1px solid transparent;
-  border-radius: 7px;
-  color: #71517f;
-  font-size: 11px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  line-height: 1.5;
   white-space: nowrap;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 }
 .worth-status-tabs > button[aria-pressed='true'] {
-  border-color: #dcc7eb;
+  border-color: #ddc9eb;
   background: #fff;
-  color: #65407c;
-  box-shadow: 0 2px 0 #e5d8ee55;
+  color: var(--text-accent);
+  box-shadow: 0 2px 3px #62417d0c;
 }
 .worth-status-tabs > button > span {
-  padding: 0 4px;
-  border-radius: 4px;
-  background: #eee3f7;
-  color: #7b568f;
-  font-size: 9px;
+  min-width: 17px;
+  padding-inline: 3px;
+  border-radius: 5px;
+  background: #eae0f3;
+  color: var(--text-accent);
+  font-size: var(--font-caption);
   font-variant-numeric: tabular-nums;
-}
-.worth-progress-label {
-  color: #7a6585;
-  font-size: 11px;
-  white-space: nowrap;
-}
-.worth-progress-label strong {
-  color: #725186;
-  font-weight: 500;
 }
 .worth-tools {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 172px auto;
-  align-items: center;
-  gap: 10px;
-  margin-top: 11px;
+  grid-template-columns: minmax(0, 1fr) 168px;
+  gap: 9px;
+  min-width: 0;
 }
 .worth-search {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   min-width: 0;
-  height: 38px;
+  height: 40px;
   padding-inline: 10px;
-  border: 1px solid #e6daee;
-  border-radius: 9px;
-  background: #fcf9ff;
-  color: #9a80aa;
+  border: 1px solid #e5d9ed;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text-muted);
+}
+.worth-search > svg {
+  flex-shrink: 0;
 }
 .worth-search:focus-within {
-  border-color: #b79acb;
-  box-shadow: 0 0 0 3px #b79acb12;
+  border-color: #b28fcc;
+  box-shadow: 0 0 0 3px #b79acb1c;
 }
 .worth-search input {
   width: 100%;
@@ -224,7 +384,10 @@
   outline: 0;
   background: transparent;
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: var(--font-control);
+}
+.worth-search input::placeholder {
+  color: var(--text-placeholder);
 }
 .worth-search input:focus {
   box-shadow: none;
@@ -233,10 +396,10 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 23px;
-  height: 23px;
+  width: 26px;
+  height: 28px;
   border-radius: 6px;
-  color: #866599;
+  color: var(--text-accent);
 }
 .worth-category {
   min-width: 0;
@@ -244,60 +407,66 @@
 .worth-category .history-select-trigger {
   width: 100%;
   min-width: 0;
-  border-radius: 9px;
-}
-.worth-archive-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-height: 36px;
-  padding: 7px 9px;
-  border: 1px solid #e6dced;
-  border-radius: 9px;
-  background: #fff;
-  color: #786284;
-  font-size: 11px;
-  white-space: nowrap;
+  height: 40px;
+  border-radius: 10px;
 }
 .worth-list {
-  container: worth-list / inline-size;
   display: grid;
-  gap: 8px;
+  gap: 9px;
   min-width: 0;
-  padding: 14px 15px 0;
+  padding: 14px 15px;
 }
 .worth-row {
+  --mood-paper: #f8f4fb;
+  --mood-border: #e2d5ec;
+  --mood-fill: #ccb8de;
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   min-width: 0;
-  padding: 12px;
-  border: 1px solid #e9dfee;
-  border-radius: 12px;
+  padding: 12px 13px;
+  border: 1px solid #e5dceb;
+  border-radius: 13px;
   background: #fff;
-  box-shadow: 0 2px 0 #e9e0ef55;
+  box-shadow: 0 2px 0 #eae0ef50;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+.worth-row::before {
+  position: absolute;
+  top: 13px;
+  bottom: 13px;
+  left: -1px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--mood-fill);
+  content: '';
+  transition: background-color 180ms ease;
 }
 .worth-transaction {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
   min-width: 0;
 }
 .worth-category-art {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 39px;
-  height: 39px;
-  border: 2px solid white;
-  border-radius: 12px;
-  box-shadow: 0 0 0 1px #eadfee;
-  transform: rotate(-4deg);
+  width: 43px;
+  height: 43px;
+  border: 2px solid #fff;
+  border-radius: 13px 15px 12px 15px;
+  box-shadow:
+    0 0 0 1px #eadfee,
+    2px 2px 0 #eee5f46b;
+  transform: rotate(-5deg);
 }
 .worth-category-art svg {
-  transform: rotate(4deg);
+  transform: rotate(5deg);
 }
 .worth-transaction-copy {
   flex: 1;
@@ -310,12 +479,12 @@
   max-width: 100%;
   min-width: 0;
   padding: 0;
-  color: #3f304b;
+  color: var(--text-primary);
   text-align: left;
 }
 .worth-transaction-title strong {
   overflow: hidden;
-  font-size: 13px;
+  font-size: var(--font-content);
   font-weight: 600;
   line-height: 1.6;
   text-overflow: ellipsis;
@@ -323,108 +492,121 @@
 }
 .worth-transaction-title > svg {
   flex-shrink: 0;
-  color: #a990b8;
+  color: var(--text-accent);
 }
 .worth-transaction-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 3px 10px;
+  gap: 3px 12px;
   margin-top: 5px;
 }
 .worth-transaction-meta > span {
-  color: #786680;
-  font-size: 11px;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  line-height: 1.6;
 }
 .worth-transaction-meta time {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .worth-transaction-meta > strong {
-  color: #715068;
-  font-size: 12px;
+  color: var(--text-primary);
+  font-size: var(--font-body);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .worth-reason {
   display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 5px 0 0;
-  color: #7a6885;
-  font-size: 11px;
+  align-items: baseline;
+  gap: 5px;
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
   line-height: 1.6;
 }
 .worth-reason svg {
   flex-shrink: 0;
+  transform: translateY(1px);
 }
 .worth-reason span {
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
 }
 .worth-row-actions {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
+  padding-left: 17px;
+  border-left: 1px dashed #e5d7ed;
 }
 .worth-rating-choices {
-  display: flex;
-  gap: 5px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
 }
 .worth-rating-choices > button {
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  min-height: 39px;
+  gap: 1px;
+  min-width: 87px;
+  min-height: 57px;
   padding: 4px 7px;
-  border: 1px solid #ece5f1;
-  border-radius: 9px;
-  background: #fdfbff;
-  color: #74607f;
-  font-size: 10px;
+  border: 1px dashed #e1d5ea;
+  border-radius: 10px;
+  background: #fffdfa;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  line-height: 1.5;
   white-space: nowrap;
   transition:
-    border-color 150ms ease,
-    background-color 150ms ease;
+    background-color 170ms ease,
+    border-color 170ms ease,
+    box-shadow 170ms ease;
 }
 .worth-rating-choices .mood-art {
-  width: 25px;
-  height: 25px;
+  width: 28px;
+  height: 28px;
+  transition: transform 180ms ease;
 }
-.worth-rating-choices > button[aria-pressed='true'][data-mood='happy'] {
-  border-color: #b4cea1;
-  background: #eff6e7;
-  color: #567245;
+.worth-rating-choices > button[aria-pressed='true'] {
+  border: 1px solid var(--mood-border);
+  background: var(--mood-paper);
+  color: var(--mood-ink);
+  box-shadow:
+    0 0 0 2px #fff inset,
+    0 2px 0 var(--mood-paper);
+  font-weight: 500;
 }
-.worth-rating-choices > button[aria-pressed='true'][data-mood='neutral'] {
-  border-color: #ccb0df;
-  background: #f2e8fa;
-  color: #77548f;
-}
-.worth-rating-choices > button[aria-pressed='true'][data-mood='regret'] {
-  border-color: #dfb59b;
-  background: #fff0e4;
-  color: #966447;
+.worth-rating-check {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  color: var(--mood-ink);
 }
 .worth-reason-button {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 31px;
-  height: 31px;
-  border: 1px solid #e8ddf0;
-  border-radius: 9px;
+  width: 34px;
+  height: 38px;
+  border: 1px solid #e1d3ec;
+  border-radius: 10px;
   background: #faf5fe;
-  color: #9c7aae;
+  color: var(--text-accent);
+  transition: background-color 160ms ease;
 }
 .worth-reason-button.has-reason {
-  border-color: #ccb4df;
-  background: #eee3f7;
-  color: #79548f;
+  border-color: #cbb0df;
+  background: #f0e6f8;
 }
 .worth-pagination {
   display: flex;
@@ -432,162 +614,279 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin: 13px 16px 0;
-  padding: 12px 0;
-  border-top: 1px solid #eee5f3;
-  color: #7a6685;
-  font-size: 11px;
+  margin: 0 16px;
+  padding: 0 0 12px;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
 }
 .worth-pagination > div {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
 }
 .worth-pagination .icon-button {
-  width: 28px;
-  height: 28px;
-  border: 1px solid #e6daee;
-  border-radius: 8px;
-  background: #faf6fd;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e3d7ed;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--text-accent);
+}
+.worth-pagination .icon-button:disabled {
+  opacity: 0.4;
+}
+.worth-library-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px dashed #e5d9ed;
+  border-radius: 0 0 18px 18px;
+  background: #fbf6fe;
+}
+.worth-library-footer > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+}
+.worth-archive-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 5px 0;
+  border-radius: 6px;
+  color: var(--text-accent);
+  font-size: var(--font-caption);
+  white-space: nowrap;
 }
 .worth-empty {
   display: grid;
   justify-items: center;
-  gap: 7px;
-  padding: 28px 20px;
+  gap: 8px;
+  padding: 28px 18px;
   text-align: center;
 }
 .worth-empty > .mood-art {
-  width: 65px;
-  height: 65px;
+  width: 78px;
+  height: 78px;
+  padding: 5px;
+  border: 1px dashed #ddcbe8;
+  border-radius: 22px;
+  background: #fbf6ff;
+  transform: rotate(-5deg);
 }
 .worth-empty h3 {
-  margin: 0;
-  color: #614376;
-  font-size: 15px;
+  margin: 5px 0 0;
+  color: var(--text-primary);
+  font-size: var(--font-section);
+  font-weight: 600;
 }
 .worth-empty p {
-  max-width: 330px;
-  margin: 0 0 3px;
-  color: #7a6685;
-  font-size: 12px;
+  max-width: 360px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
   line-height: 1.8;
 }
 .worth-empty .button {
-  min-height: 35px;
+  min-height: 37px;
+  margin-top: 3px;
   padding: 8px 11px;
-  border-radius: 9px;
-  font-size: 12px;
+  border-radius: 10px;
+  font-size: var(--font-control);
 }
-.worth-notes-back {
-  margin-bottom: 13px;
+.worth-empty .text-button {
+  color: var(--text-accent);
+  font-size: var(--font-control);
 }
-.worth-notes-back > button {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 32px;
-  padding: 5px 9px;
-  border: 1px solid #e4d6ef;
-  border-radius: 8px;
-  background: #faf5fe;
-  color: #7b588f;
-  font-size: 12px;
+.worth-workspace button:focus-visible,
+.worth-parent-link:focus-visible {
+  outline: 2px solid var(--action);
+  outline-offset: 3px;
+}
+
+.dialog.review-dialog {
+  --review-dialog-height: min(650px, calc(100dvh - 24px));
+  width: 500px;
+  max-width: calc(100vw - 24px);
+  max-height: var(--review-dialog-height);
+  overflow: hidden;
+  border: 1px solid #dfd0e9;
+  border-radius: 18px;
+  color: var(--text-primary);
+  font-size: var(--font-body);
+}
+.review-dialog .dialog-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--review-dialog-height) - 2px);
+  padding: 0;
+}
+.review-dialog .dialog-heading {
+  flex-shrink: 0;
+  gap: 12px;
+  margin: 0;
+  padding: 18px 20px 15px;
+  border-bottom: 1px dashed #e2d3ec;
+  background: linear-gradient(120deg, #fff8ed, #faf2ff);
+}
+.review-dialog .dialog-heading .eyebrow {
+  color: var(--text-accent);
+  font-size: var(--font-caption);
+  letter-spacing: 0.8px;
 }
 .review-dialog .dialog-heading h2 {
+  margin-top: 6px;
+  color: var(--text-primary);
   font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.5px;
 }
 .review-dialog .dialog-heading p {
-  font-size: 12px;
+  margin-top: 5px;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
+  line-height: 1.6;
+}
+.review-dialog .dialog-heading > .icon-button {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e3d2ee;
+  border-radius: 9px;
+  background: #fffdfb;
+  color: var(--text-secondary);
 }
 .review-dialog-transaction {
-  display: flex;
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
   align-items: center;
   gap: 9px;
+  margin: 16px 20px 0;
   padding: 10px;
-  border: 1px solid #e9def0;
+  border: 1px solid #e7dbea;
   border-radius: 11px;
-  background: #fcf8ff;
+  background: #fffcf6;
 }
 .review-dialog-transaction > span {
   display: grid;
   place-items: center;
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border: 2px solid #fff;
+  border-radius: 11px;
+  box-shadow: 0 0 0 1px #eee3ed;
 }
 .review-dialog-transaction > div {
   display: grid;
-  gap: 3px;
-  flex: 1;
+  gap: 4px;
   min-width: 0;
 }
 .review-dialog-transaction > div > strong {
   overflow: hidden;
-  color: #5d3f70;
-  font-size: 12px;
+  color: var(--text-primary);
+  font-size: var(--font-content);
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .review-dialog-transaction > div > span {
-  color: #7a6586;
-  font-size: 10px;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  line-height: 1.6;
 }
 .review-dialog-transaction > strong {
-  color: #72516a;
-  font-size: 12px;
+  color: var(--text-primary);
+  font-size: var(--font-body);
+  font-weight: 600;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.review-dialog .review-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 0;
+}
+.review-form-body {
+  min-height: 0;
+  padding: 15px 20px 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #c2abd6 #f7f3fb;
 }
 .review-dialog-choices {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 9px;
-  margin-top: 17px;
+  margin: 0;
 }
 .review-dialog-choices > button {
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 4px;
+  gap: 3px;
   padding: 9px 5px;
-  border: 1px solid #e8ddec;
-  border-radius: 12px;
-  background: #fffdfa;
-  color: #795f86;
-  font-size: 12px;
+  border: 1px dashed #dfd1e8;
+  border-radius: 13px;
+  background: #fffdf9;
+  color: var(--text-secondary);
+  font-size: var(--font-control-option);
+  line-height: 1.5;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
 }
 .review-dialog-choices .mood-art {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
+  transition: transform 180ms ease;
 }
 .review-dialog-choices > button[aria-pressed='true'] {
-  border-color: #be9ad5;
-  background: #f5edfb;
-  box-shadow: 0 2px 0 #e3d3ef77;
+  border: 1px solid var(--mood-border);
+  background: var(--mood-paper);
+  color: var(--mood-ink);
+  box-shadow:
+    0 0 0 3px #fff inset,
+    0 2px 0 var(--mood-paper);
+  font-weight: 500;
 }
 .review-dialog-choices > button > svg:not(.mood-art) {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  color: #9270a7;
+  top: 7px;
+  right: 7px;
+  color: var(--mood-ink);
 }
 .review-note-field {
   display: grid;
-  gap: 7px;
-  margin-top: 17px;
+  gap: 8px;
+  margin: 16px 0 0;
 }
 .review-note-field > span {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  color: #61496e;
-  font-size: 12px;
+  gap: 4px 8px;
+  color: var(--text-secondary);
+  font-size: var(--font-control-label);
+  font-weight: 500;
 }
 .review-note-field > span > span {
-  color: #8a7396;
-  font-size: 10px;
+  color: var(--text-muted);
+  font-size: var(--font-caption);
+  font-weight: 400;
 }
 .review-note-field textarea {
   width: 100%;
@@ -596,223 +895,408 @@
   min-height: 72px;
   padding: 10px 11px;
   border: 1px solid #e2d2ec;
-  border-radius: 10px;
-  background: #fffcf7;
-  color: #493551;
-  font-size: 13px;
+  border-radius: 11px;
+  background-color: #fffcf7;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 21px, #e8dbce66 21px 22px);
+  background-attachment: local;
+  background-origin: content-box;
+  color: var(--text-primary);
+  font-size: var(--font-control);
   line-height: 22px;
   resize: vertical;
-  scrollbar-width: thin;
-  scrollbar-color: #c5a5d9 #faf5fd;
 }
 .review-note-field textarea::placeholder {
-  color: #826c8c;
+  color: var(--text-placeholder);
+}
+.review-note-field textarea:focus {
+  outline: none;
+  border-color: #b791cf;
+  box-shadow: 0 0 0 3px #baa0cf1f;
+}
+.review-dialog .form-error {
+  margin: 10px 0 0;
+  font-size: var(--font-body);
+  color: var(--text-danger);
 }
 .review-dialog .dialog-actions {
+  flex-shrink: 0;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 0;
+  padding: 13px 20px;
+  border-top: 1px solid #ebe0f2;
+  background: #fdfaff;
 }
 .review-dialog .dialog-actions .button {
   min-height: 38px;
   padding: 8px 11px;
-  font-size: 12px;
+  border-radius: 10px;
+  font-size: var(--font-control);
 }
 .review-dialog .review-clear {
   margin-right: auto;
-  color: #9a7769;
-  font-size: 11px;
+  color: var(--text-danger);
+  font-size: var(--font-caption);
 }
-@container worth-list (max-width: 690px) {
-  .worth-row {
+.review-dialog button:focus-visible {
+  outline: 2px solid var(--action);
+  outline-offset: 3px;
+}
+
+@container worth-library (max-width: 880px) {
+  .worth-toolbar {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  .worth-row-actions {
-    justify-content: flex-end;
-  }
-}
-@media (hover: hover) and (pointer: fine) {
-  .worth-rating-choices > button:hover {
-    border-color: #c9afd9;
-    background: #f6effb;
-  }
-  .worth-transaction-title:hover {
-    color: #8459a2;
-  }
-  .worth-archive-button:hover {
-    border-color: #cbb4dc;
-    background: #fcf8ff;
-  }
-}
-@media (max-width: 1000px) {
-  .worth-progress-label {
-    font-size: 10px;
+  .worth-status-tabs {
+    justify-self: start;
   }
   .worth-tools {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) 186px;
   }
-  .worth-search {
-    grid-column: 1 / -1;
+}
+@container worth-library (max-width: 720px) {
+  .worth-row {
+    grid-template-columns: 1fr;
+    gap: 11px;
   }
+  .worth-row-actions {
+    justify-content: flex-end;
+    padding: 10px 0 0;
+    border-top: 1px dashed #e7dced;
+    border-left: 0;
+  }
+  .worth-transaction-meta {
+    justify-content: flex-start;
+  }
+  .worth-rating-choices {
+    flex: 1;
+  }
+  .worth-rating-choices > button {
+    min-width: 0;
+    flex-direction: row;
+    gap: 4px;
+    min-height: 40px;
+  }
+}
+@container worth (max-width: 640px) {
   .worth-summary {
     gap: 9px;
   }
   .worth-summary > button {
-    grid-template-columns: 34px minmax(0, 1fr);
-    padding: 10px;
-    column-gap: 7px;
-  }
-  .worth-summary .mood-art {
-    grid-row: 1 / 3;
-    width: 34px;
-    height: 34px;
-  }
-  .worth-summary-name {
-    grid-row: 3;
-    grid-column: 1 / -1;
-    margin-top: 4px;
-    font-size: 11px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 5px;
+    padding: 10px 7px 7px;
+    border-radius: 14px;
     text-align: center;
   }
-  .worth-summary > button > strong {
-    grid-column: 2;
-    grid-row: 1;
-    font-size: 17px;
+  .worth-summary > button::before {
+    left: 16px;
+    width: 22px;
+    height: 6px;
   }
-  .worth-summary > button > strong > small {
-    display: none;
+  .worth-summary-sticker {
+    width: 45px;
+    height: 45px;
+    border-radius: 14px;
   }
-  .worth-summary-amount {
-    grid-column: 2;
-    grid-row: 2;
-    font-size: 10px;
+  .worth-summary-sticker::before {
+    inset: 3px;
+    border-radius: 10px;
   }
-}
-@media (max-width: 760px) {
-  .worth-page-heading h1 {
-    font-size: 23px;
+  .worth-summary-sticker .mood-art {
+    width: 43px;
+    height: 43px;
   }
-  .worth-page-heading .page-actions {
-    padding-top: 0;
-  }
-  .worth-toolbar {
-    padding: 12px;
-  }
-  .worth-status-row {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 7px;
-  }
-  .worth-progress-label {
-    padding-left: 2px;
-  }
-  .worth-list {
-    padding: 11px 11px 0;
-    gap: 8px;
-  }
-  .worth-row {
-    padding: 10px;
-  }
-  .worth-row-actions {
-    gap: 6px;
-  }
-  .worth-rating-choices {
-    flex: 1;
-    gap: 5px;
-  }
-  .worth-rating-choices > button {
-    flex: 1;
-    flex-direction: column;
+  .worth-summary-copy {
+    justify-items: center;
     gap: 0;
-    min-width: 0;
-    min-height: 45px;
-    padding: 3px 4px;
-    font-size: 10px;
   }
-  .worth-rating-choices .mood-art {
-    width: 24px;
-    height: 24px;
+  .worth-summary-name {
+    font-size: var(--font-caption);
   }
-  .worth-reason-button {
-    width: 33px;
-    height: 33px;
-  }
-  .worth-tools {
-    gap: 8px;
-  }
-  .worth-category .history-select-trigger > .history-select-icon {
-    display: none;
-  }
-  .worth-category .history-select-trigger {
-    height: 36px;
-    padding-inline: 8px;
+  .worth-summary-tally {
+    justify-content: center;
     gap: 4px;
   }
-  .worth-archive-button {
-    padding-inline: 7px;
+  .worth-summary-tally strong {
+    font-size: 18px;
+  }
+  .worth-summary-tally > span {
+    font-size: var(--font-caption);
+  }
+  .worth-summary-amount {
+    align-self: end;
+    justify-content: center;
+    width: 100%;
+    padding-top: 5px;
+  }
+  .worth-summary-amount > svg {
+    display: none;
+  }
+  .worth-summary-check {
+    top: 5px;
+    right: 5px;
+    width: 14px;
+    height: 14px;
+  }
+}
+@container worth-library (max-width: 480px) {
+  .worth-library-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+  }
+  .worth-library-title {
+    gap: 8px;
+  }
+  .worth-library-title > span {
+    width: 29px;
+    height: 29px;
+    border-radius: 9px;
+  }
+  .worth-library-title p {
+    display: none;
+  }
+  .worth-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .worth-progress-label {
+    flex-shrink: 0;
+  }
+  .worth-progress-track {
+    flex: 1;
+    min-width: 24px;
+  }
+  .worth-toolbar {
+    padding: 10px;
+  }
+  .worth-status-tabs {
+    display: grid;
+    grid-template-columns: 0.8fr 1.15fr 1.05fr;
+    justify-self: stretch;
+    gap: 1px;
+  }
+  .worth-status-tabs > button {
+    gap: 3px;
+    padding-inline: 4px;
+  }
+  .worth-status-tabs > button > span {
+    display: none;
+  }
+  .worth-tools {
+    grid-template-columns: minmax(0, 1fr) 142px;
+    gap: 7px;
+  }
+  .worth-search {
+    padding-inline: 8px;
+  }
+  .worth-category .history-select-trigger {
+    padding-inline: 8px;
+    gap: 5px;
+  }
+  .worth-category .history-select-icon {
+    display: none;
+  }
+  .worth-list {
+    padding: 10px;
+    gap: 9px;
+  }
+  .worth-row {
+    padding: 11px 10px;
+    gap: 10px;
+  }
+  .worth-transaction {
+    gap: 9px;
+  }
+  .worth-transaction-title {
+    max-width: calc(100% - 34px);
+  }
+  .worth-category-art {
+    width: 38px;
+    height: 38px;
+  }
+  .worth-category-art svg {
+    width: 32px;
+    height: 32px;
+  }
+  .worth-transaction-meta {
+    gap: 3px 9px;
   }
   .worth-category-name {
     display: none;
   }
+  .worth-row-actions {
+    gap: 7px;
+    padding-top: 8px;
+  }
+  .worth-rating-choices {
+    gap: 4px;
+  }
+  .worth-rating-choices > button {
+    flex-direction: column;
+    gap: 0;
+    min-height: 56px;
+    padding: 4px 2px;
+  }
+  .worth-rating-choices > button > span {
+    white-space: normal;
+    text-align: center;
+  }
+  .worth-rating-choices .mood-art {
+    width: 27px;
+    height: 27px;
+  }
+  .worth-reason-button {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+    width: 32px;
+    height: 30px;
+  }
   .worth-pagination {
-    margin-inline: 12px;
+    margin-inline: 11px;
+    padding-bottom: 10px;
+    gap: 5px;
+  }
+  .worth-pagination > div {
+    gap: 6px;
+  }
+  .worth-pagination .icon-button {
+    width: 28px;
+    height: 28px;
+  }
+  .worth-library-footer {
+    justify-content: flex-end;
+    padding: 7px 12px;
+  }
+  .worth-library-footer > span {
+    display: none;
   }
 }
-@media (max-width: 359px) {
+@container worth-library (max-width: 340px) {
+  .worth-tools {
+    grid-template-columns: 1fr;
+  }
+  .worth-category .history-select-icon {
+    display: grid;
+  }
+  .worth-row-actions {
+    gap: 5px;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .worth-summary > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--mood-border);
+  }
+  .worth-summary > button:hover .worth-summary-sticker {
+    transform: rotate(-9deg);
+  }
+  .worth-summary > button[data-mood='neutral']:hover .worth-summary-sticker {
+    transform: rotate(8deg);
+  }
+  .worth-rating-choices > button:hover,
+  .review-dialog-choices > button:hover {
+    border-color: var(--mood-fill);
+    background: var(--mood-paper);
+  }
+  .worth-rating-choices > button:hover .mood-art,
+  .review-dialog-choices > button:hover .mood-art {
+    transform: translateY(-2px) rotate(-5deg);
+  }
+  .worth-row:hover {
+    border-color: #ceb6de;
+    box-shadow: 0 3px 0 #eee5f2;
+  }
+  .worth-reason-button:hover {
+    background: #eee1f8;
+  }
+  .worth-transaction-title:hover,
+  .worth-archive-button:hover,
+  .worth-parent-link:hover {
+    color: var(--action-hover);
+  }
+}
+@media (max-width: 760px) {
+  .worth-page-heading > div:first-child {
+    flex-basis: 100%;
+  }
+  .worth-page-heading h1 {
+    font-size: 23px;
+  }
+  .worth-page-heading .page-actions {
+    width: 100%;
+    padding-top: 0;
+  }
+  .review-dialog .dialog-heading {
+    padding: 15px 16px 13px;
+  }
+  .review-dialog .dialog-heading h2 {
+    font-size: 18px;
+  }
+  .review-dialog-transaction {
+    margin: 13px 16px 0;
+  }
+  .review-dialog-choices {
+    gap: 7px;
+  }
+  .review-form-body {
+    padding: 13px 16px 14px;
+  }
+  .review-note-field {
+    margin-top: 14px;
+  }
+  .review-dialog .dialog-actions {
+    padding: 12px 16px;
+  }
+}
+@media (max-width: 480px) {
   .worth-page-heading .page-actions .add-button {
-    width: 40px;
+    width: 38px;
     padding-inline: 0;
   }
   .worth-page-heading .add-button > span {
     display: none;
   }
-  .worth-summary {
-    gap: 7px;
-  }
-  .worth-summary > button {
-    grid-template-columns: 28px minmax(0, 1fr);
-    padding: 8px 6px;
-    gap: 2px 4px;
-  }
-  .worth-summary .mood-art {
-    width: 28px;
-    height: 28px;
-  }
-  .worth-summary-name {
-    font-size: 10px;
-  }
-  .worth-summary-amount {
-    font-size: 9px;
-  }
-  .worth-toolbar {
-    padding: 11px 10px;
-  }
-  .worth-status-tabs {
-    gap: 2px;
-  }
-  .worth-status-tabs > button {
-    gap: 3px;
-    padding-inline: 6px;
-    font-size: 10px;
-  }
-  .worth-transaction-meta > strong {
-    font-size: 11px;
-  }
   .review-dialog-transaction {
-    flex-wrap: wrap;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 5px 9px;
+  }
+  .review-dialog-transaction > span {
+    grid-row: 1 / 3;
+    width: 36px;
+    height: 36px;
   }
   .review-dialog-transaction > strong {
-    margin-left: 45px;
-  }
-  .review-dialog-choices {
-    gap: 6px;
+    grid-column: 2;
   }
   .review-dialog-choices > button {
-    font-size: 11px;
+    padding: 8px 3px;
+  }
+  .review-dialog-choices .mood-art {
+    width: 43px;
+    height: 43px;
+  }
+}
+@media (max-width: 359px) {
+  .worth-page-heading h1 {
+    font-size: 21px;
   }
   .review-dialog .review-clear {
     flex-basis: 100%;
     justify-content: flex-start;
+  }
+  .review-dialog .dialog-actions {
+    gap: 8px;
+  }
+  .review-dialog .dialog-actions .button {
+    padding-inline: 9px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
