@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
 import CategoryArt from './CategoryArt'
+import SourceBadge, { SourceBadgeIcon } from './SourceBadge'
 import { FieldPopover, useFieldPopover } from './FieldPopover'
 import './FilterSelect.css'
 
@@ -15,11 +16,13 @@ function OptionIcon({ option, compact = false }) {
   const Icon = option.icon
   return (
     <span
-      className={`history-select-icon ${option.category ? 'has-category' : ''}`}
+      className={`history-select-icon ${option.category ? 'has-category' : ''} ${option.sourceType ? 'has-source' : ''}`}
       style={option.background ? { background: option.background } : undefined}
       aria-hidden="true"
     >
-      {option.category ? (
+      {option.sourceType ? (
+        <SourceBadgeIcon type={option.sourceType} size={compact ? 22 : 28} />
+      ) : option.category ? (
         <CategoryArt category={option.category} size={compact ? 22 : 30} />
       ) : Icon ? (
         <Icon size={compact ? 15 : 17} />
@@ -131,10 +134,22 @@ export default function FilterSelect({ label, caption, options, value, onChange,
         onClick={() => (popover.open ? popover.close() : show())}
         onKeyDown={handleKeys}
       >
-        <OptionIcon option={selected} compact />
-        <span className="history-select-value" id={`${listId}-value`}>
-          {selected.label}
-        </span>
+        {selected.sourceType ? (
+          <SourceBadge
+            type={selected.sourceType}
+            label={selected.label}
+            size="small"
+            className="history-select-source"
+            id={`${listId}-value`}
+          />
+        ) : (
+          <>
+            <OptionIcon option={selected} compact />
+            <span className="history-select-value" id={`${listId}-value`}>
+              {selected.label}
+            </span>
+          </>
+        )}
         <ChevronDown className="history-select-chevron" size={14} aria-hidden="true" />
       </button>
       <FieldPopover

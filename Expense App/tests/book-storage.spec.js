@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
-import { createDemoData, isValidData, monthKey, STORAGE_KEY } from '../src/data.js'
+import { isValidData, monthKey, STORAGE_KEY } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 import { RECOVERY_PREFIX } from '../src/bookStorage.js'
 
 function book() {
   return {
-    ...createDemoData(),
-    isDemo: false,
+    ...createSampleData(),
     bags: [],
     notes: [],
     transactions: [

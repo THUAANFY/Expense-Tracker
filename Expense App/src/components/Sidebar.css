@@ -1,6 +1,6 @@
 .sidebar.sidebar-cute {
   height: 100dvh;
-  padding: 22px 12px max(0px, env(safe-area-inset-bottom));
+  padding: 22px 12px max(12px, env(safe-area-inset-bottom));
   border-right-color: #e3d7ec;
   border-radius: 0 24px 24px 0;
   background: linear-gradient(180deg, #f8f2fe 0, #fffcf9 220px, #fffcf9 65%, #faf5fc);
@@ -13,6 +13,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  margin-bottom: 20px;
   padding-inline: 5px;
 }
 .sidebar-cute .brand-button {
@@ -58,22 +59,6 @@
   border-radius: 10px;
   background: #fff9;
   color: #7c5d93;
-}
-.sidebar-cute .workspace-label {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  margin: 23px 9px 10px;
-  color: #71577f;
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-.sidebar-cute .workspace-label svg {
-  flex-shrink: 0;
-  color: #a68bb8;
 }
 .sidebar-cute nav {
   gap: 7px;
@@ -233,20 +218,6 @@
   border-color: #ece1ed;
   background: #ffffff80;
 }
-.sidebar-cute .sidebar-signature {
-  flex-wrap: nowrap;
-  gap: 6px;
-  margin-top: 13px;
-  padding: 13px 3px 14px;
-  border-top: 1px dashed #ded0e7;
-  color: #705a7d;
-  font-size: 10px;
-}
-.sidebar-cute .sidebar-signature > svg {
-  flex-shrink: 0;
-  fill: #e5c7d555;
-  color: #b088a2;
-}
 @media (hover: hover) and (pointer: fine) {
   .sidebar.sidebar-cute .nav-item:hover {
     border-color: #e8d9f0;
@@ -281,14 +252,14 @@
   }
 }
 @media (max-height: 740px) {
+  .sidebar-cute .sidebar-brand-row {
+    margin-bottom: 16px;
+  }
   .sidebar.sidebar-cute .sidebar-prompt {
     display: none;
   }
   .sidebar-cute .sidebar-bottom {
     padding-top: 16px;
-  }
-  .sidebar-cute .workspace-label {
-    margin-top: 18px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

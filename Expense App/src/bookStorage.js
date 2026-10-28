@@ -1,8 +1,8 @@
-import { isValidData, STORAGE_KEY, uid } from './data'
+import { isValidData, normalizeData, STORAGE_KEY, uid } from './data'
 
 export const RECOVERY_PREFIX = `${STORAGE_KEY}:recovery:`
 const LOCK_DATABASE = 'may-book-writes-v1'
-const COLLECTIONS = new Set(['transactions', 'notes', 'bags'])
+const COLLECTIONS = new Set(['transactions', 'notes', 'bags', 'moneySources', 'sourceTransfers'])
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 const object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
 
@@ -146,7 +146,7 @@ export function persistBook(base, next, { baseRaw, replace = false, recover = fa
     if (raw !== null) {
       try {
         const parsed = JSON.parse(raw)
-        if (isValidData(parsed)) latest = parsed
+        if (isValidData(parsed)) latest = normalizeData(parsed)
       } catch {
         /* The original bytes are retained below, including malformed JSON. */
       }
@@ -164,7 +164,10 @@ export function persistBook(base, next, { baseRaw, replace = false, recover = fa
         'Chưa đọc được bản lưu hiện tại nên không thể khôi phục an toàn. Hãy thử lại sau khi cho phép bộ nhớ trình duyệt.',
       )
     }
-    const saved = replace || raw === null ? next : mergeValue(base, next, latest)
+    const saved =
+      replace || raw === null
+        ? normalizeData(next)
+        : mergeValue(normalizeData(base), normalizeData(next), latest)
     if (!isValidData(saved)) {
       throw new BookStorageError(
         'conflict',

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData, dateKey, isValidData, monthKey } from '../src/data.js'
+import { dateKey, isValidData, monthKey } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 import { summarizeReviews, withReview } from '../src/reviews.js'
 import { chooseHistoryFilter } from './helpers/history-filters.js'
 
@@ -8,7 +9,7 @@ const now = new Date()
 const previousDate = dateKey(new Date(now.getFullYear(), now.getMonth() - 1, 5))
 
 function reviewData() {
-  const data = createDemoData()
+  const data = createSampleData()
   const expense = (id, title, amount, category, date = `${currentMonth}-05`) => ({
     id,
     title,

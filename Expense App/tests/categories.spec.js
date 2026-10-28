@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData, dateKey, money } from '../src/data.js'
+import { dateKey, money } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 
 async function navigateToCategories(page) {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
@@ -13,7 +14,7 @@ async function navigateToCategories(page) {
 }
 
 async function seedCategories(page) {
-  const data = createDemoData()
+  const data = createSampleData()
   data.profile.budget = 3000000
   data.budgets = { ...data.budgets, food: 1000000, shopping: 1000000, home: 1000000 }
   const now = new Date()

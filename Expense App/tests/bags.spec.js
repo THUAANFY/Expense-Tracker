@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData, dateKey, isValidData, monthKey } from '../src/data.js'
+import { dateKey, isValidData, monthKey } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 import { withReview } from '../src/reviews.js'
 import { bagSummary } from '../src/bags.js'
 import { chooseHistoryFilter } from './helpers/history-filters.js'
@@ -32,7 +33,7 @@ const expense = (id, title, amount = 120000, overrides = {}) => ({
 })
 
 function fixture() {
-  const data = createDemoData()
+  const data = createSampleData()
   data.bags = [
     makeBag('trip', 'Chuyến đi Đà Lạt'),
     makeBag('gift', 'Quà sinh nhật', { style: 'gift', color: 'peach', budget: 1000000 }),

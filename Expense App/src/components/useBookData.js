@@ -92,7 +92,7 @@ export default function useBookData(notify) {
       apply({ data: result.data, raw: result.raw, blocked: false, error: '' })
       sync()
       if (result.recovery) setRecovery(result.recovery)
-      notifyRef.current(message)
+      if (!options.silent) notifyRef.current(message)
       return result.data
     } catch (error) {
       if (error.code === 'conflict' || error.code === 'blocked') {

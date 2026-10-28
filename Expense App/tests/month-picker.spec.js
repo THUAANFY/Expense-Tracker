@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData, monthKey } from '../src/data.js'
+import { monthKey } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 import { selectMonth } from './helpers/month-picker.js'
 
 test('custom month and year selection updates real totals, navigation and current month', async ({
   page,
 }) => {
-  const data = createDemoData()
+  const data = createSampleData()
   data.transactions = [
     {
       id: 'march-expense',

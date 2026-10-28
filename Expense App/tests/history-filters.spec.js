@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData, money, monthKey } from '../src/data.js'
+import { money, monthKey } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 import { chooseHistoryFilter } from './helpers/history-filters.js'
 
 async function openHistory(page) {
-  const data = createDemoData()
+  const data = createSampleData()
   const month = monthKey()
   data.transactions = [
     ['old-food', 'Bữa sáng đầu tháng', 'food', 100000, '02'],

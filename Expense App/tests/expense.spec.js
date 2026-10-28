@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { chooseHistoryFilter } from './helpers/history-filters.js'
+import { createSampleData, seedSampleBook } from './helpers/fixtures.js'
 
 test('development CSS and Vietnamese fonts load without a Vite error overlay', async ({ page }) => {
   const assetErrors = []
@@ -85,6 +86,7 @@ test('expense lifecycle, filters, CSV, persistence and deletion', async ({ page 
 })
 
 test('income changes totals and month navigation changes the actual data', async ({ page }) => {
+  await seedSampleBook(page)
   await page.goto('/')
   const before = await page.locator('.stat-card').nth(1).locator('.stat-value').innerText()
   await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
@@ -125,9 +127,9 @@ test('notes can be created, pinned, edited, persisted and removed', async ({ pag
   await expect(edited).toHaveCount(0)
 })
 
-test('category budget and profile persist; creating a personal book clears demo records', async ({
-  page,
-}) => {
+test('category budget and profile persist without clearing saved records', async ({ page }) => {
+  const original = createSampleData()
+  await seedSampleBook(page, original)
   await page.goto('/')
   await navigate(page, 'Danh mục & ngân sách')
   await page.getByRole('button', { name: 'Chỉnh ngân sách Ăn uống' }).click()
@@ -146,13 +148,11 @@ test('category budget and profile persist; creating a personal book clears demo 
   const data = await page.evaluate(() => JSON.parse(localStorage.getItem('may-expense-tracker-v1')))
   expect(data.budgets.food).toBe(4500000)
   expect(data.profile.budget).toBe(15000000)
+  expect(data.transactions).toEqual(original.transactions)
+  expect(data.notes).toEqual(original.notes)
+  expect(data.bags).toEqual(original.bags)
   await navigate(page, 'Cài đặt')
-  await page.getByRole('button', { name: 'Tạo sổ của tôi' }).click()
-  await dialog.getByRole('button', { name: 'Tạo sổ của tôi' }).click()
-  await expect(page.locator('.recent-panel')).toContainText('Một trang mới đang chờ bạn')
-  await expect(page.locator('.stat-card').nth(1).locator('.stat-value')).toContainText('0')
-  await page.reload()
-  await expect(page.locator('.recent-panel')).toContainText('Một trang mới đang chờ bạn')
+  await expect(page.getByRole('button', { name: 'Tạo sổ của tôi' })).toHaveCount(0)
 })
 
 test('keyboard dialog focus and Escape; storage failure is visible', async ({ page }) => {
@@ -179,6 +179,7 @@ test('keyboard dialog focus and Escape; storage failure is visible', async ({ pa
 test('backup restore requires confirmation and rejects an impossible calendar date', async ({
   page,
 }) => {
+  await seedSampleBook(page)
   await page.goto('/')
   await navigate(page, 'Cài đặt')
   await page.getByRole('textbox', { name: 'Mây có thể gọi bạn là' }).fill('Bình')

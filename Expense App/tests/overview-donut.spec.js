@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test'
-import { CATEGORIES, createDemoData, dateKey } from '../src/data.js'
+import { CATEGORIES, dateKey } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 
 async function openOverview(page, amounts) {
-  const data = createDemoData()
+  const data = createSampleData()
   data.transactions = amounts.map(([category, amount], index) => ({
     id: `donut-${index}`,
     title: CATEGORIES.find((item) => item.id === category).name,

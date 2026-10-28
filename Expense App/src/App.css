@@ -56,14 +56,6 @@
   color: var(--text-secondary);
   white-space: nowrap;
 }
-.workspace-label {
-  margin: 24px 10px 10px;
-  color: var(--text-secondary);
-  font-size: var(--font-caption);
-  letter-spacing: 0.8px;
-  font-weight: 500;
-  line-height: 1.7;
-}
 .sidebar nav {
   flex-shrink: 0;
   display: flex;
@@ -166,24 +158,7 @@
 .settings-nav {
   margin-bottom: 12px;
 }
-.sidebar-signature {
-  border-top: 1px solid var(--border);
-  font-size: var(--font-caption);
-  color: var(--text-secondary);
-  padding: 15px 5px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: normal;
-  flex-wrap: wrap;
-  line-height: 1.7;
-}
-.sidebar-signature > svg {
-  margin-left: auto;
-  color: var(--text-secondary);
-}
 .online-dot,
-.demo-dot,
 .over-dot {
   display: inline-block;
   width: 5px;
@@ -191,9 +166,6 @@
   border-radius: 50%;
   background: #91b5a3;
   flex-shrink: 0;
-}
-.demo-dot {
-  background: #c5a866;
 }
 .over-dot {
   background: #d8957d;
@@ -1832,17 +1804,6 @@ button:hover > span > .category-art {
 .budget-dialog-art + .field {
   margin-bottom: 23px;
 }
-.welcome-art {
-  display: flex;
-  justify-content: center;
-  margin: -10px 0 5px;
-}
-.welcome-copy {
-  font-size: var(--font-body);
-  color: var(--text-secondary);
-  line-height: 2;
-  margin: 10px 0 25px;
-}
 .help-steps {
   display: flex;
   flex-direction: column;
@@ -1896,7 +1857,7 @@ button:hover > span > .category-art {
   width: max-content;
   line-height: 1.6;
 }
-.toast > span {
+.toast > .toast-icon {
   display: grid;
   place-items: center;
   height: 24px;
@@ -1905,7 +1866,7 @@ button:hover > span > .category-art {
   background: #f0f5eb;
   color: var(--text-secondary);
 }
-.toast > button {
+.toast > .toast-close {
   margin-left: 9px;
   padding: 4px;
   color: var(--text-secondary);
@@ -1947,15 +1908,9 @@ button:hover > span > .category-art {
   .topbar {
     height: var(--topbar-height);
   }
-  .workspace-label {
-    font-size: var(--font-small);
-  }
   .nav-item {
     font-size: var(--font-body);
     min-height: 44px;
-  }
-  .sidebar-signature {
-    font-size: var(--font-small);
   }
   .sidebar-prompt h3 {
     font-size: 14px;
@@ -2194,14 +2149,8 @@ button:hover > span > .category-art {
     gap: 10px;
     padding: 10px;
   }
-  .workspace-label {
-    font-size: var(--font-caption);
-  }
   .sidebar-prompt h3 {
     font-size: 13px;
-  }
-  .sidebar-signature {
-    font-size: var(--font-caption);
   }
   .topbar {
     padding: 0 var(--page-gutter);
@@ -2326,11 +2275,6 @@ button:hover > span > .category-art {
     padding: 10px;
     gap: 10px;
   }
-  .workspace-label {
-    font-size: var(--font-caption);
-    margin-left: 10px;
-    letter-spacing: 1px;
-  }
   .brand-button {
     padding-left: 10px;
   }
@@ -2342,10 +2286,6 @@ button:hover > span > .category-art {
     margin-right: 1px;
     padding-left: 5px;
     padding-right: 5px;
-  }
-  .sidebar-signature {
-    font-size: var(--font-caption);
-    gap: 4px;
   }
   .topbar {
     padding: 0 var(--page-gutter);
@@ -2490,17 +2430,10 @@ button:hover > span > .category-art {
     right: 12px;
     top: 16px;
   }
-  .workspace-label {
-    font-size: var(--font-caption);
-    margin-top: 24px;
-  }
   .sidebar nav .nav-item {
     font-size: var(--font-body);
     gap: 10px;
     padding: 10px;
-  }
-  .sidebar-signature {
-    font-size: var(--font-caption);
   }
   .sidebar-prompt h3 {
     font-size: 14px;
@@ -3060,7 +2993,7 @@ button:hover > span > .category-art {
     font-size: var(--font-small);
     padding: 12px;
   }
-  .toast > span {
+  .toast > .toast-icon {
     width: 22px;
     height: 22px;
   }
@@ -3511,7 +3444,7 @@ button:hover > span > .category-art {
     font-size: var(--font-small);
     gap: 8px;
   }
-  .toast > button {
+  .toast > .toast-close {
     margin-left: 0;
   }
 }
@@ -3601,16 +3534,6 @@ button:hover > span > .category-art {
     font-size: var(--font-caption);
   }
 }
-.demo-tag {
-  border: 1px solid #e7dded;
-  background: #f0eaf5;
-  color: var(--text-secondary);
-  border-radius: 4px;
-  padding: 3px 6px;
-  font-size: var(--font-caption);
-  margin-left: 4px;
-  white-space: nowrap;
-}
 /* Readable type uses shared tokens at every screen size. */
 .brand-caption {
   font-size: 11px;
@@ -3630,7 +3553,6 @@ button:hover > span > .category-art {
 .note-body > p,
 .notes-grid .note-body > p,
 .transaction-notes-grid p,
-.welcome-copy,
 .help-steps p {
   font-size: var(--font-content);
   line-height: 1.85;
@@ -3739,9 +3661,6 @@ button:hover > span > .category-art {
   }
   .greeting-dot {
     display: none;
-  }
-  .demo-tag {
-    font-size: var(--font-caption);
   }
   .stat-label {
     height: auto;

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 import { buildNotifications, NOTIFICATION_KEY } from '../src/notifications.js'
 
 const NOW = new Date('2026-10-27T12:00:00+07:00')
@@ -24,8 +24,7 @@ const transaction = (
   createdAt: new Date(createdAt).getTime(),
 })
 function fixture() {
-  const data = createDemoData()
-  data.isDemo = false
+  const data = createSampleData()
   data.profile.budget = 1000000
   data.budgets = Object.fromEntries(Object.keys(data.budgets).map((id) => [id, 1000000]))
   data.transactions = [

@@ -121,6 +121,7 @@
 
 .transaction-note {
   display: flex;
+  flex: 1 1 0%;
   align-items: center;
   gap: 4px;
   min-width: 0;

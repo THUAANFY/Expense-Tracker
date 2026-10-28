@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData, dateKey } from '../src/data.js'
+import { dateKey } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 
 async function navigateToNotes(page) {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
@@ -11,7 +12,7 @@ async function navigateToNotes(page) {
 }
 
 async function seedNotes(page, notes) {
-  const data = createDemoData()
+  const data = createSampleData()
   data.notes = notes
   await page.addInitScript((value) => {
     if (!localStorage.getItem('may-expense-tracker-v1')) {
@@ -83,8 +84,7 @@ test('search, paper colors and pin filters find real notes and pin changes persi
 test('transaction tab supports keyboard navigation, search, editing and changing months', async ({
   page,
 }) => {
-  await page.goto('/')
-  await navigateToNotes(page)
+  await seedNotes(page, [])
   await page.getByRole('tab', { name: /Ghi chú của tôi/ }).focus()
   await page.keyboard.press('ArrowRight')
   const transactionTab = page.getByRole('tab', { name: /Từ giao dịch/ })

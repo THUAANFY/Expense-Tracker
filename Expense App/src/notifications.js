@@ -41,9 +41,8 @@ export function buildNotifications(
   { now = new Date(), storageError = '', remindersEnabled = true } = {},
 ) {
   const month = monthKey(now)
-  const scope = data.isDemo ? 'demo' : 'personal'
   const notifications = []
-  const add = (item) => notifications.push({ ...item, id: `${scope}:${item.id}` })
+  const add = (item) => notifications.push({ ...item, id: `personal:${item.id}` })
   const currentExpenses = data.transactions.filter(
     (item) => item.type === 'expense' && item.date.startsWith(month),
   )

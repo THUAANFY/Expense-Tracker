@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 
 test('startup and budget popup no longer depend on the stale Dialogs module', async ({ page }) => {
   const errors = []
@@ -28,7 +28,7 @@ test('a failed entry import offers reload and recovers without clearing stored r
 }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Gọn chi tiêu. Nhẹ cuộc sống.')
-  const data = createDemoData()
+  const data = createSampleData()
   data.profile.name = 'An'
   await page.evaluate(
     (value) => localStorage.setItem('may-expense-tracker-v1', JSON.stringify(value)),

@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test'
-import { createDemoData } from '../src/data.js'
+import { createSampleData } from './helpers/fixtures.js'
 import { selectMonth } from './helpers/month-picker.js'
 
 async function openChart(page, month, lastDay) {
-  const data = createDemoData()
+  const data = createSampleData()
   const expense = (id, day, amount, type = 'expense') => ({
     id,
     date: `${month}-${String(day).padStart(2, '0')}`,

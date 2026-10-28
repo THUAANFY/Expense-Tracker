@@ -1,13 +1,11 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import {
   ArrowDownToLine,
-  ArrowRight,
   ArrowUpRight,
   Check,
   Download,
   FileJson,
   HardDrive,
-  Sparkles,
   UserRound,
   Wallet,
 } from 'lucide-react'
@@ -23,7 +21,6 @@ export default function SettingsView({
   recovery,
   onSave,
   onRestore,
-  onStart,
   onCategories,
   notify,
 }) {
@@ -285,21 +282,12 @@ export default function SettingsView({
             )}
             <p className="settings-data-hint">
               <FileJson size={12} aria-hidden="true" />
-              <span>JSON · Giao dịch, túi, ghi chú & thiết lập · Nhập tối đa 5 MB.</span>
+              <span>
+                JSON · Giao dịch, nguồn tiền, túi, ghi chú & thiết lập · Nhập tối đa 5 MB.
+              </span>
             </p>
           </div>
         </section>
-        {data.isDemo && (
-          <section className="settings-demo-row" aria-label="Dữ liệu mẫu">
-            <span>
-              <Sparkles size={14} aria-hidden="true" />
-              <strong>Dữ liệu mẫu</strong>
-            </span>
-            <button type="button" onClick={onStart}>
-              Tạo sổ của tôi <ArrowRight size={13} aria-hidden="true" />
-            </button>
-          </section>
-        )}
       </div>
       {pendingImport && (
         <Dialog
@@ -316,7 +304,9 @@ export default function SettingsView({
               <strong title={importName}>{importName}</strong>
               <p>
                 {pendingImport.transactions.length} giao dịch · {pendingImport.notes.length} ghi chú
-                · {(pendingImport.bags || []).length} túi
+                · {(pendingImport.bags || []).length} túi ·{' '}
+                {(pendingImport.moneySources || []).length} nguồn tiền ·{' '}
+                {(pendingImport.sourceTransfers || []).length} bản ghi chuyển nguồn
               </p>
             </div>
             <dl>

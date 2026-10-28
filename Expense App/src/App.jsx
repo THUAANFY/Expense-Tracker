@@ -19,7 +19,6 @@ import {
   Eye,
   EyeOff,
   FileText,
-  Heart,
   History,
   LayoutDashboard,
   Menu,
@@ -29,12 +28,12 @@ import {
   Settings2,
   ShoppingBag,
   SlidersHorizontal,
-  Sparkles,
   Sun,
   Tags,
   TrendingDown,
   TrendingUp,
   Wallet,
+  WalletCards,
   X,
 } from 'lucide-react'
 import CategoryArt from './components/CategoryArt'
@@ -52,6 +51,11 @@ import OverviewArt from './components/OverviewArt'
 import SidebarArt from './components/SidebarArt'
 import NotificationCenter from './components/NotificationCenter'
 import SettingsView from './components/SettingsView'
+import Toast from './components/Toast'
+import MoneySourcesView, { OverviewMoneySources } from './components/MoneySourcesView'
+import MoneySourceDialog from './components/dialogs/MoneySourceDialog'
+import SourceTransferDialog from './components/dialogs/SourceTransferDialog'
+import SourceBadge from './components/SourceBadge'
 import useBookData, { SaveFeedbackContext } from './components/useBookData'
 import Dialog from './components/dialogs/Dialog'
 import TransactionDialog from './components/dialogs/TransactionDialog'
@@ -60,7 +64,6 @@ import ReviewDialog from './components/dialogs/ReviewDialog'
 import BagDialog from './components/dialogs/BagDialog'
 import BagTransactionsDialog from './components/dialogs/BagTransactionsDialog'
 import BudgetDialog from './components/dialogs/BudgetDialog'
-import WelcomeDialog from './components/dialogs/WelcomeDialog'
 import {
   CATEGORIES,
   compactMoney,
@@ -73,6 +76,7 @@ import {
 } from './data'
 import { getReviewOption, withReview } from './reviews'
 import { linkBagTransactions, removeBag, setTransactionBag } from './bags'
+import { getMoneySource, removeMoneySource, sourceName } from './moneySources'
 import './App.css'
 import './components/TransactionList.css'
 import './components/HistoryView.css'
@@ -82,6 +86,7 @@ import './components/Sidebar.css'
 const NAVIGATION = [
   { id: 'overview', label: 'Tổng quan', icon: LayoutDashboard },
   { id: 'transactions', label: 'Lịch sử giao dịch', icon: Wallet },
+  { id: 'sources', label: 'Nguồn tiền', icon: WalletCards },
   { id: 'categories', label: 'Danh mục & ngân sách', icon: Tags },
   { id: 'bags', label: 'Túi chi tiêu', icon: ShoppingBag },
 ]
@@ -112,6 +117,7 @@ const TITLES = {
   bags: ['Túi chi tiêu theo dịp', 'Một chiếc túi nhỏ cho mỗi câu chuyện chi tiêu.'],
   notes: ['Ghi chú đã lưu.', 'Những dòng ghi chép của bạn vẫn ở đây.'],
   settings: ['Theo cách của bạn.', 'Một vài điều chỉnh để mây gần gũi với bạn hơn.'],
+  sources: ['Nguồn tiền của bạn.', 'Biết tiền đang ở đâu, ghi chép từng thay đổi.'],
 }
 const ease = [0.22, 1, 0.36, 1]
 const normalize = (value) =>
@@ -181,7 +187,7 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
       <section className="stat-card balance-card">
         <div className="stat-label">
           <span>
-            <Wallet size={17} /> Số dư trong tháng
+            <Wallet size={17} /> Chênh lệch thu − chi
           </span>
           <button
             className="icon-button"
@@ -350,7 +356,22 @@ function TransactionList({
   onPage,
   ledger = false,
   groupByDate = false,
+  highlightedTransaction,
+  moneySources = [],
 }) {
+  const highlightedRef = useRef(null)
+  useEffect(() => {
+    const row = highlightedRef.current
+    if (!highlightedTransaction || !row) return
+    const frame = requestAnimationFrame(() => {
+      row.focus({ preventScroll: true })
+      row.scrollIntoView({
+        block: 'center',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [highlightedTransaction])
   if (!transactions.length)
     return (
       <EmptyState
@@ -370,6 +391,9 @@ function TransactionList({
       return (
         <button
           className="transaction-row"
+          ref={highlightedTransaction?.id === item.id ? highlightedRef : undefined}
+          data-transaction-id={item.id}
+          data-highlighted={highlightedTransaction?.id === item.id || undefined}
           data-type={item.type}
           style={
             ledger
@@ -393,7 +417,13 @@ function TransactionList({
             <span className="transaction-copy">
               <strong title={item.title}>{item.title}</strong>
               <span className="transaction-meta">
-                <span className="transaction-wallet">{item.wallet}</span>
+                <SourceBadge
+                  type={getMoneySource(moneySources, item.sourceId)?.type}
+                  label={sourceName(moneySources, item.sourceId)}
+                  size="small"
+                  className="transaction-wallet"
+                />
+                <span className="transaction-payment">· {item.wallet}</span>
                 {item.note && (
                   <>
                     <span className="transaction-meta-dot" aria-hidden="true" />
@@ -522,6 +552,7 @@ function AppProviders({ saveError, saving, children }) {
 
 export default function App() {
   const [view, setView] = useState('overview')
+  const [asOf, setAsOf] = useState(dateKey)
   const [month, setMonth] = useState(monthKey())
   const [search, setSearch] = useState('')
   const [filterType, setFilterType] = useState('all')
@@ -532,9 +563,10 @@ export default function App() {
   const [selectedBagId, setSelectedBagId] = useState(null)
   const [mobileMenu, setMobileMenu] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 760px)').matches)
-  const [toast, setToast] = useState('')
+  const [toast, setToast] = useState(null)
+  const [highlightedTransaction, setHighlightedTransaction] = useState(null)
   const searchRef = useRef(null)
-  const toastTimer = useRef(null)
+  const toastSequence = useRef(0)
   const {
     data,
     raw,
@@ -546,12 +578,34 @@ export default function App() {
     clearSaveError,
     recovery,
   } = useBookData(notify)
+  const sources = data.moneySources || []
+  const sourceTransfers = data.sourceTransfers || []
   function setModal(value) {
     clearSaveError()
+    if (value) setToast(null)
     setModalState(value ? { ...value, base: data, baseRaw: raw } : null)
   }
-  const saveModalData = (next, message) =>
-    saveData(next, message, { base: modal.base, baseRaw: modal.baseRaw })
+  const saveModalData = (next, message, options = {}) =>
+    saveData(next, message, { base: modal.base, baseRaw: modal.baseRaw, ...options })
+  useEffect(() => {
+    const refresh = () => setAsOf(dateKey())
+    const visible = () => {
+      if (document.visibilityState === 'visible') refresh()
+    }
+    const timer = setInterval(refresh, 60000)
+    window.addEventListener('focus', refresh)
+    document.addEventListener('visibilitychange', visible)
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('focus', refresh)
+      document.removeEventListener('visibilitychange', visible)
+    }
+  }, [])
+  useEffect(() => {
+    if (!highlightedTransaction) return
+    const timer = setTimeout(() => setHighlightedTransaction(null), 8000)
+    return () => clearTimeout(timer)
+  }, [highlightedTransaction])
   useEffect(() => {
     const query = window.matchMedia('(max-width: 760px)')
     const update = (event) => setIsMobile(event.matches)
@@ -604,16 +658,37 @@ export default function App() {
     document.addEventListener('keydown', handler)
     return () => {
       document.removeEventListener('keydown', handler)
-      clearTimeout(toastTimer.current)
     }
   }, [])
 
-  function notify(message) {
-    setToast(message)
-    clearTimeout(toastTimer.current)
-    toastTimer.current = setTimeout(() => setToast(''), 3500)
+  function notify(message, transactionId = null) {
+    setToast({ id: ++toastSequence.current, message, transactionId })
+  }
+  function dismissToast(id) {
+    setToast((current) => (current?.id === id ? null : current))
+  }
+  function showSavedTransaction(id) {
+    const transaction = data.transactions.find((item) => item.id === id)
+    if (!transaction) {
+      notify('Giao dịch này không còn trong sổ hiện tại.')
+      return
+    }
+    const targetMonth = transaction.date.slice(0, 7)
+    const ordered = data.transactions
+      .filter((item) => item.date.startsWith(targetMonth))
+      .sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt)
+    const index = ordered.findIndex((item) => item.id === id)
+    navigate('transactions')
+    setMonth(targetMonth)
+    setFilterType('all')
+    setFilterCategory('all')
+    setSort('newest')
+    setPage(Math.floor(index / 8) + 1)
+    setHighlightedTransaction({ id, request: toastSequence.current })
+    setToast(null)
   }
   function navigate(id) {
+    setHighlightedTransaction(null)
     setView(id)
     if (id === 'bags') setSelectedBagId(null)
     setMobileMenu(false)
@@ -639,6 +714,7 @@ export default function App() {
   const editTransaction = (transaction) => setModal({ type: 'transaction', transaction })
   const editNote = (note) => setModal({ type: 'note', note })
   const createBag = () => setModal({ type: 'bag' })
+  const createSource = (initialType = 'cash') => setModal({ type: 'source', initialType })
   const bags = data.bags || []
   function rateTransaction(id, review, options = {}) {
     const source = options.base || data
@@ -666,18 +742,6 @@ export default function App() {
       'Đã cập nhật ghim ghi chú',
     )
   }
-  async function startOwnBook() {
-    const saved = await saveData(
-      { ...data, transactions: [], notes: [], bags: [], isDemo: false },
-      'Sổ chi tiêu của bạn đã sẵn sàng',
-      { replace: true, base: modal.base, baseRaw: modal.baseRaw },
-    )
-    if (!saved) return
-    setModal(null)
-    setMonth(monthKey())
-    setView('overview')
-    setSearch('')
-  }
   const monthTransactions = data.transactions.filter((item) => item.date.startsWith(month))
   const expenses = monthTransactions.filter((item) => item.type === 'expense')
   const expense = expenses.reduce((total, item) => total + item.amount, 0)
@@ -702,9 +766,9 @@ export default function App() {
     (item) =>
       (filterType === 'all' || item.type === filterType) &&
       (filterCategory === 'all' || item.category === filterCategory) &&
-      normalize(`${item.title} ${item.note} ${getCategory(item.category).name}`).includes(
-        normalize(search),
-      ),
+      normalize(
+        `${item.title} ${item.note} ${getCategory(item.category).name} ${sourceName(sources, item.sourceId)}`,
+      ).includes(normalize(search)),
   )
   if (sort === 'oldest') filtered.reverse()
   if (sort === 'highest') filtered.sort((a, b) => b.amount - a.amount)
@@ -757,10 +821,6 @@ export default function App() {
             >
               <X size={18} />
             </button>
-          </div>
-          <div className="workspace-label">
-            <span>MỘT GÓC CHO MÌNH</span>
-            <Sparkles size={12} aria-hidden="true" />
           </div>
           <nav>
             {NAVIGATION.map(({ id, label, icon: Icon }) => (
@@ -830,11 +890,6 @@ export default function App() {
               </span>
               <span className="nav-label">Cài đặt</span>
             </button>
-            <div className="sidebar-signature">
-              <span className="online-dot" />
-              Không gian chi tiêu cá nhân
-              <Heart size={11} />
-            </div>
           </div>
         </aside>
         <div className="app-body">
@@ -889,32 +944,29 @@ export default function App() {
           <main id="main-content" tabIndex="-1">
             <div
               className={
-                view === 'categories'
-                  ? 'page-heading categories-page-heading'
-                  : view === 'transactions'
-                    ? 'page-heading history-page-heading'
-                    : view === 'overview'
-                      ? 'page-heading overview-page-heading'
-                      : view === 'settings'
-                        ? 'page-heading settings-page-heading'
-                        : view === 'bags'
-                          ? `page-heading bags-page-heading ${bags.some((bag) => bag.id === selectedBagId) ? 'is-bag-detail' : ''}`
-                          : view === 'reviews'
-                            ? 'page-heading worth-page-heading'
-                            : view === 'notes'
-                              ? 'page-heading notes-page-heading'
-                              : 'page-heading'
+                view === 'sources'
+                  ? 'page-heading sources-page-heading'
+                  : view === 'categories'
+                    ? 'page-heading categories-page-heading'
+                    : view === 'transactions'
+                      ? 'page-heading history-page-heading'
+                      : view === 'overview'
+                        ? 'page-heading overview-page-heading'
+                        : view === 'settings'
+                          ? 'page-heading settings-page-heading'
+                          : view === 'bags'
+                            ? `page-heading bags-page-heading ${bags.some((bag) => bag.id === selectedBagId) ? 'is-bag-detail' : ''}`
+                            : view === 'reviews'
+                              ? 'page-heading worth-page-heading'
+                              : view === 'notes'
+                                ? 'page-heading notes-page-heading'
+                                : 'page-heading'
               }
             >
               <div>
                 <div className="greeting">
                   <Sun size={15} /> Chào {data.profile.name}, một ngày thật nhẹ nhàng
                   <span className="greeting-dot">✧</span>
-                  {data.isDemo && (
-                    <button className="demo-tag" onClick={() => setModal({ type: 'welcome' })}>
-                      Dữ liệu mẫu
-                    </button>
-                  )}
                 </div>
                 <h1>{TITLES[view][0]}</h1>
                 <p>
@@ -931,7 +983,7 @@ export default function App() {
                 </p>
               </div>
               <div className="page-actions">
-                {!['notes', 'settings', 'bags'].includes(view) && (
+                {!['notes', 'settings', 'bags', 'sources'].includes(view) && (
                   <MonthPicker
                     value={month}
                     onChange={(value) => {
@@ -944,27 +996,33 @@ export default function App() {
                   className="button primary add-button"
                   disabled={storageBlocked}
                   aria-label={
-                    view === 'notes'
-                      ? 'Viết ghi chú'
-                      : view === 'bags'
-                        ? 'Tạo túi'
-                        : 'Thêm giao dịch'
+                    view === 'sources'
+                      ? 'Thêm nguồn tiền'
+                      : view === 'notes'
+                        ? 'Viết ghi chú'
+                        : view === 'bags'
+                          ? 'Tạo túi'
+                          : 'Thêm giao dịch'
                   }
                   onClick={
-                    view === 'notes'
-                      ? () => setModal({ type: 'note' })
-                      : view === 'bags'
-                        ? createBag
-                        : addTransaction
+                    view === 'sources'
+                      ? () => createSource()
+                      : view === 'notes'
+                        ? () => setModal({ type: 'note' })
+                        : view === 'bags'
+                          ? createBag
+                          : addTransaction
                   }
                 >
                   <Plus size={17} />
                   <span>
-                    {view === 'notes'
-                      ? 'Viết ghi chú'
-                      : view === 'bags'
-                        ? 'Tạo túi'
-                        : 'Thêm giao dịch'}
+                    {view === 'sources'
+                      ? 'Thêm nguồn tiền'
+                      : view === 'notes'
+                        ? 'Viết ghi chú'
+                        : view === 'bags'
+                          ? 'Tạo túi'
+                          : 'Thêm giao dịch'}
                   </span>
                 </button>
               </div>
@@ -1000,6 +1058,14 @@ export default function App() {
                       previousExpense={previousExpense}
                       budget={data.profile.budget}
                       transactionCount={monthTransactions.length}
+                    />
+                    <OverviewMoneySources
+                      sources={sources}
+                      transactions={data.transactions}
+                      transfers={sourceTransfers}
+                      asOf={asOf}
+                      onOpen={() => navigate('sources')}
+                      onCreate={() => createSource()}
                     />
                     <div className="dashboard-columns">
                       <div className="dashboard-main">
@@ -1046,6 +1112,7 @@ export default function App() {
                             </button>
                           </div>
                           <TransactionList
+                            moneySources={sources}
                             transactions={sortedTransactions.slice(0, 5)}
                             onEdit={editTransaction}
                             onAdd={addTransaction}
@@ -1236,7 +1303,7 @@ export default function App() {
                               className="button secondary export-button"
                               aria-label="Xuất CSV"
                               onClick={() => {
-                                exportCSV(filtered)
+                                exportCSV(filtered, sources)
                                 notify(`Đã xuất ${filtered.length} giao dịch`)
                               }}
                             >
@@ -1288,6 +1355,7 @@ export default function App() {
                           </span>
                         </div>
                         <TransactionList
+                          moneySources={sources}
                           transactions={filtered.slice((currentPage - 1) * 8, currentPage * 8)}
                           total={filtered.length}
                           hasFilters={Boolean(
@@ -1299,6 +1367,7 @@ export default function App() {
                           onPage={setPage}
                           ledger
                           groupByDate={sort !== 'highest'}
+                          highlightedTransaction={highlightedTransaction}
                         />
                       </div>
                     </section>
@@ -1357,6 +1426,27 @@ export default function App() {
                     onOpenReviews={() => navigate('reviews')}
                   />
                 )}
+                {view === 'sources' && (
+                  <MoneySourcesView
+                    sources={sources}
+                    transactions={data.transactions}
+                    transfers={sourceTransfers}
+                    asOf={asOf}
+                    onCreate={createSource}
+                    onEdit={(source) => setModal({ type: 'source', source })}
+                    onTransfer={() => setModal({ type: 'source-transfer' })}
+                    onEditTransfer={(entry) =>
+                      setModal({
+                        type: 'source-transfer',
+                        transfer: sourceTransfers.find((item) => item.id === entry.id),
+                      })
+                    }
+                    onAddTransaction={(source, initialType) =>
+                      setModal({ type: 'transaction', sourceId: source.id, initialType })
+                    }
+                    onEditTransaction={editTransaction}
+                  />
+                )}
                 {view === 'reviews' && (
                   <WorthView
                     key={month}
@@ -1396,7 +1486,6 @@ export default function App() {
                         baseRaw,
                       })
                     }
-                    onStart={() => setModal({ type: 'welcome' })}
                     onCategories={() => navigate('categories')}
                     notify={notify}
                   />
@@ -1409,16 +1498,7 @@ export default function App() {
                 <span className="footer-separator">/</span>Nhẹ ghi chép, nhẹ âu lo.
               </span>
               <span>
-                {data.isDemo ? (
-                  <button onClick={() => setModal({ type: 'welcome' })}>
-                    <span className="demo-dot" />
-                    Dữ liệu mẫu <ArrowUpRight size={11} />
-                  </button>
-                ) : (
-                  <>
-                    <CheckCheck size={12} /> Dữ liệu trên thiết bị
-                  </>
-                )}
+                <CheckCheck size={12} /> Dữ liệu trên thiết bị
                 <span className="footer-separator">·</span>
                 <span className="footer-date">{today}</span>
               </span>
@@ -1431,10 +1511,21 @@ export default function App() {
           transaction={modal.transaction}
           initialCategory={modal.category}
           initialBagId={modal.bagId}
+          initialSourceId={modal.sourceId}
+          initialType={modal.initialType}
           bags={bags}
+          sources={sources}
+          transactions={data.transactions}
+          transfers={sourceTransfers}
+          asOf={asOf}
+          onSourceStart={clearSaveError}
+          onCreateSource={(source) =>
+            saveModalData({ ...data, moneySources: [source, ...sources] }, 'Đã thêm nguồn tiền')
+          }
           onClose={() => setModal(null)}
           onSave={async (transaction) => {
             const existing = data.transactions.some((item) => item.id === transaction.id)
+            const message = existing ? 'Đã cập nhật giao dịch' : 'Đã lưu một giao dịch mới'
             const saved = await saveModalData(
               {
                 ...data,
@@ -1444,12 +1535,17 @@ export default function App() {
                     )
                   : [transaction, ...data.transactions],
               },
-              existing ? 'Đã cập nhật giao dịch' : 'Đã lưu một giao dịch mới',
+              message,
+              { silent: true },
             )
             if (!saved) return
             const savedTransaction = saved.transactions.find((item) => item.id === transaction.id)
             if (savedTransaction) setMonth(savedTransaction.date.slice(0, 7))
             setModal(null)
+            notify(
+              savedTransaction ? message : 'Giao dịch này không còn trong sổ hiện tại.',
+              savedTransaction?.id,
+            )
           }}
           onDelete={async (id) => {
             const saved = await saveModalData(
@@ -1458,6 +1554,63 @@ export default function App() {
             )
             if (!saved) return
             setModal(null)
+          }}
+        />
+      )}
+      {modal?.type === 'source' && (
+        <MoneySourceDialog
+          source={modal.source}
+          initialType={modal.initialType}
+          transactions={data.transactions}
+          transfers={sourceTransfers}
+          asOf={asOf}
+          onClose={() => setModal(null)}
+          onSave={async (source) => {
+            const saved = await saveModalData(
+              {
+                ...data,
+                moneySources: sources.some((item) => item.id === source.id)
+                  ? sources.map((item) => (item.id === source.id ? source : item))
+                  : [source, ...sources],
+              },
+              modal.source ? 'Đã cập nhật nguồn tiền' : 'Đã thêm nguồn tiền',
+            )
+            if (saved) setModal(null)
+          }}
+          onDelete={async (id) => {
+            const next = removeMoneySource(data, id)
+            if (!next) return
+            const saved = await saveModalData(next, 'Đã xóa nguồn, các khoản thu/chi vẫn được giữ')
+            if (saved) setModal(null)
+          }}
+        />
+      )}
+      {modal?.type === 'source-transfer' && (
+        <SourceTransferDialog
+          transfer={modal.transfer}
+          sources={sources}
+          transactions={data.transactions}
+          transfers={sourceTransfers}
+          asOf={asOf}
+          onClose={() => setModal(null)}
+          onSave={async (transfer) => {
+            const saved = await saveModalData(
+              {
+                ...data,
+                sourceTransfers: sourceTransfers.some((item) => item.id === transfer.id)
+                  ? sourceTransfers.map((item) => (item.id === transfer.id ? transfer : item))
+                  : [transfer, ...sourceTransfers],
+              },
+              'Đã lưu ghi nhận chuyển nguồn',
+            )
+            if (saved) setModal(null)
+          }}
+          onDelete={async (id) => {
+            const saved = await saveModalData(
+              { ...data, sourceTransfers: sourceTransfers.filter((item) => item.id !== id) },
+              'Đã xóa bản ghi chuyển nguồn',
+            )
+            if (saved) setModal(null)
           }}
         />
       )}
@@ -1575,9 +1728,6 @@ export default function App() {
           }}
         />
       )}
-      {modal?.type === 'welcome' && (
-        <WelcomeDialog onClose={() => setModal(null)} onStart={startOwnBook} />
-      )}
       {modal?.type === 'help' && (
         <Dialog
           title="Chào bạn, mây đây."
@@ -1614,36 +1764,20 @@ export default function App() {
             ))}
           </div>
           <div className="dialog-actions">
-            {data.isDemo && (
-              <button className="button secondary" onClick={() => setModal({ type: 'welcome' })}>
-                Tạo sổ của tôi
-              </button>
-            )}
             <button className="button primary" onClick={() => setModal(null)}>
-              Bắt đầu khám phá <ArrowRight size={16} />
+              Đã hiểu <Check size={16} />
             </button>
           </div>
         </Dialog>
       )}
       <AnimatePresence>
         {toast && (
-          <motion.div
-            key={toast}
-            className="toast"
-            style={{ x: '-50%' }}
-            role="status"
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10 }}
-          >
-            <span>
-              <Check size={15} />
-            </span>
-            {toast}
-            <button aria-label="Đóng thông báo" onClick={() => setToast('')}>
-              <X size={14} />
-            </button>
-          </motion.div>
+          <Toast
+            key={toast.id}
+            toast={toast}
+            onClose={() => dismissToast(toast.id)}
+            onViewTransaction={() => showSavedTransaction(toast.transactionId)}
+          />
         )}
       </AnimatePresence>
     </AppProviders>

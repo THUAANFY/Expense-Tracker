@@ -1,0 +1,69 @@
+.source-badge {
+  --badge-paper: #edf3fc;
+  --badge-border: #c8d8eb;
+  --badge-ink: #3f5c7b;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  flex-shrink: 1;
+  gap: 5px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 2px 7px 2px 4px;
+  border: 1px solid var(--badge-border);
+  border-radius: 8px 8px 8px 4px;
+  background: linear-gradient(125deg, #fffefa, var(--badge-paper));
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--badge-border) 45%, transparent);
+  color: var(--badge-ink);
+  font-size: var(--font-caption);
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.source-badge--cash {
+  --badge-paper: #f1f7e9;
+  --badge-border: #ccdcbd;
+  --badge-ink: #45663c;
+  border-radius: 11px 7px 7px 11px;
+}
+.source-badge--ewallet {
+  --badge-paper: #f4ebfc;
+  --badge-border: #dec8ed;
+  --badge-ink: #6b4384;
+  border-radius: 8px 11px 11px 8px;
+}
+.source-badge--unassigned {
+  --badge-paper: #fff7e5;
+  --badge-border: #e4c68d;
+  --badge-ink: #81582a;
+  border-style: dashed;
+  border-radius: 7px;
+  box-shadow: none;
+}
+.source-badge-icon {
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.source-badge-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.source-badge--small {
+  gap: 4px;
+  padding: 2px 6px 2px 3px;
+  box-shadow: none;
+}
+.history-select-trigger > .history-select-source {
+  margin-right: auto;
+}
+.history-select-icon.has-source {
+  background: transparent;
+}
+.transaction-meta > .source-badge.transaction-wallet {
+  flex: 0 1 auto;
+  min-width: 34px;
+  max-width: 65%;
+}
