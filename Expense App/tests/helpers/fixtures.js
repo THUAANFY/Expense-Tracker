@@ -1,5 +1,8 @@
-import { dateKey, uid } from '../../src/data.js'
-import { createCategoryBudgetPolicy, LEGACY_CATEGORY_BUDGETS } from '../../src/categoryBudgets.js'
+import { dateKey, uid } from '../../src/shared/storage/data.js'
+import {
+  createCategoryBudgetPolicy,
+  LEGACY_CATEGORY_BUDGETS,
+} from '../../src/features/budgets/categoryBudgets.js'
 
 export function createSampleData() {
   const now = new Date()

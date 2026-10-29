@@ -83,73 +83,61 @@ Cảm nhận là trường tùy chọn `review` trong từng giao dịch chi, g�
 ## Cấu trúc
 
 ```text
-src/
-  App.jsx                      # Điều hướng, dashboard, lịch sử, ghi chú, cài đặt
-  App.css                      # Bố cục, giao diện và responsive
-  index.css                    # Token chữ, màu và reset
-  bootstrap.js                 # Mở màn hình khởi động, tải app và xử lý lỗi entry
-  startup.js                   # Đồng bộ loading với React sẵn sàng và mở lại tương tác
-  startup.css                  # Font cục bộ, logo/slogan xuất hiện và responsive loading
-  data.js                      # Sổ trống, kiểm tra, định dạng, CSV và sao lưu
-  monthlyBudgets.js            # Ngân sách theo tháng và kiểm tra mức mới với số dư nguồn
-  categoryBudgets.js           # Tỷ lệ gợi ý, chia hạn mức nguyên đồng và giữ chính sách lịch sử
-  closedMonths.js              # Khóa giao dịch và ngân sách của tháng đã qua khi ghi dữ liệu
-  dates.js                     # Ngày cục bộ, tháng và kiểm tra ngày hợp lệ
-  moneySources.js              # Nguồn tiền, chuyển nguồn, số dư và kiểm tra dữ liệu
-  bookStorage.js               # Tuần tự hóa ghi, gộp thay đổi và cách ly bản lưu lỗi
-  notifications.js             # Quy tắc cảnh báo, tổng kết và đọc cấu hình thông báo
-  reviews.js                   # Mức cảm nhận, kiểm tra dữ liệu và tổng hợp khoản chi
-  bags.js                      # Kiểu túi, màu, kiểm tra, tổng hợp và liên kết giao dịch
-  components/
-    StartupBoundary.jsx       # Báo app đã dựng xong, dự phòng lỗi render và tải lại
-    useBookData.js             # Trạng thái sổ, đồng bộ các tab và phản hồi lỗi lưu
-    Toast.jsx                  # Thông báo thao tác, xem giao dịch vừa lưu và thời gian đóng
-    Toast.css                  # Nút xem nhanh, bố cục mobile và đánh dấu dòng giao dịch
-    CategoryArt.jsx            # Chín minh họa SVG (tám nhóm chi + thu nhập)
-    SpendingChart.jsx          # Biểu đồ SVG tính từ giao dịch
-    CategoriesView.jsx         # Tổng quan ngân sách, thẻ danh mục và lọc hạn mức
-    BudgetFilterEmpty.jsx      # SVG và thao tác cho nhóm gần/vượt hạn mức đang trống
-    FilterSelect.jsx           # Dropdown danh mục và sắp xếp trong lịch sử
-    MoneySourcesView.jsx       # Số dư các nguồn, nhật ký và gán giao dịch cũ
-    MoneySourceSelect.jsx      # Dropdown nguồn tiền và số dư hiện tại
-    SourceArt.jsx              # SVG ví tiền mặt, thẻ ngân hàng và ví điện tử
-    SourceLedgerArt.jsx        # SVG sổ ghi chép, bút chì, đồng xu và chi tiết trang trí
-    SourceSummaryArt.jsx       # SVG ví charm mây, hai ví chuyển xu và hóa đơn kẹp giấy
-    SourceCardsRail.jsx        # Dải nguồn tiền một hàng, vuốt và điều hướng có bộ đếm
-    SourceBadge.jsx            # Bốn badge và SVG nhận diện nguồn dùng chung
-    HistoryOverview.jsx        # Tổng kết tháng và thẻ thu/chi pastel
-    HistoryArt.jsx             # SVG thỏ ôm sổ, ví tiền và túi mua sắm
-    OverviewArt.jsx            # SVG hũ tiết kiệm, thỏ, mây cầu vồng, hoa và hóa đơn
-    OverviewJournalCorner.jsx  # Khoản chi lớn nhất theo tháng và trạng thái chuyển động trong vùng nhìn
-    JournalDeskArt.jsx         # SVG mây viết sổ, bàn gỗ, chậu cây và đồng xu
-    OverviewView.css           # Giao diện Tổng quan pastel và responsive
-    RecentTransactionsEmpty.jsx # Biên lai SVG và thao tác thêm giao dịch khi tháng trống
-    SidebarArt.jsx             # SVG mây đeo kính đọc sổ, chậu cây, đồng xu và tách trà
-    SidebarArt.css             # Chớp mắt, vẫy tay, lá cây, hơi trà và reduced motion
-    Sidebar.css                # Sidebar pastel, trạng thái chọn và menu mobile
-    NotificationCenter.jsx     # Chuông, danh sách và thao tác thông báo trong app
-    useNotifications.js        # Cập nhật lời nhắc và lưu trạng thái đã đọc
-    SettingsView.jsx           # Cá nhân hóa, ngân sách, xuất và xem trước bản sao lưu
-    CategoryRatiosSettings.jsx  # Chỉnh tỷ lệ đủ 100%, xem trước hạn mức, lưu theo tháng
-    SettingsArt.jsx            # SVG sổ tay, bút chì và hộp lưu trữ
-    WorthView.jsx              # Đáng tiền không? Đánh giá, tổng hợp và lọc khoản chi
-    MoodArt.jsx                # Ba biểu cảm SVG cho cảm nhận sau chi tiêu
-    BagsView.jsx               # Danh sách túi, chi tiết, ngân sách và phân bổ danh mục
-    BagArt.jsx                 # SVG vali, túi quà có nơ, giỏ đan và túi đựng công nghệ
-    NotesView.jsx              # Ghi chú đã lưu, tìm kiếm, bộ lọc và tab giao dịch
-    dialogs/                   # Module riêng cho popup giao dịch, ghi chú, ngân sách
-tests/expense.spec.js           # Kiểm tra hành vi và responsive
-tests/categories.spec.js        # Hạn mức, xem trước, lưu và popup ngân sách trên mobile
-tests/auto-category-budgets.spec.js # Tự chia, làm tròn, đặt riêng, nhiều tab và bảo toàn lịch sử
-tests/category-ratios-settings.spec.js # Tỷ lệ tùy chỉnh, kế thừa, khóa lịch sử và bản nháp
-tests/closed-months.spec.js     # Chế độ chỉ xem, khóa tại lượt ghi, chuyển tháng và khôi phục lịch sử
-tests/notes.spec.js             # Tìm kiếm, ghim, tab giao dịch và popup trên mobile
-tests/overview-donut.spec.js    # Tỷ lệ hiển thị lát nhỏ, vòng 100%, tháng trống và lọc từ chú giải
-tests/overview-journal-corner.spec.js # Khoản chi lớn nhất, tháng chỉ xem, chuyển động và responsive
-tests/notifications.spec.js     # Ngưỡng ngân sách, đọc/lưu, lời nhắc, điều hướng và popup mobile
-tests/reviews.spec.js           # Đánh giá, lý do, lọc, sao lưu, ghi chú cũ và popup mobile
-tests/bags.spec.js              # Tạo/sửa túi, gom/chuyển giao dịch, sao lưu và popup mobile
-tests/money-sources.spec.js     # Số dư, sửa/xóa, chuyển nguồn, dữ liệu cũ, sao lưu và mobile
+Expense App/
+├── public/                     # Logo, favicon và tài nguyên công khai
+├── src/
+│   ├── bootstrap.js            # Khởi động màn hình chờ và tải React
+│   ├── main.jsx                # Điểm vào React
+│   ├── app/
+│   │   ├── App.jsx             # Điều hướng, trạng thái và ghép các chức năng
+│   │   ├── App.css             # Bố cục và responsive chung
+│   │   ├── layout/             # Sidebar, footer và SVG đi kèm
+│   │   └── startup/            # Màn hình khởi động, CSS và xử lý lỗi tải app
+│   ├── features/
+│   │   ├── overview/           # Biểu đồ, trạng thái trống và góc mây
+│   │   ├── transactions/       # Lịch sử giao dịch, thanh toán và popup giao dịch
+│   │   ├── money-sources/      # Nguồn tiền, số dư, chuyển nguồn và SVG nguồn
+│   │   ├── budgets/            # Ngân sách tháng, tỷ lệ và hạn mức danh mục
+│   │   ├── bags/               # Túi chi tiêu và gom giao dịch theo dịp
+│   │   ├── notes/              # Ghi chú đã lưu
+│   │   ├── reviews/            # Cảm nhận và đánh giá Đáng tiền không
+│   │   ├── notifications/      # Chuông, quy tắc và trạng thái thông báo
+│   │   └── settings/           # Cá nhân hóa, tỷ lệ danh mục và sao lưu
+│   └── shared/
+│       ├── components/         # Dialog, select, lịch, toast và thông báo tháng khóa
+│       ├── hooks/              # useBookData: lưu, đồng bộ và phục hồi dữ liệu
+│       ├── storage/            # Định dạng sổ, kiểm tra dữ liệu và lượt ghi an toàn
+│       ├── lib/                # Ngày tháng và quy tắc khóa tháng đã qua
+│       ├── illustrations/      # CategoryArt dùng ở nhiều chức năng
+│       ├── styles/             # Token chữ/màu, reset và kiểu ô nhập dùng chung
+│       └── assets/             # Tài nguyên ảnh
+├── tests/
+│   ├── app/                    # Khởi động, luồng tổng thể, điều hướng, responsive
+│   ├── overview/               # Biểu đồ, donut và góc mây ghi chép
+│   ├── transactions/           # Bộ lọc, ô nhập và luồng sau khi lưu giao dịch
+│   ├── budgets/                # Phân bổ, tỷ lệ tùy chỉnh và khóa tháng cũ
+│   ├── money-sources/          # Số dư, chuyển nguồn và bảo vệ nguồn có giao dịch
+│   ├── bags/                   # Tạo túi và liên kết giao dịch
+│   ├── notes/                  # Tìm kiếm, ghim và popup ghi chú
+│   ├── reviews/                # Cảm nhận, lý do và sao lưu đánh giá
+│   ├── notifications/          # Cảnh báo, nhắc ghi chép và trạng thái đã đọc
+│   ├── shared/                 # Bộ chọn tháng và năm
+│   ├── storage/                # Nhiều tab, lỗi lưu, khôi phục và bảo vệ dữ liệu
+│   └── helpers/                # Dữ liệu giả và thao tác kiểm thử dùng chung
+├── scripts/                    # Tiện ích chụp giao diện
+├── artifacts/                  # Ảnh chụp, trace và kết quả kiểm thử; được Git bỏ qua
+├── index.html
+├── package.json
+├── vite.config.js
+└── playwright.config.js
 ```
+
+Component, CSS và SVG riêng của một chức năng nằm cạnh nhau trong `features/<tên chức năng>`. Popup riêng nằm trong `dialogs/` của chính chức năng đó; khung popup dùng chung là `shared/components/Dialog.jsx`. Các tệp dùng lại ở nhiều chức năng nằm trong `shared`, còn `app` ghép giao diện và xử lý điều hướng.
+
+Logic số dư ở `features/money-sources/moneySources.js`; logic ngân sách ở `features/budgets/`; cấu trúc sổ và lưu trữ ở `shared/storage/`. Các khóa localStorage và định dạng bản sao lưu được giữ nguyên.
+
+Kiểm thử được nhóm theo chức năng dưới `tests/`, dùng chung fixture trong `tests/helpers/`. Chạy một nhóm bằng `npx playwright test tests/budgets --workers=2`, hoặc toàn bộ bằng `npm run test:e2e -- --workers=2`. Trace và ảnh lỗi nằm trong `artifacts/playwright/`; ảnh chụp giao diện nằm trong `artifacts/screenshots/`. Thư mục `artifacts/previous-test-results/` giữ kết quả có từ trước khi sắp xếp lại.
+
+Chạy `node scripts/capture.mjs` khi dev server đang mở để chụp Tổng quan trên desktop và mobile. `node_modules/`, `dist/` và `artifacts/` là các thư mục được công cụ tạo ra; mã nguồn ứng dụng nằm trong `src/`.
 
 Trên Windows, cấu hình Playwright sử dụng Chrome tại đường dẫn mặc định trong `Program Files`. Trên hệ điều hành khác, chạy `npx playwright install chromium` trước lần kiểm tra đầu tiên. Bộ kiểm tra bao gồm thêm/sửa/xóa, lưu qua tải lại, thu nhập, ghi chú, bộ lọc, CSV, ngân sách, focus, lỗi bộ nhớ và độ rộng 320–2560px.
