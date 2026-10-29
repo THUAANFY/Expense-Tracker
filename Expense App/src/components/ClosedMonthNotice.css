@@ -1,0 +1,76 @@
+.closed-month-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 0 0 14px;
+  border-radius: 12px;
+  background: #f0eaf7;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
+  line-height: 1.6;
+}
+.closed-month-notice > svg {
+  flex-shrink: 0;
+  color: var(--text-accent);
+}
+.closed-month-notice p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 0;
+  flex: 1;
+}
+.closed-month-notice strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.closed-month-notice button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 6px 0 6px 8px;
+  color: var(--text-accent);
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+.transaction-form > .closed-month-notice,
+.source-form > .closed-month-notice {
+  margin: 10px 16px 0;
+}
+.dialog-fields {
+  display: contents;
+}
+.dialog fieldset:disabled input,
+.dialog fieldset:disabled textarea,
+.dialog fieldset:disabled button {
+  opacity: 1;
+  color: var(--text-secondary);
+  cursor: default;
+}
+.dialog fieldset:disabled .transaction-amount-control input {
+  color: var(--text-primary);
+}
+button:disabled.budget-category-edit,
+.category-overview-heading button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+@media (max-width: 480px) {
+  .closed-month-notice {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .closed-month-notice p {
+    flex-basis: calc(100% - 25px);
+  }
+  .closed-month-notice p span {
+    font-size: var(--font-caption);
+  }
+  .closed-month-notice button {
+    margin-left: 23px;
+    padding: 0;
+  }
+}

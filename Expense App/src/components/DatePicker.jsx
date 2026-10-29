@@ -11,7 +11,7 @@ const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate()
 const pageForYear = (year) => 1900 + Math.floor((year - 1900) / 12) * 12
 const weekdays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
 
-export default function DatePicker({ value, onChange, labelId, name = 'date' }) {
+export default function DatePicker({ value, onChange, labelId, name = 'date', min = MIN_DATE }) {
   const selected = parseDate(value)
   const [year, setYear] = useState(selected.getFullYear())
   const [month, setMonth] = useState(selected.getMonth())
@@ -62,6 +62,7 @@ export default function DatePicker({ value, onChange, labelId, name = 'date' }) 
   }
 
   function chooseDate(key) {
+    if (key < min || key > MAX_DATE) return
     onChange(key)
     popover.close()
   }
@@ -151,7 +152,7 @@ export default function DatePicker({ value, onChange, labelId, name = 'date' }) 
       } else return
       event.preventDefault()
       const key = dateKey(next)
-      if (key < MIN_DATE || key > MAX_DATE) return
+      if (key < min || key > MAX_DATE) return
       pendingFocus.current = true
       setYear(next.getFullYear())
       setMonth(next.getMonth())
@@ -304,7 +305,7 @@ export default function DatePicker({ value, onChange, labelId, name = 'date' }) 
                       key={key}
                       data-date={key}
                       tabIndex={key === focusedDate ? 0 : -1}
-                      disabled={key < MIN_DATE || key > MAX_DATE}
+                      disabled={key < min || key > MAX_DATE}
                       aria-label={formatDate(key, {
                         day: 'numeric',
                         month: 'long',

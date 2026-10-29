@@ -120,17 +120,21 @@ test('saving preserves the current filters; the action reveals the saved record 
   ).toHaveAttribute('aria-pressed', 'true')
   await expect(page.locator('.pagination')).toContainText('Trang 1/3')
   await expect(row(page, saved.id)).toBeFocused()
+  await expect(row(page, saved.id)).toBeInViewport({ ratio: 0.95 })
   await expect(row(page, saved.id)).toHaveAttribute('data-highlighted', 'true')
   expect((await stored(page)).transactions.filter((item) => item.id === saved.id)).toHaveLength(1)
 })
 
-test('a backdated record is located on its actual month and fourth page', async ({ page }) => {
+test('a new record cannot use a closed month and its save action still reveals it', async ({
+  page,
+}) => {
   await seed(page)
   const dialog = await prepare(page, 'Khoản ghi lùi tháng')
   await dialog.getByRole('button', { name: /Ngày giao dịch/ }).click()
   const calendar = page.getByRole('dialog', { name: 'Chọn ngày giao dịch', exact: true })
   await calendar.getByRole('button', { name: 'Tháng trước của lịch', exact: true }).click()
-  await calendar.locator(`[data-date="${previousMonth}-01"]`).click()
+  await expect(calendar.locator(`[data-date="${previousMonth}-01"]`)).toBeDisabled()
+  await calendar.getByRole('button', { name: 'Đóng lịch', exact: true }).click()
   await save(dialog)
   const saved = (await stored(page)).transactions.find(
     (item) => item.title === 'Khoản ghi lùi tháng',
@@ -138,12 +142,13 @@ test('a backdated record is located on its actual month and fourth page', async 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Gọn chi tiêu. Nhẹ cuộc sống.')
   await action(page).click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Mỗi khoản chi, một câu chuyện.')
-  const [year, number] = previousMonth.split('-')
+  const [year, number] = month.split('-')
   await expect(
     page.getByRole('button', { name: 'Chọn tháng thống kê', exact: true }),
   ).toContainText(`Tháng ${number}, ${year}`)
-  await expect(page.locator('.pagination')).toContainText('Trang 4/4')
+  expect(saved.date.startsWith(month)).toBeTruthy()
   await expect(row(page, saved.id)).toBeFocused()
+  await expect(row(page, saved.id)).toBeInViewport({ ratio: 0.95 })
 })
 
 test('an edited record hidden by its old category can be revealed without creating a duplicate', async ({

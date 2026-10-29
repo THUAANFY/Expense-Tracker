@@ -21,32 +21,38 @@
 }
 .sidebar-cute .brand {
   gap: 10px;
-  padding-bottom: 18px;
+  padding-bottom: 0;
   color: #37243f;
   font-size: 34px;
 }
 .sidebar-cute .brand-symbol {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ddcbea;
-  border-radius: 13px;
-  background: #fffaf9;
-  box-shadow: 0 3px 0 #e3d5ee;
-  transform: rotate(-6deg);
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
 }
-.sidebar-cute .brand-symbol svg {
-  width: 28px;
-  height: 29px;
-  transform: rotate(6deg);
+.sidebar-cute .brand-symbol img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.sidebar-cute .brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.sidebar-cute .brand-wordmark {
+  display: block;
+  line-height: 1;
+  letter-spacing: -1.6px;
 }
 .sidebar-cute .brand-caption {
-  bottom: 0;
-  left: 50px;
+  position: static;
   color: #745b81;
   font-size: 8.5px;
-  letter-spacing: 1.25px;
+  letter-spacing: 0.8px;
+  line-height: 1.4;
 }
 .sidebar-cute .brand-dot {
   color: #9c7bb7;

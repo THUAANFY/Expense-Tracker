@@ -22,7 +22,9 @@ export function useFieldPopover({ width = 304, matchWidth = false } = {}) {
     const anchor = triggerRef.current?.getBoundingClientRect()
     const panel = panelRef.current
     if (!anchor || !panel) return
-    const padding = 12
+    const styles = getComputedStyle(document.documentElement)
+    const padding = parseFloat(styles.getPropertyValue('--popover-viewport-gap')) || 16
+    const gap = parseFloat(styles.getPropertyValue('--popover-anchor-gap')) || 8
     const viewportWidth = document.documentElement.clientWidth
     const viewportHeight = window.visualViewport?.height || innerHeight
     const panelWidth = Math.min(
@@ -31,8 +33,8 @@ export function useFieldPopover({ width = 304, matchWidth = false } = {}) {
     )
     const maxHeight = viewportHeight - padding * 2
     const height = Math.min(panel.offsetHeight, maxHeight)
-    const below = anchor.bottom + 8
-    const above = anchor.top - height - 8
+    const below = anchor.bottom + gap
+    const above = anchor.top - height - gap
     const top =
       below + height <= viewportHeight - padding
         ? below

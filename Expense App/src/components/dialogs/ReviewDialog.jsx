@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Check, RotateCcw } from 'lucide-react'
 import Dialog from './Dialog'
 import CategoryArt from '../CategoryArt'
+import { isClosedMonth } from '../../closedMonths'
+import ClosedMonthNotice from '../ClosedMonthNotice'
 import MoodArt from '../MoodArt'
 import { formatDate, getCategory, money } from '../../data'
 import { REVIEW_OPTIONS } from '../../reviews'
@@ -12,6 +14,7 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
   const [note, setNote] = useState(transaction.review?.note || '')
   const [error, setError] = useState('')
   const category = getCategory(transaction.category)
+  const readOnly = isClosedMonth(transaction.date)
   return (
     <Dialog
       title="Khoản chi này thế nào?"
@@ -35,6 +38,7 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
         className="review-form"
         onSubmit={(event) => {
           event.preventDefault()
+          if (readOnly) return
           if (!rating) {
             setError('Chọn một cảm nhận trước khi lưu nhé.')
             return
@@ -43,11 +47,13 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
         }}
       >
         <div className="review-form-body">
+          {readOnly && <ClosedMonthNotice />}
           <div className="review-dialog-choices" role="group" aria-label="Cảm nhận về khoản chi">
             {REVIEW_OPTIONS.map((option) => (
               <button
                 key={option.id}
                 type="button"
+                disabled={readOnly}
                 data-mood={option.id}
                 aria-pressed={rating === option.id}
                 onClick={() => {
@@ -70,6 +76,7 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
               rows="3"
               maxLength="500"
               value={note}
+              readOnly={readOnly}
               placeholder="Điều gì khiến bạn cảm thấy như vậy?"
               onChange={(event) => setNote(event.target.value)}
             />
@@ -81,15 +88,15 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
           )}
         </div>
         <div className="dialog-actions">
-          {transaction.review && (
+          {transaction.review && !readOnly && (
             <button type="button" className="text-button review-clear" onClick={onClear}>
               <RotateCcw size={13} /> Bỏ đánh giá
             </button>
           )}
           <button type="button" className="button secondary" onClick={onClose}>
-            Để sau
+            {readOnly ? 'Đóng chi tiết' : 'Để sau'}
           </button>
-          <button type="submit" className="button primary">
+          <button type="submit" className="button primary" disabled={readOnly}>
             <Check size={15} /> Lưu cảm nhận
           </button>
         </div>

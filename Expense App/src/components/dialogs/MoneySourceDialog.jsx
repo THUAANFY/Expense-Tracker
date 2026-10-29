@@ -1,5 +1,5 @@
 import { useId, useRef, useEffect, useState } from 'react'
-import { Check, Trash2 } from 'lucide-react'
+import { Check, LockKeyhole, Trash2 } from 'lucide-react'
 import Dialog from './Dialog'
 import SourceArt from '../SourceArt'
 import DatePicker from '../DatePicker'
@@ -30,6 +30,7 @@ export default function MoneySourceDialog({
   const [confirmDelete, setConfirmDelete] = useState(false)
   const confirmation = useRef(null)
   const dateId = useId()
+  const deleteReasonId = useId()
   const update = (key, value) => setForm((previous) => ({ ...previous, [key]: value }))
   const linkedTransfers = transfers.filter(
     (item) => item.fromSourceId === source?.id || item.toSourceId === source?.id,
@@ -43,9 +44,20 @@ export default function MoneySourceDialog({
     asOf,
   )
   const count = transactions.filter((item) => item.sourceId === source?.id && source).length
+  const deleteBlocked = count > 0 || linkedTransfers.length > 0
+  const linkedRecords = [
+    count > 0 ? `${count} giao dịch thu/chi` : '',
+    linkedTransfers.length > 0 ? `${linkedTransfers.length} bản ghi chuyển nguồn` : '',
+  ]
+    .filter(Boolean)
+    .join(' và ')
   useEffect(() => {
+    if (deleteBlocked) {
+      setConfirmDelete(false)
+      return
+    }
     if (confirmDelete) confirmation.current?.scrollIntoView({ block: 'nearest' })
-  }, [confirmDelete])
+  }, [confirmDelete, deleteBlocked])
   return (
     <Dialog
       title={source ? 'Chăm chút nguồn tiền' : 'Thêm một nguồn tiền'}
@@ -177,7 +189,7 @@ export default function MoneySourceDialog({
               {error}
             </p>
           )}
-          {confirmDelete && (
+          {confirmDelete && !deleteBlocked && (
             <div
               className="source-delete-confirm"
               ref={confirmation}
@@ -185,27 +197,37 @@ export default function MoneySourceDialog({
               aria-label="Xác nhận xóa nguồn"
             >
               <p>
-                {linkedTransfers.length
-                  ? `Nguồn có ${linkedTransfers.length} bản ghi chuyển nguồn. Hãy xóa các bản ghi này trước khi xóa nguồn.`
-                  : `Xóa nguồn sẽ bỏ gán ở ${count} giao dịch. Các khoản thu/chi và ghi chú vẫn được giữ nguyên.`}
+                Xóa nguồn “{source.name}” khỏi danh sách theo dõi? Nguồn này chưa có giao dịch
+                thu/chi hoặc bản ghi chuyển nguồn.
               </p>
-              {!linkedTransfers.length && (
-                <button type="button" className="danger-text" onClick={() => onDelete(source.id)}>
-                  Xác nhận xóa nguồn
-                </button>
-              )}
+              <button type="button" className="danger-text" onClick={() => onDelete(source.id)}>
+                Xác nhận xóa nguồn
+              </button>
               <button type="button" onClick={() => setConfirmDelete(false)}>
                 Hủy
               </button>
             </div>
           )}
         </div>
+        {source && deleteBlocked && (
+          <div className="source-delete-note" id={deleteReasonId} role="note">
+            <LockKeyhole size={15} aria-hidden="true" />
+            <p>
+              Không thể xóa nguồn đang có <strong>{linkedRecords}</strong>.
+            </p>
+          </div>
+        )}
         <div className="dialog-actions">
           {source && (
             <button
               type="button"
               className="icon-button danger-text"
               aria-label="Xóa nguồn tiền"
+              aria-describedby={deleteBlocked ? deleteReasonId : undefined}
+              title={
+                deleteBlocked ? 'Không thể xóa nguồn có giao dịch' : 'Xóa nguồn chưa có giao dịch'
+              }
+              disabled={deleteBlocked}
               onClick={() => setConfirmDelete(true)}
             >
               <Trash2 size={17} />

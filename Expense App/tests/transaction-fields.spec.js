@@ -30,6 +30,7 @@ async function expectFitsViewport(popup) {
 test('custom calendar handles leap days and persists the chosen date and payment method', async ({
   page,
 }) => {
+  await page.clock.setFixedTime(new Date(2024, 1, 15, 12))
   const form = await openTransaction(page)
   const date = form.getByRole('button', { name: /Ngày giao dịch/ })
   const calendar = page.getByRole('dialog', { name: 'Chọn ngày giao dịch', exact: true })

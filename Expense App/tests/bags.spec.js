@@ -70,7 +70,7 @@ const openBag = async (page, name = 'Chuyến đi Đà Lạt') => {
   await expect(page.locator('.bag-detail')).toBeVisible()
 }
 
-test('legacy data can create a styled bag and group expenses across months without duplicating records', async ({
+test('legacy data can create a styled bag, group open-month expenses and preserve closed-month records', async ({
   page,
 }) => {
   const data = fixture()
@@ -94,11 +94,13 @@ test('legacy data can create a styled bag and group expenses across months witho
     0,
   )
   await dialog.getByRole('checkbox', { name: 'Bữa trưa cùng bạn', exact: true }).check()
-  await dialog.getByRole('checkbox', { name: 'Vé xe tháng trước', exact: true }).check()
+  await expect(
+    dialog.getByRole('checkbox', { name: 'Vé xe tháng trước', exact: true }),
+  ).toBeDisabled()
   await dialog.getByRole('button', { name: 'Lưu vào túi' }).click()
   await expect(page.locator('.bag-detail-hero')).toContainText('300.000')
-  await expect(page.locator('.bag-detail-hero')).toContainText('Vừa đủ ngân sách')
-  await expect(page.locator('.bag-expense-row')).toHaveCount(2)
+  await expect(page.locator('.bag-detail-hero')).toContainText('120.000')
+  await expect(page.locator('.bag-expense-row')).toHaveCount(1)
   const saved = await stored(page)
   expect(saved.bags[0]).toMatchObject({
     name: 'Đi chơi cuối tuần',
@@ -112,7 +114,7 @@ test('legacy data can create a styled bag and group expenses across months witho
   await page.reload()
   await navigate(page)
   await openBag(page, 'Đi chơi cuối tuần')
-  await expect(page.locator('.bag-expense-row')).toHaveCount(2)
+  await expect(page.locator('.bag-expense-row')).toHaveCount(1)
   expect(errors).toEqual([])
 })
 

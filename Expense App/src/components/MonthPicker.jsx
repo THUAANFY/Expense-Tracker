@@ -11,7 +11,7 @@ const YEAR_PAGE_SIZE = 12
 const pageForYear = (year) =>
   MIN_YEAR + Math.floor((year - MIN_YEAR) / YEAR_PAGE_SIZE) * YEAR_PAGE_SIZE
 
-export default function MonthPicker({ value, onChange }) {
+export default function MonthPicker({ value, onChange, label = 'Chọn tháng thống kê' }) {
   const [selectedYear, selectedMonth] = value.split('-').map(Number)
   const currentMonth = monthKey()
   const currentYear = Number(currentMonth.slice(0, 4))
@@ -36,8 +36,9 @@ export default function MonthPicker({ value, onChange }) {
     const anchor = pickerRef.current?.getBoundingClientRect()
     const panel = popoverRef.current
     if (!anchor || !panel) return
-    const padding = 12
-    const gap = 9
+    const styles = getComputedStyle(document.documentElement)
+    const padding = parseFloat(styles.getPropertyValue('--popover-viewport-gap')) || 16
+    const gap = parseFloat(styles.getPropertyValue('--popover-anchor-gap')) || 8
     const viewportWidth = document.documentElement.clientWidth
     const viewportHeight = window.visualViewport?.height || window.innerHeight
     const width = Math.min(304, viewportWidth - padding * 2)
@@ -185,7 +186,7 @@ export default function MonthPicker({ value, onChange }) {
           type="button"
           ref={triggerRef}
           className="month-picker-trigger"
-          aria-label="Chọn tháng thống kê"
+          aria-label={label}
           aria-haspopup="dialog"
           aria-expanded={open}
           aria-controls={open ? popoverId : undefined}

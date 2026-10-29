@@ -124,6 +124,8 @@ export function previewSourceBalance(source, transactions, transfers, draft, asO
 
 export function removeMoneySource(data, sourceId) {
   if (
+    !(data.moneySources || []).some((source) => source.id === sourceId) ||
+    data.transactions.some((item) => item.sourceId === sourceId) ||
     (data.sourceTransfers || []).some(
       (item) => item.fromSourceId === sourceId || item.toSourceId === sourceId,
     )
@@ -132,11 +134,5 @@ export function removeMoneySource(data, sourceId) {
   return {
     ...data,
     moneySources: (data.moneySources || []).filter((source) => source.id !== sourceId),
-    transactions: data.transactions.map((item) => {
-      if (item.sourceId !== sourceId) return item
-      const next = { ...item }
-      delete next.sourceId
-      return next
-    }),
   }
 }

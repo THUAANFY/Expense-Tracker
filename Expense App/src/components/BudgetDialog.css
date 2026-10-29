@@ -101,6 +101,42 @@
   font-size: var(--font-control-label);
   line-height: 1.7;
 }
+.budget-editor-allocation {
+  padding: 11px 12px;
+  border: 1px solid #e5daed;
+  border-radius: 9px;
+  background: #fbf8fe;
+  color: var(--text-secondary);
+  font-size: var(--font-control-label);
+  line-height: 1.7;
+}
+.budget-editor-allocation > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-accent);
+}
+.budget-editor-allocation strong {
+  font-size: inherit;
+  font-weight: 600;
+}
+.budget-editor-allocation p {
+  margin-top: 4px;
+}
+.budget-editor-allocation > button {
+  display: block;
+  margin-top: 6px;
+  min-height: 30px;
+  padding: 3px 0;
+  color: var(--text-accent);
+  font-size: inherit;
+  text-align: left;
+  font-weight: 500;
+}
+.budget-editor-allocation > button:disabled {
+  opacity: 1;
+  cursor: default;
+}
 .budget-dialog .field {
   gap: 7px;
 }

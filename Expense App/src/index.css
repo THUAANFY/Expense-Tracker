@@ -18,6 +18,12 @@
   --font-control-label: 12px;
   --font-control-option: 13px;
   --font-picker-title: 14px;
+  --control-padding-inline: 12px;
+  --control-content-gap: 8px;
+  --select-panel-padding: 8px;
+  --select-option-padding-inline: 10px;
+  --popover-viewport-gap: 16px;
+  --popover-anchor-gap: 8px;
   --sidebar-width: 252px;
   --sidebar-padding: 14px;
   --page-gutter: clamp(18px, 1.8vw, 36px);
@@ -165,5 +171,6 @@ img {
   :root {
     --font-control-option: 12px;
     --font-picker-title: 13px;
+    --control-padding-inline: 10px;
   }
 }

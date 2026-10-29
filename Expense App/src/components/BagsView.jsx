@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { isClosedMonth } from '../closedMonths'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowLeft,
@@ -199,7 +200,7 @@ function BagDetail({
                   <div className="bag-expense-copy">
                     <button
                       onClick={() => onEditTransaction(item)}
-                      aria-label={`Sửa khoản chi ${item.title}`}
+                      aria-label={`${isClosedMonth(item.date) ? 'Xem' : 'Sửa'} khoản chi ${item.title}`}
                     >
                       <strong>{item.title}</strong>
                       <ArrowUpRight size={11} />
@@ -213,8 +214,13 @@ function BagDetail({
                   <strong className="bag-expense-amount">{money(item.amount)}</strong>
                   <button
                     className="bag-unlink"
+                    disabled={isClosedMonth(item.date)}
                     aria-label={`Bỏ ${item.title} khỏi túi`}
-                    title="Bỏ khỏi túi, giữ giao dịch"
+                    title={
+                      isClosedMonth(item.date)
+                        ? 'Giao dịch tháng đã qua chỉ được xem'
+                        : 'Bỏ khỏi túi, giữ giao dịch'
+                    }
                     onClick={() => onUnlink(item)}
                   >
                     <Unlink size={14} />

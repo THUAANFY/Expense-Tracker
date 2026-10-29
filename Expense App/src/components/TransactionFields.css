@@ -6,11 +6,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--control-content-gap);
   width: 100%;
   min-width: 0;
   height: var(--transaction-input-height, 42px);
-  padding: 9px 12px;
+  padding: 9px var(--control-padding-inline);
   border: 1px solid #e7deee;
   border-radius: 8px;
   background: #fff;
@@ -60,8 +60,8 @@
   position: fixed;
   z-index: 90;
   width: 304px;
-  max-width: calc(100vw - 24px);
-  max-height: calc(100dvh - 24px);
+  max-width: calc(100vw - var(--popover-viewport-gap) * 2);
+  max-height: calc(100dvh - var(--popover-viewport-gap) * 2);
   margin: 0;
   border: 1px solid #e5d9ee;
   border-radius: 13px;
@@ -271,14 +271,14 @@
 }
 
 .payment-select-popover {
-  padding: 6px;
+  padding: var(--select-panel-padding);
   overflow-y: auto;
 }
 
 .payment-select-caption {
-  padding: 6px 8px 8px;
+  padding: 6px var(--select-option-padding-inline) 8px;
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: var(--font-control-label);
   font-weight: 500;
   letter-spacing: 0.4px;
 }
@@ -286,11 +286,12 @@
 .payment-select-option {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--control-content-gap);
   width: 100%;
+  min-width: 0;
   min-height: 44px;
   margin: 2px 0;
-  padding: 7px 8px;
+  padding: 7px var(--select-option-padding-inline);
   border: 1px solid transparent;
   border-radius: 8px;
   color: var(--text-secondary);
@@ -301,6 +302,9 @@
 
 .payment-select-option > span:nth-child(2) {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

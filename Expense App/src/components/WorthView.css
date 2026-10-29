@@ -1097,8 +1097,8 @@
     padding-inline: 8px;
   }
   .worth-category .history-select-trigger {
-    padding-inline: 8px;
-    gap: 5px;
+    padding-inline: var(--control-padding-inline);
+    gap: var(--control-content-gap);
   }
   .worth-category .history-select-icon {
     display: none;

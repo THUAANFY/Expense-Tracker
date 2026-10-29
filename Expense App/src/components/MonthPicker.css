@@ -85,8 +85,8 @@
   position: fixed;
   z-index: 70;
   width: 304px;
-  max-width: calc(100vw - 24px);
-  max-height: calc(100dvh - 24px);
+  max-width: calc(100vw - var(--popover-viewport-gap) * 2);
+  max-height: calc(100dvh - var(--popover-viewport-gap) * 2);
   padding: 15px;
   overflow-y: auto;
   overscroll-behavior: contain;

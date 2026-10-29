@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Check, ChevronLeft, ChevronRight, Search } from 'lucide-react'
 import Dialog from './Dialog'
 import CategoryArt from '../CategoryArt'
+import { isClosedMonth } from '../../closedMonths'
 import { formatDate, getCategory, money } from '../../data'
 import '../BagDialogs.css'
 
@@ -48,6 +49,11 @@ export default function BagTransactionsDialog({ bag, transactions, onSave, onClo
         }}
       >
         <div className="bag-picker-body">
+          {eligible.some((item) => isClosedMonth(item.date)) && (
+            <p className="source-form-hint">
+              Khoản chi của tháng đã qua chỉ được xem, không thể đổi túi.
+            </p>
+          )}
           <div className="bag-search">
             <Search size={15} aria-hidden="true" />
             <input
@@ -68,6 +74,10 @@ export default function BagTransactionsDialog({ bag, transactions, onSave, onClo
               >
                 <input
                   type="checkbox"
+                  disabled={isClosedMonth(item.date)}
+                  title={
+                    isClosedMonth(item.date) ? 'Giao dịch tháng đã qua chỉ được xem' : undefined
+                  }
                   aria-label={item.title}
                   checked={selected.has(item.id)}
                   onChange={(event) =>

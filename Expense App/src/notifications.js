@@ -1,4 +1,5 @@
 import { CATEGORIES, dateKey, money, monthKey } from './data'
+import { getMonthlyBudget, getCategoryBudgets } from './monthlyBudgets'
 
 export const NOTIFICATION_KEY = 'may-notifications-v1'
 export const emptyNotificationState = () => ({ version: 1, remindersEnabled: true, entries: {} })
@@ -59,10 +60,10 @@ export function buildNotifications(
     })
 
   const budgetNotice = (spent, budget, category) => {
-    if (!(budget > 0) || spent < budget * 0.8) return
+    if (budget < 0 || (budget === 0 && spent === 0) || spent < budget * 0.8) return
     const stage = spent > budget ? 'over' : spent === budget ? 'full' : 'near'
     const name = category ? category.name : 'Ngân sách tháng'
-    const percent = Math.min(99.9, Math.round((spent / budget) * 1000) / 10)
+    const percent = budget > 0 ? Math.min(99.9, Math.round((spent / budget) * 1000) / 10) : 100
     const title =
       stage === 'over'
         ? `${name} đã vượt hạn mức`
@@ -88,14 +89,15 @@ export function buildNotifications(
   }
   budgetNotice(
     currentExpenses.reduce((sum, item) => sum + item.amount, 0),
-    data.profile.budget,
+    getMonthlyBudget(data, month),
   )
+  const categoryBudgets = getCategoryBudgets(data, month)
   for (const category of CATEGORIES) {
     budgetNotice(
       currentExpenses
         .filter((item) => item.category === category.id)
         .reduce((sum, item) => sum + item.amount, 0),
-      data.budgets[category.id],
+      categoryBudgets[category.id],
       category,
     )
   }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, MotionConfig } from 'motion/react'
 import {
   ArrowDownLeft,
@@ -8,12 +8,10 @@ import {
   BookOpen,
   CalendarDays,
   Check,
-  CheckCheck,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
-  Cloud,
   Clock3,
   Download,
   Eye,
@@ -47,7 +45,12 @@ import CategoriesView from './components/CategoriesView'
 import FilterSelect from './components/FilterSelect'
 import HistoryOverview from './components/HistoryOverview'
 import HistoryArt from './components/HistoryArt'
+import HistoryEmptyState from './components/HistoryEmptyState'
+import RecentTransactionsEmpty from './components/RecentTransactionsEmpty'
+import ClosedMonthNotice from './components/ClosedMonthNotice'
+import AppFooter from './components/AppFooter'
 import OverviewArt from './components/OverviewArt'
+import OverviewJournalCorner from './components/OverviewJournalCorner'
 import SidebarArt from './components/SidebarArt'
 import NotificationCenter from './components/NotificationCenter'
 import SettingsView from './components/SettingsView'
@@ -73,10 +76,14 @@ import {
   getCategory,
   money,
   monthKey,
+  transactionCategoryName,
 } from './data'
 import { getReviewOption, withReview } from './reviews'
 import { linkBagTransactions, removeBag, setTransactionBag } from './bags'
 import { getMoneySource, removeMoneySource, sourceName } from './moneySources'
+import { getMonthlyBudget, getCategoryBudgets } from './monthlyBudgets'
+import { getAutomaticCategoryBudget, getCategoryBudgetPlan } from './categoryBudgets'
+import { isClosedMonth } from './closedMonths'
 import './App.css'
 import './components/TransactionList.css'
 import './components/HistoryView.css'
@@ -131,50 +138,14 @@ function Brand() {
   return (
     <div className="brand">
       <span className="brand-symbol">
-        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path d="M5 12 16 6l11 6-11 6Z" fill="#b9a7df" />
-          <path
-            d="m5 17 11 6 11-6"
-            stroke="#a08bc7"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="m5 23 11 6 11-6"
-            stroke="#d5c8eb"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <img src="/logo-may.svg?v=ledger-detail" width="64" height="64" alt="" />
       </span>
-      <span>
-        mây<span className="brand-dot">.</span>
+      <span className="brand-copy">
+        <span className="brand-wordmark">
+          mây<span className="brand-dot">.</span>
+        </span>
+        <span className="brand-caption">QUẢN LÝ CHI TIÊU</span>
       </span>
-      <span className="brand-caption">EXPENSE TRACKER</span>
-    </div>
-  )
-}
-
-function EmptyState({
-  title = 'Chưa có giao dịch nào',
-  description = 'Thêm một giao dịch để bắt đầu câu chuyện chi tiêu của bạn.',
-  onAdd,
-  compact = false,
-}) {
-  return (
-    <div className={`empty-state ${compact ? 'compact' : ''}`}>
-      <span>
-        <Cloud size={34} strokeWidth={1.3} />
-      </span>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      {onAdd && (
-        <button className="button secondary" onClick={onAdd}>
-          <Plus size={15} /> Thêm giao dịch
-        </button>
-      )}
     </div>
   )
 }
@@ -352,6 +323,7 @@ function TransactionList({
   small = false,
   total = transactions.length,
   hasFilters = false,
+  onClearFilters,
   page = 1,
   onPage,
   ledger = false,
@@ -373,21 +345,16 @@ function TransactionList({
     return () => cancelAnimationFrame(frame)
   }, [highlightedTransaction])
   if (!transactions.length)
-    return (
-      <EmptyState
-        title={hasFilters ? 'Không tìm thấy giao dịch' : 'Một trang mới đang chờ bạn'}
-        description={
-          hasFilters
-            ? 'Thử tìm từ khóa khác hoặc thay đổi bộ lọc.'
-            : 'Lưu lại khoản chi đầu tiên, mọi thứ sẽ bắt đầu từ đây.'
-        }
-        onAdd={onAdd}
-      />
+    return ledger ? (
+      <HistoryEmptyState hasFilters={hasFilters} onClearFilters={onClearFilters} onAdd={onAdd} />
+    ) : (
+      <RecentTransactionsEmpty onAdd={onAdd} />
     )
   const renderRows = (items) =>
     items.map((item) => {
       const category = getCategory(item.category)
       const income = item.type === 'income'
+      const readOnly = isClosedMonth(item.date)
       return (
         <button
           className="transaction-row"
@@ -405,7 +372,7 @@ function TransactionList({
           }
           key={item.id}
           onClick={() => onEdit(item)}
-          aria-label={`Sửa giao dịch ${item.title}, ${money(item.amount)}${ledger ? `, ${formatDate(item.date)}` : ''}`}
+          aria-label={`${readOnly ? 'Xem' : 'Sửa'} giao dịch ${item.title}, ${money(item.amount)}${ledger ? `, ${formatDate(item.date)}` : ''}`}
         >
           <span className="transaction-main">
             <span
@@ -459,7 +426,7 @@ function TransactionList({
             {money(item.amount)}
           </strong>
           <span className="row-edit" aria-hidden="true">
-            <PencilLine size={15} />
+            {readOnly ? <Eye size={15} /> : <PencilLine size={15} />}
           </span>
         </button>
       )
@@ -542,6 +509,10 @@ function TransactionList({
   )
 }
 
+function scrollPageToTop() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+}
+
 function AppProviders({ saveError, saving, children }) {
   return (
     <SaveFeedbackContext.Provider value={{ saveError, saving }}>
@@ -580,6 +551,13 @@ export default function App() {
   } = useBookData(notify)
   const sources = data.moneySources || []
   const sourceTransfers = data.sourceTransfers || []
+  const closedMonth = isClosedMonth(month, asOf.slice(0, 7))
+  const categoryPlan = getCategoryBudgetPlan(data, month)
+  const categoryBudgets = categoryPlan.budgets
+  // React view changes do not reset browser scroll. Specific record links scroll after mounting.
+  useLayoutEffect(() => {
+    scrollPageToTop()
+  }, [view, selectedBagId])
   function setModal(value) {
     clearSaveError()
     if (value) setToast(null)
@@ -688,6 +666,7 @@ export default function App() {
     setToast(null)
   }
   function navigate(id) {
+    if (id === view) scrollPageToTop()
     setHighlightedTransaction(null)
     setView(id)
     if (id === 'bags') setSelectedBagId(null)
@@ -709,6 +688,12 @@ export default function App() {
     setSearch('')
     setPage(1)
     setView('transactions')
+  }
+  function clearHistoryFilters() {
+    setSearch('')
+    setFilterCategory('all')
+    setFilterType('all')
+    setPage(1)
   }
   const addTransaction = () => setModal({ type: 'transaction' })
   const editTransaction = (transaction) => setModal({ type: 'transaction', transaction })
@@ -765,28 +750,23 @@ export default function App() {
   const filtered = sortedTransactions.filter(
     (item) =>
       (filterType === 'all' || item.type === filterType) &&
-      (filterCategory === 'all' || item.category === filterCategory) &&
+      (filterCategory === 'all' || (item.type === 'expense' && item.category === filterCategory)) &&
       normalize(
-        `${item.title} ${item.note} ${getCategory(item.category).name} ${sourceName(sources, item.sourceId)}`,
+        `${item.title} ${item.note} ${transactionCategoryName(item)} ${sourceName(sources, item.sourceId)}`,
       ).includes(normalize(search)),
   )
   if (sort === 'oldest') filtered.reverse()
   if (sort === 'highest') filtered.sort((a, b) => b.amount - a.amount)
   const currentPage = Math.min(page, Math.max(1, Math.ceil(filtered.length / 8)))
-  const budgetPercent = Math.round((expense / data.profile.budget) * 100)
-  const remaining = data.profile.budget - expense
+  const monthlyBudget = getMonthlyBudget(data, month)
+  const budgetPercent = Math.round((expense / monthlyBudget) * 100)
+  const remaining = monthlyBudget - expense
   const viewLabel =
     view === 'notes'
       ? 'Ghi chú đã lưu'
       : view === 'reviews'
         ? 'Cảm nhận đã lưu'
         : NAVIGATION.find((item) => item.id === view)?.label || 'Cài đặt'
-  const today = new Intl.DateTimeFormat('vi-VN', {
-    weekday: 'long',
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date())
 
   return (
     <AppProviders saveError={saveError} saving={saving}>
@@ -983,9 +963,10 @@ export default function App() {
                 </p>
               </div>
               <div className="page-actions">
-                {!['notes', 'settings', 'bags', 'sources'].includes(view) && (
+                {!['notes', 'bags', 'sources'].includes(view) && (
                   <MonthPicker
                     value={month}
+                    label={view === 'settings' ? 'Chọn tháng ngân sách' : undefined}
                     onChange={(value) => {
                       setMonth(value)
                       setPage(1)
@@ -1027,6 +1008,14 @@ export default function App() {
                 </button>
               </div>
             </div>
+            {closedMonth && !['notes', 'bags', 'sources'].includes(view) && (
+              <ClosedMonthNotice
+                onCurrent={() => {
+                  setMonth(asOf.slice(0, 7))
+                  setPage(1)
+                }}
+              />
+            )}
             {(storageError || saveError) && (
               <div className="storage-alert" role="alert">
                 <CircleHelp size={18} />
@@ -1056,7 +1045,7 @@ export default function App() {
                       income={income}
                       expense={expense}
                       previousExpense={previousExpense}
-                      budget={data.profile.budget}
+                      budget={monthlyBudget}
                       transactionCount={monthTransactions.length}
                     />
                     <OverviewMoneySources
@@ -1175,7 +1164,7 @@ export default function App() {
                           </div>
                           <div className="budget-numbers">
                             <strong>{compactMoney(expense)}</strong>
-                            <span>/ {compactMoney(data.profile.budget)}</span>
+                            <span>/ {compactMoney(monthlyBudget)}</span>
                             <span className={budgetPercent > 100 ? 'over-budget' : ''}>
                               {budgetPercent}%
                             </span>
@@ -1229,6 +1218,13 @@ export default function App() {
                             Sống theo cách mình muốn.
                           </p>
                         </div>
+                        <OverviewJournalCorner
+                          expenses={expenses}
+                          month={month}
+                          readOnly={closedMonth}
+                          onOpen={editTransaction}
+                          onAdd={addTransaction}
+                        />
                       </div>
                     </div>
                   </div>
@@ -1257,6 +1253,7 @@ export default function App() {
                                 aria-pressed={filterType === id}
                                 onClick={() => {
                                   setFilterType(id)
+                                  if (id === 'income') setFilterCategory('all')
                                   setPage(1)
                                 }}
                               >
@@ -1286,6 +1283,7 @@ export default function App() {
                               options={CATEGORY_FILTER_OPTIONS}
                               onChange={(value) => {
                                 setFilterCategory(value)
+                                if (value !== 'all') setFilterType('expense')
                                 setPage(1)
                               }}
                             />
@@ -1327,12 +1325,7 @@ export default function App() {
                             <button
                               className="text-button"
                               aria-label="Xóa bộ lọc"
-                              onClick={() => {
-                                setSearch('')
-                                setFilterCategory('all')
-                                setFilterType('all')
-                                setPage(1)
-                              }}
+                              onClick={clearHistoryFilters}
                             >
                               <X size={13} /> Xóa bộ lọc
                             </button>
@@ -1361,6 +1354,7 @@ export default function App() {
                           hasFilters={Boolean(
                             search || filterType !== 'all' || filterCategory !== 'all',
                           )}
+                          onClearFilters={clearHistoryFilters}
                           onEdit={editTransaction}
                           onAdd={addTransaction}
                           page={currentPage}
@@ -1376,13 +1370,24 @@ export default function App() {
                 {view === 'categories' && (
                   <CategoriesView
                     categories={totals}
-                    budgets={data.budgets}
-                    totalBudget={data.profile.budget}
+                    budgets={categoryBudgets}
+                    plan={categoryPlan}
+                    readOnly={closedMonth}
+                    totalBudget={monthlyBudget}
                     spent={expense}
                     transactions={expenses}
                     month={month}
-                    onEditBudget={(category) => setModal({ type: 'budget', category })}
+                    onEditBudget={(category) => setModal({ type: 'budget', category, month })}
                     onEditTotalBudget={() => navigate('settings')}
+                    onResetBudgets={() =>
+                      saveData(
+                        {
+                          ...data,
+                          monthlyCategoryBudgets: { ...data.monthlyCategoryBudgets, [month]: {} },
+                        },
+                        'Đã chia lại hạn mức theo tỷ lệ đã chọn cho tháng này',
+                      )
+                    }
                     onViewTransactions={categoryFilter}
                   />
                 )}
@@ -1475,6 +1480,8 @@ export default function App() {
                   <SettingsView
                     data={data}
                     dataRaw={raw}
+                    month={month}
+                    asOf={asOf}
                     storageBlocked={storageBlocked}
                     recovery={recovery}
                     onSave={saveData}
@@ -1487,22 +1494,13 @@ export default function App() {
                       })
                     }
                     onCategories={() => navigate('categories')}
+                    onSources={() => navigate('sources')}
                     notify={notify}
                   />
                 )}
               </motion.div>
             </AnimatePresence>
-            <footer className="footer">
-              <span>
-                Được chăm chút bởi <span className="footer-brand">mây.</span>
-                <span className="footer-separator">/</span>Nhẹ ghi chép, nhẹ âu lo.
-              </span>
-              <span>
-                <CheckCheck size={12} /> Dữ liệu trên thiết bị
-                <span className="footer-separator">·</span>
-                <span className="footer-date">{today}</span>
-              </span>
-            </footer>
+            <AppFooter />
           </main>
         </div>
       </div>
@@ -1580,7 +1578,7 @@ export default function App() {
           onDelete={async (id) => {
             const next = removeMoneySource(data, id)
             if (!next) return
-            const saved = await saveModalData(next, 'Đã xóa nguồn, các khoản thu/chi vẫn được giữ')
+            const saved = await saveModalData(next, 'Đã xóa nguồn tiền chưa có giao dịch')
             if (saved) setModal(null)
           }}
         />
@@ -1617,6 +1615,12 @@ export default function App() {
       {modal?.type === 'bag' && (
         <BagDialog
           bag={modal.bag}
+          deleteBlocked={Boolean(
+            modal.bag &&
+            data.transactions.some(
+              (item) => item.bagId === modal.bag.id && isClosedMonth(item.date, asOf.slice(0, 7)),
+            ),
+          )}
           onClose={() => setModal(null)}
           onSave={async (bag) => {
             const saved = await saveModalData(
@@ -1714,13 +1718,44 @@ export default function App() {
       {modal?.type === 'budget' && (
         <BudgetDialog
           category={modal.category}
-          budget={data.budgets[modal.category.id]}
+          budget={getCategoryBudgets(data, modal.month)[modal.category.id]}
+          automaticBudget={getAutomaticCategoryBudget(data, modal.month, modal.category.id)}
+          suggestedWeight={categoryPlan.weights[modal.category.id]}
+          custom={Object.hasOwn(
+            data.monthlyCategoryBudgets?.[modal.month] || {},
+            modal.category.id,
+          )}
           spent={totals.find((category) => category.id === modal.category.id)?.spent || 0}
-          month={month}
+          month={modal.month}
+          readOnly={isClosedMonth(modal.month, asOf.slice(0, 7))}
           onClose={() => setModal(null)}
+          onAuto={async () => {
+            const overrides = { ...data.monthlyCategoryBudgets?.[modal.month] }
+            delete overrides[modal.category.id]
+            const saved = await saveModalData(
+              {
+                ...data,
+                monthlyCategoryBudgets: {
+                  ...data.monthlyCategoryBudgets,
+                  [modal.month]: overrides,
+                },
+              },
+              'Danh mục đã trở về hạn mức tự động',
+            )
+            if (saved) setModal(null)
+          }}
           onSave={async (budget) => {
             const saved = await saveModalData(
-              { ...data, budgets: { ...data.budgets, [modal.category.id]: budget } },
+              {
+                ...data,
+                monthlyCategoryBudgets: {
+                  ...data.monthlyCategoryBudgets,
+                  [modal.month]: {
+                    ...data.monthlyCategoryBudgets?.[modal.month],
+                    [modal.category.id]: budget,
+                  },
+                },
+              },
               'Đã cập nhật ngân sách danh mục',
             )
             if (!saved) return

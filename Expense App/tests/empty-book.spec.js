@@ -4,6 +4,7 @@ import { createEmptyData, isValidData, STORAGE_KEY } from '../src/data.js'
 import { createSampleData } from './helpers/fixtures.js'
 
 async function navigate(page, label) {
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   const menu = page.getByRole('button', { name: 'Mở menu', exact: true })
   if (await menu.isVisible()) await menu.click()
   await page.locator('.sidebar').getByRole('button', { name: label, exact: true }).click()
@@ -22,6 +23,20 @@ for (const width of [320, 1440]) {
     await expect(page.locator('.donut-center strong')).toContainText('0')
     await expect(page.getByRole('button', { name: 'Dữ liệu mẫu', exact: true })).toHaveCount(0)
     await expect(page.getByRole('button', { name: 'Tạo sổ của tôi', exact: true })).toHaveCount(0)
+
+    const empty = page
+      .locator('.recent-panel')
+      .getByRole('region', { name: 'Chưa có giao dịch trong tháng', exact: true })
+    await expect(empty).toBeVisible()
+    const initialRaw = await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)
+    await empty.getByRole('button', { name: 'Thêm giao dịch', exact: true }).click()
+    const emptyDraft = page.locator('.transaction-dialog')
+    await expect(emptyDraft).toBeVisible()
+    await expect(
+      emptyDraft.getByRole('textbox', { name: 'Tên giao dịch', exact: true }),
+    ).toHaveValue('')
+    await emptyDraft.getByRole('button', { name: 'Để sau', exact: true }).click()
+    expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).toBe(initialRaw)
 
     await page.getByRole('button', { name: 'Thông báo', exact: true }).click()
     const notices = page.getByRole('dialog', { name: 'Thông báo của bạn', exact: true })

@@ -113,7 +113,7 @@ test('stale forms merge edits to different fields of the same transaction', asyn
   await expect(a).not.toBeVisible()
   await page.evaluate((key) => {
     const current = JSON.parse(localStorage.getItem(key))
-    current.transactions[0].date = '2025-12-31'
+    current.transactions[0].date = '2099-12-31'
     localStorage.setItem(key, JSON.stringify(current))
   }, STORAGE_KEY)
   await b.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click()
@@ -121,11 +121,11 @@ test('stale forms merge edits to different fields of the same transaction', asyn
   expect((await saved(page)).transactions[0]).toMatchObject({
     amount: 45000,
     title: 'Tên mới từ tab B',
-    date: '2025-12-31',
+    date: '2099-12-31',
   })
   await expect(
     second.getByRole('button', { name: 'Chọn tháng thống kê', exact: true }),
-  ).toContainText('Tháng 12, 2025')
+  ).toContainText('Tháng 12, 2099')
 })
 
 test('conflicting edits retain the newer saved value and keep the unsaved form open', async ({
@@ -270,7 +270,19 @@ test('an archive failure keeps the damaged primary book untouched and recovery o
 })
 
 test('a settings draft preserves a budget edited in another tab', async ({ page, context }) => {
-  await seed(page)
+  const data = book()
+  data.moneySources = [
+    {
+      id: 'funds',
+      name: 'Nguồn ngân sách',
+      type: 'cash',
+      color: 'mint',
+      openingBalance: 25000000,
+      openingDate: `${monthKey()}-01`,
+      createdAt: Date.now(),
+    },
+  ]
+  await seed(page, data)
   await settings(page)
   await page.getByRole('textbox', { name: 'Mây có thể gọi bạn là' }).fill('Tên đang nhập')
   const second = await context.newPage()
@@ -278,10 +290,10 @@ test('a settings draft preserves a budget edited in another tab', async ({ page,
   await settings(second)
   await second.getByRole('spinbutton', { name: 'Ngân sách chi tiêu mỗi tháng' }).fill('18000000')
   await second.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click()
-  await expect.poll(async () => (await saved(second)).profile.budget).toBe(18000000)
+  await expect.poll(async () => (await saved(second)).monthlyBudgets?.[monthKey()]).toBe(18000000)
   await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click()
   await expect.poll(async () => (await saved(page)).profile.name).toBe('Tên đang nhập')
-  expect((await saved(page)).profile.budget).toBe(18000000)
+  expect((await saved(page)).monthlyBudgets[monthKey()]).toBe(18000000)
   await expect(page.getByRole('spinbutton', { name: 'Ngân sách chi tiêu mỗi tháng' })).toHaveValue(
     '18000000',
   )

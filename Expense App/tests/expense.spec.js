@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { chooseHistoryFilter } from './helpers/history-filters.js'
 import { createSampleData, seedSampleBook } from './helpers/fixtures.js'
+import { monthKey } from '../src/data.js'
 
 test('development CSS and Vietnamese fonts load without a Vite error overlay', async ({ page }) => {
   const assetErrors = []
@@ -129,6 +130,17 @@ test('notes can be created, pinned, edited, persisted and removed', async ({ pag
 
 test('category budget and profile persist without clearing saved records', async ({ page }) => {
   const original = createSampleData()
+  original.moneySources = [
+    {
+      id: 'funds',
+      name: 'Nguồn ngân sách',
+      type: 'cash',
+      color: 'mint',
+      openingBalance: 30000000,
+      openingDate: `${monthKey()}-01`,
+      createdAt: Date.now(),
+    },
+  ]
   await seedSampleBook(page, original)
   await page.goto('/')
   await navigate(page, 'Danh mục & ngân sách')
@@ -146,8 +158,10 @@ test('category budget and profile persist without clearing saved records', async
   await page.reload()
   await expect(page.locator('.greeting')).toContainText('Chào An')
   const data = await page.evaluate(() => JSON.parse(localStorage.getItem('may-expense-tracker-v1')))
-  expect(data.budgets.food).toBe(4500000)
-  expect(data.profile.budget).toBe(15000000)
+  expect(data.monthlyCategoryBudgets[monthKey()].food).toBe(4500000)
+  expect(data.budgets.food).toBe(original.budgets.food)
+  expect(data.monthlyBudgets[monthKey()]).toBe(15000000)
+  expect(data.profile.budget).toBe(original.profile.budget)
   expect(data.transactions).toEqual(original.transactions)
   expect(data.notes).toEqual(original.notes)
   expect(data.bags).toEqual(original.bags)

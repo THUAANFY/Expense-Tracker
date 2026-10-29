@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import {
   ArrowDownToLine,
   ArrowUpRight,
@@ -11,42 +11,74 @@ import {
 } from 'lucide-react'
 import Dialog from './dialogs/Dialog'
 import SettingsArt from './SettingsArt'
+import CategoryRatiosSettings from './CategoryRatiosSettings'
+import { isClosedMonth } from '../closedMonths'
 import { dateKey, downloadFile, isValidData, money } from '../data'
+import {
+  budgetFunds,
+  getMonthlyBudget,
+  isValidBudgetAmount,
+  monthlyBudgetFundingError,
+} from '../monthlyBudgets'
 import './SettingsView.css'
 
 export default function SettingsView({
   data,
   dataRaw,
+  month,
+  asOf = dateKey(),
   storageBlocked,
   recovery,
   onSave,
   onRestore,
   onCategories,
+  onSources,
   notify,
 }) {
   const nameId = useId()
   const budgetId = useId()
-  const [name, setName] = useState(data.profile.name)
-  const [budget, setBudget] = useState(data.profile.budget)
+  const readOnly = isClosedMonth(month, asOf.slice(0, 7))
+  const [nameDraft, setNameDraft] = useState(null)
+  const [budgetDrafts, setBudgetDrafts] = useState({})
+  const name = nameDraft?.value ?? data.profile.name
+  const draft = budgetDrafts[month] || {
+    value: getMonthlyBudget(data, month),
+    baseValue: getMonthlyBudget(data, month),
+    hadValue: Object.hasOwn(data.monthlyBudgets || {}, month),
+  }
+  const budget = readOnly ? getMonthlyBudget(data, month) : draft.value
   const [formError, setFormError] = useState('')
   const [pendingImport, setPendingImport] = useState(null)
   const [importName, setImportName] = useState('')
   const [importError, setImportError] = useState('')
+  const [ratiosRevision, setRatiosRevision] = useState(0)
   const fileInput = useRef(null)
-  const formBase = useRef({ data, raw: dataRaw })
   const importBase = useRef(null)
   const numericBudget = Number(budget)
-  const validBudget =
-    Number.isSafeInteger(numericBudget) && numericBudget > 0 && numericBudget <= 1e12
-  const hasChanges = name.trim() !== data.profile.name || numericBudget !== data.profile.budget
-  useEffect(() => {
-    const previous = formBase.current.data.profile
-    if (name === previous.name && Number(budget) === previous.budget) {
-      setName(data.profile.name)
-      setBudget(data.profile.budget)
-      formBase.current = { data, raw: dataRaw }
-    }
-  }, [data, dataRaw, name, budget])
+  const validBudget = isValidBudgetAmount(numericBudget)
+  const nameChanged = nameDraft && name.trim() !== nameDraft.baseValue
+  const budgetChanged =
+    !readOnly &&
+    (budgetDrafts[month]
+      ? !draft.hadValue || numericBudget !== draft.baseValue
+      : !draft.hadValue && !nameChanged)
+  const hasChanges = Boolean(nameChanged || budgetChanged)
+  const funds = budgetFunds(data, asOf)
+  const fundingError =
+    budgetChanged && validBudget ? monthlyBudgetFundingError(data, numericBudget, asOf) : ''
+  const monthCaption = `tháng ${Number(month.slice(5))}/${month.slice(0, 4)}`
+  function changeBudget(value) {
+    if (readOnly) return
+    setBudgetDrafts((previous) => ({
+      ...previous,
+      [month]: {
+        value,
+        baseValue: previous[month]?.baseValue ?? getMonthlyBudget(data, month),
+        hadValue: previous[month]?.hadValue ?? Object.hasOwn(data.monthlyBudgets || {}, month),
+      },
+    }))
+    setFormError('')
+  }
   async function importData(event) {
     const file = event.target.files?.[0]
     if (!file) return
@@ -79,16 +111,35 @@ export default function SettingsView({
               setFormError('Ngân sách cần là số nguyên từ 1 đến 1.000.000.000.000 ₫.')
               return
             }
+            if (fundingError) {
+              return
+            }
             setFormError('')
+            const base = { ...data, profile: { ...data.profile } }
+            if (nameChanged) base.profile.name = nameDraft.baseValue
+            if (budgetChanged) {
+              base.monthlyBudgets = { ...data.monthlyBudgets }
+              if (draft.hadValue) base.monthlyBudgets[month] = draft.baseValue
+              else delete base.monthlyBudgets[month]
+            }
+            const next = {
+              ...base,
+              profile: { ...base.profile, ...(nameChanged ? { name: name.trim() } : {}) },
+            }
+            if (budgetChanged)
+              next.monthlyBudgets = { ...base.monthlyBudgets, [month]: numericBudget }
             const saved = await onSave(
-              { ...formBase.current.data, profile: { name: name.trim(), budget: numericBudget } },
-              'Đã lưu thiết lập',
-              { base: formBase.current.data, baseRaw: formBase.current.raw },
+              next,
+              budgetChanged ? `Đã lưu ngân sách ${monthCaption}` : 'Đã lưu thiết lập',
+              { base, baseRaw: dataRaw },
             )
             if (!saved) return
-            setName(saved.profile.name)
-            setBudget(saved.profile.budget)
-            formBase.current = { data: saved, raw: JSON.stringify(saved) }
+            setNameDraft(null)
+            setBudgetDrafts((previous) => {
+              const remaining = { ...previous }
+              delete remaining[month]
+              return remaining
+            })
           }}
         >
           <div className="settings-section-heading">
@@ -111,14 +162,19 @@ export default function SettingsView({
                   value={name}
                   placeholder="Tên gọi của bạn"
                   onChange={(event) => {
-                    setName(event.target.value)
+                    const value = event.target.value
+                    setNameDraft((previous) =>
+                      value === (previous?.baseValue ?? data.profile.name)
+                        ? null
+                        : { value, baseValue: previous?.baseValue ?? data.profile.name },
+                    )
                     setFormError('')
                   }}
                 />
               </div>
               <div className="settings-field">
                 <label htmlFor={budgetId}>Ngân sách chi tiêu mỗi tháng (VND)</label>
-                <div className="settings-budget-input">
+                <div className={`settings-budget-input ${fundingError ? 'is-invalid' : ''}`}>
                   <Wallet size={15} aria-hidden="true" />
                   <input
                     id={budgetId}
@@ -129,11 +185,11 @@ export default function SettingsView({
                     step="1"
                     inputMode="numeric"
                     value={budget}
-                    aria-describedby={budgetId + '-hint'}
-                    onChange={(event) => {
-                      setBudget(event.target.value)
-                      setFormError('')
-                    }}
+                    readOnly={readOnly}
+                    aria-readonly={readOnly}
+                    aria-invalid={Boolean(fundingError)}
+                    aria-describedby={`${budgetId}-hint${readOnly ? '' : ` ${budgetId}-funds`}${fundingError ? ` ${budgetId}-error` : ''}`}
+                    onChange={(event) => changeBudget(event.target.value)}
                   />
                   <span aria-hidden="true">₫</span>
                 </div>
@@ -141,12 +197,37 @@ export default function SettingsView({
                   {validBudget ? (
                     <>
                       <strong>{money(numericBudget)}</strong>
-                      <span> / tháng</span>
+                      <span> · {monthCaption}</span>
                     </>
                   ) : (
                     'Nhập ngân sách phù hợp với bạn.'
                   )}
                 </p>
+                {!readOnly && (
+                  <p className="settings-budget-funds" id={`${budgetId}-funds`}>
+                    Số dư các nguồn hôm nay: <strong>{money(funds.balance)}</strong>
+                    <button type="button" onClick={onSources}>
+                      {funds.sourceCount ? 'Xem nguồn tiền' : 'Thêm nguồn tiền'}{' '}
+                      <ArrowUpRight size={12} aria-hidden="true" />
+                    </button>
+                  </p>
+                )}
+                <p className="settings-budget-scope">
+                  {readOnly
+                    ? 'Ngân sách tháng đã qua chỉ được xem, không thể thay đổi.'
+                    : Object.hasOwn(data.monthlyBudgets || {}, month)
+                      ? `Chỉ lưu cho ${monthCaption}. Các hạn mức tự động sẽ chia lại theo mức này.`
+                      : 'Đang dùng mức mặc định. Lưu cho tháng này và tự chia hạn mức danh mục.'}
+                </p>
+                {fundingError && (
+                  <p
+                    className="settings-budget-error"
+                    id={`${budgetId}-error`}
+                    role={budgetDrafts[month] ? 'alert' : 'note'}
+                  >
+                    {fundingError}
+                  </p>
+                )}
                 <div
                   className="settings-budget-presets"
                   role="group"
@@ -156,11 +237,9 @@ export default function SettingsView({
                     <button
                       key={amount}
                       type="button"
+                      disabled={readOnly}
                       aria-pressed={numericBudget === amount}
-                      onClick={() => {
-                        setBudget(amount)
-                        setFormError('')
-                      }}
+                      onClick={() => changeBudget(amount)}
                     >
                       {amount / 1000000} triệu
                     </button>
@@ -177,20 +256,33 @@ export default function SettingsView({
               <button
                 className="settings-category-link"
                 type="button"
-                title="Hạn mức danh mục được điều chỉnh riêng với ngân sách tổng"
+                title="Danh mục tự chia theo ngân sách tháng; mức đặt riêng được giữ nguyên"
                 onClick={onCategories}
               >
                 Hạn mức danh mục <ArrowUpRight size={12} aria-hidden="true" />
               </button>
               <div>
                 {hasChanges && <span className="settings-unsaved">Chưa lưu</span>}
-                <button type="submit" className="button primary" disabled={storageBlocked}>
+                <button
+                  type="submit"
+                  className="button primary"
+                  disabled={storageBlocked || Boolean(fundingError) || !validBudget || !hasChanges}
+                >
                   <Check size={15} /> Lưu thay đổi
                 </button>
               </div>
             </div>
           </div>
         </form>
+        <CategoryRatiosSettings
+          key={ratiosRevision}
+          data={data}
+          dataRaw={dataRaw}
+          month={month}
+          asOf={asOf}
+          storageBlocked={storageBlocked}
+          onSave={onSave}
+        />
         {recovery && (
           <section
             className="settings-recovery settings-section"
@@ -315,8 +407,8 @@ export default function SettingsView({
                 <dd>{pendingImport.profile.name}</dd>
               </div>
               <div>
-                <dt>Ngân sách tháng</dt>
-                <dd>{money(pendingImport.profile.budget)}</dd>
+                <dt>Ngân sách {monthCaption}</dt>
+                <dd>{money(getMonthlyBudget(pendingImport, month))}</dd>
               </div>
             </dl>
           </div>
@@ -337,9 +429,9 @@ export default function SettingsView({
                   importBase.current.raw,
                 )
                 if (!saved) return
-                setName(saved.profile.name)
-                setBudget(saved.profile.budget)
-                formBase.current = { data: saved, raw: JSON.stringify(saved) }
+                setNameDraft(null)
+                setBudgetDrafts({})
+                setRatiosRevision((value) => value + 1)
                 setFormError('')
                 setPendingImport(null)
               }}

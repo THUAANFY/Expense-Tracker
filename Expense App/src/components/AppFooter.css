@@ -1,0 +1,97 @@
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+  margin-top: var(--layout-gap);
+  padding: 9px 0;
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  line-height: 1.5;
+}
+
+.app-footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.footer-cloud-art {
+  display: block;
+  width: 60px;
+  height: 46px;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.footer-cloud-character {
+  animation: footer-cloud-float 5s ease-in-out infinite;
+}
+
+.app-footer-note {
+  color: var(--text-secondary);
+  font-size: var(--font-caption);
+  letter-spacing: 0.05px;
+}
+
+.app-footer-signature {
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-footer-wordmark {
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -1.1px;
+  line-height: 1;
+}
+
+.app-footer-wordmark > span {
+  color: #9574b0;
+}
+
+.app-footer-signature > svg {
+  display: block;
+  height: 7px;
+  transform: rotate(-3deg);
+}
+
+@keyframes footer-cloud-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+@media (max-width: 760px) {
+  .app-footer {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    min-height: 59px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+
+  .footer-cloud-art {
+    width: 52px;
+    height: 40px;
+  }
+
+  .app-footer-wordmark {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-cloud-character {
+    animation: none;
+  }
+}

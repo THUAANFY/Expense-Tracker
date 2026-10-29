@@ -1,0 +1,103 @@
+.category-budget-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-width: 0;
+  min-height: 180px;
+  padding: 18px 12px 24px;
+}
+.category-empty-art {
+  display: block;
+  flex: 0 0 140px;
+  width: 140px;
+  height: auto;
+}
+.category-budget-empty-copy {
+  width: 100%;
+  min-width: 0;
+  max-width: 380px;
+}
+.category-budget-empty h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--font-section);
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+}
+.category-budget-empty p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
+  line-height: 1.7;
+}
+.category-budget-empty .button {
+  gap: 6px;
+  min-height: 38px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: var(--font-control);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.budget-empty-envelope,
+.budget-empty-needle,
+.budget-empty-shield {
+  transition: transform 350ms ease;
+}
+.budget-empty-needle {
+  transform-origin: 133px 67px;
+}
+.budget-empty-shield {
+  transform-origin: 131px 67px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .category-budget-empty:hover .budget-empty-envelope {
+    transform: translateY(-2px);
+  }
+  .category-budget-empty:hover .budget-empty-needle {
+    transform: rotate(12deg);
+  }
+  .category-budget-empty:hover .budget-empty-shield {
+    transform: rotate(4deg);
+  }
+}
+@media (max-width: 760px) {
+  .category-budget-empty {
+    gap: 16px;
+    padding-inline: 0;
+  }
+  .category-empty-art {
+    flex-basis: 116px;
+    width: 116px;
+  }
+}
+@media (max-width: 480px) {
+  .category-budget-empty {
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    padding: 8px 0 20px;
+    text-align: center;
+  }
+  .category-empty-art {
+    flex: 0 0 auto;
+    width: 100px;
+  }
+  .category-budget-empty-copy {
+    max-width: 310px;
+  }
+  .category-budget-empty .button {
+    min-height: 42px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .category-budget-empty .budget-empty-envelope,
+  .category-budget-empty .budget-empty-needle,
+  .category-budget-empty .budget-empty-shield {
+    transform: none;
+    transition: none;
+  }
+}

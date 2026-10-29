@@ -175,6 +175,7 @@ export default function FilterSelect({ label, caption, options, value, onChange,
               role="option"
               tabIndex={-1}
               aria-label={option.label}
+              title={option.label}
               aria-selected={value === option.value}
               aria-describedby={option.description ? `${optionId(index)}-description` : undefined}
               className={`history-select-option ${activeIndex === index ? 'is-active' : ''} ${value === option.value ? 'is-selected' : ''}`}

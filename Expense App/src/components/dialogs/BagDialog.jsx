@@ -6,7 +6,7 @@ import { BAG_COLORS, BAG_STYLES } from '../../bags'
 import { uid } from '../../data'
 import '../BagDialogs.css'
 
-export default function BagDialog({ bag, onSave, onDelete, onClose }) {
+export default function BagDialog({ bag, deleteBlocked = false, onSave, onDelete, onClose }) {
   const [form, setForm] = useState(
     bag || {
       name: '',
@@ -138,7 +138,10 @@ export default function BagDialog({ bag, onSave, onDelete, onClose }) {
               {error}
             </p>
           )}
-          {confirmDelete && (
+          {deleteBlocked && (
+            <p className="source-form-hint">Túi có giao dịch của tháng đã qua nên không thể xóa.</p>
+          )}
+          {confirmDelete && !deleteBlocked && (
             <div className="bag-delete-confirm" ref={confirmation}>
               <p>Xóa túi “{bag.name}”? Các giao dịch và cảm nhận vẫn được giữ trong lịch sử.</p>
               <button type="button" className="danger-text" onClick={() => onDelete(bag.id)}>
@@ -156,6 +159,7 @@ export default function BagDialog({ bag, onSave, onDelete, onClose }) {
               type="button"
               className="icon-button danger-text"
               aria-label="Xóa túi"
+              disabled={deleteBlocked}
               onClick={() => setConfirmDelete(true)}
             >
               <Trash2 size={17} />

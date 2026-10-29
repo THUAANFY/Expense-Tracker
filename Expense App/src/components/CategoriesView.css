@@ -317,6 +317,58 @@
 .category-limits-toggle {
   display: none;
 }
+.category-allocation-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: #efe8f7;
+  color: var(--text-accent);
+  font-size: var(--font-caption);
+  line-height: 1.7;
+}
+.category-allocation-note > svg {
+  flex-shrink: 0;
+}
+.category-allocation-note > p {
+  flex: 1 1 180px;
+}
+.category-allocation-note > button {
+  min-height: 34px;
+  padding: 5px 10px;
+  border: 1px solid #d8c6e6;
+  border-radius: 7px;
+  background: #fffafc;
+  color: var(--text-accent);
+  font-size: inherit;
+  font-weight: 500;
+}
+.category-allocation-note > button:hover {
+  background: #fff;
+  border-color: #a78abf;
+}
+.category-allocation-note.is-warning {
+  background: #fff2df;
+  color: var(--text-warning);
+}
+.budget-allocation-mode,
+.budget-transaction-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.budget-allocation-mode {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.budget-allocation-mode.is-auto {
+  color: var(--text-accent);
+}
+.budget-transaction-count {
+  font-size: 11px;
+}
 .category-budget-library {
   min-width: 0;
 }
@@ -713,6 +765,7 @@
 }
 .budget-category-footer > span,
 .budget-category-footer > button {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -727,45 +780,12 @@
   font-weight: 500;
   transition: background-color 160ms ease;
 }
+.budget-category-footer > span {
+  min-width: 0;
+  flex-wrap: wrap;
+}
 .budget-category-footer > button:hover {
   background: #eadef3;
-}
-.category-budget-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 250px;
-  padding: 34px 20px;
-  border: 1px dashed #c5b0d7;
-  border-radius: 15px;
-  background: #fcfaff;
-  text-align: center;
-}
-.category-budget-empty > span {
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  margin-bottom: 15px;
-  border: 1px solid #c6ddce;
-  border-radius: 18px;
-  background: #e7f1eb;
-  color: #46785d;
-}
-.category-budget-empty h3 {
-  color: var(--budget-ink);
-  font-size: var(--font-section);
-  line-height: 1.6;
-}
-.category-budget-empty p {
-  margin-top: 7px;
-  color: #574661;
-  font-size: var(--font-body);
-  line-height: 1.8;
-}
-.category-budget-empty .button {
-  margin-top: 18px;
-  font-size: var(--font-control);
 }
 @media (min-width: 1800px) {
   .category-budget-grid {

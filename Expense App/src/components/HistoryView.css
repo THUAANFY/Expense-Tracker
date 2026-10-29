@@ -459,12 +459,6 @@
   background: #fff;
   color: #73518b;
 }
-.history-workspace .empty-state {
-  margin: 16px 0 20px;
-  border: 1px dashed #d9c4e6;
-  border-radius: 18px;
-  background: #f8f1fc;
-}
 @media (hover: hover) and (pointer: fine) {
   .history-month-balance:hover .history-journal-art {
     transform: rotate(3deg) translateY(-3px);

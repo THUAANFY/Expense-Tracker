@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { dateKey, money } from '../src/data.js'
+import { dateKey, money, monthKey } from '../src/data.js'
 import { createSampleData } from './helpers/fixtures.js'
 
 async function navigateToCategories(page) {
@@ -17,6 +17,7 @@ async function seedCategories(page) {
   const data = createSampleData()
   data.profile.budget = 3000000
   data.budgets = { ...data.budgets, food: 1000000, shopping: 1000000, home: 1000000 }
+  data.monthlyCategoryBudgets = { [monthKey()]: { ...data.budgets } }
   const now = new Date()
   const previous = dateKey(new Date(now.getFullYear(), now.getMonth() - 1, 10))
   data.transactions = [
@@ -102,7 +103,8 @@ test('budget preview and quick amounts persist without changing the total budget
   const stored = await page.evaluate(() =>
     JSON.parse(localStorage.getItem('may-expense-tracker-v1')),
   )
-  expect(stored.budgets.food).toBe(1200000)
+  expect(stored.monthlyCategoryBudgets[monthKey()].food).toBe(1200000)
+  expect(stored.budgets.food).toBe(1000000)
   expect(stored.profile.budget).toBe(3000000)
   await expect(
     page.getByRole('article', { name: 'Ăn uống', exact: true }).getByRole('progressbar'),
@@ -110,7 +112,7 @@ test('budget preview and quick amounts persist without changing the total budget
   await page.getByRole('button', { name: 'Tháng trước', exact: true }).click()
   const food = page.getByRole('article', { name: 'Ăn uống', exact: true })
   await expect(food.locator('.budget-category-spent > strong')).toHaveText(money(500000))
-  await expect(food.locator('.budget-category-remaining')).toContainText(money(700000))
+  await expect(food.locator('.budget-category-remaining')).toContainText(money(500000))
   await food.getByRole('button', { name: 'Xem giao dịch Ăn uống', exact: true }).click()
   await expect(page.locator('.transaction-row')).toHaveCount(1)
   await expect(page.locator('.transaction-row')).toContainText('Ăn uống tháng trước')
@@ -139,7 +141,7 @@ test.describe('small touch screen budgets', () => {
     await input.fill('')
     await expect(save).toBeDisabled()
     await input.fill('0')
-    await expect(save).toBeDisabled()
+    await expect(save).toBeEnabled()
     await input.fill('1000000000000')
     await expect(save).toBeEnabled()
     await expect(save).toBeInViewport()
@@ -161,9 +163,24 @@ test.describe('small touch screen budgets', () => {
     await dialog.getByRole('spinbutton').fill('2000000')
     await save.tap()
     await expect(
-      page.getByRole('heading', { name: 'Chưa có danh mục vượt hạn mức', exact: true }),
+      page.getByRole('heading', { name: 'Chưa có mục vượt hạn mức', exact: true }),
     ).toBeVisible()
     await page.getByRole('button', { name: 'Xem tất cả danh mục', exact: true }).tap()
     await expect(page.locator('.budget-category-card')).toHaveCount(8)
+    const savedBeforeFilter = await page.evaluate(() =>
+      localStorage.getItem('may-expense-tracker-v1'),
+    )
+    await page.getByRole('button', { name: 'Tháng trước', exact: true }).tap()
+    await page
+      .getByRole('group', { name: 'Lọc trạng thái ngân sách' })
+      .getByRole('button', { name: /^Gần hạn mức/ })
+      .tap()
+    const emptyNear = page.getByRole('region', { name: 'Chưa có mục gần hạn mức', exact: true })
+    await expect(emptyNear).toContainText('80–100%')
+    await emptyNear.getByRole('button', { name: 'Xem tất cả danh mục', exact: true }).tap()
+    await expect(page.locator('.budget-category-card')).toHaveCount(8)
+    expect(await page.evaluate(() => localStorage.getItem('may-expense-tracker-v1'))).toBe(
+      savedBeforeFilter,
+    )
   })
 })

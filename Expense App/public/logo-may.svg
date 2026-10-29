@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none">
+  <title>mây. — Sổ thu chi nhỏ</title>
+  <defs>
+    <linearGradient id="may-cloud" x1="72" y1="18" x2="82" y2="106" gradientUnits="userSpaceOnUse"><stop stop-color="#fffef9"/><stop offset="1" stop-color="#f4eaf4"/></linearGradient>
+    <linearGradient id="may-cover" x1="29" y1="95" x2="130" y2="145" gradientUnits="userSpaceOnUse"><stop stop-color="#ebdef5"/><stop offset="1" stop-color="#c5a9d9"/></linearGradient>
+    <linearGradient id="may-left-page" x1="52" y1="88" x2="61" y2="135" gradientUnits="userSpaceOnUse"><stop stop-color="#fffef9"/><stop offset="1" stop-color="#fff6e9"/></linearGradient>
+    <linearGradient id="may-right-page" x1="114" y1="89" x2="90" y2="136" gradientUnits="userSpaceOnUse"><stop stop-color="#fffef9"/><stop offset="1" stop-color="#f7f3e9"/></linearGradient>
+    <linearGradient id="may-coin" x1="44" y1="98" x2="57" y2="115" gradientUnits="userSpaceOnUse"><stop stop-color="#fff0c3"/><stop offset="1" stop-color="#edcf85"/></linearGradient>
+    <linearGradient id="may-pencil" x1="-3" y1="12" x2="3" y2="14" gradientUnits="userSpaceOnUse"><stop stop-color="#dfead5"/><stop offset="1" stop-color="#b1cba4"/></linearGradient>
+  </defs>
+  <ellipse cx="81" cy="150" rx="51" ry="3.2" fill="#d9c9e6" opacity=".55"/>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M41 105c-16 0-26-10-26-23 0-13 8-23 21-25-2-15 9-27 24-27 4-12 18-16 29-9 7 4 11 10 12 17 14-4 27 5 29 18 11 2 18 11 17 23-1 15-13 26-29 26Z" fill="#e2d1eb" opacity=".48"/>
+    <path d="M41 103c-16 0-26-10-26-23 0-13 8-23 21-25-2-15 9-27 24-27 4-12 18-16 29-9 7 4 11 10 12 17 14-4 27 5 29 18 11 2 18 11 17 23-1 15-13 26-29 26Z" fill="url(#may-cloud)" stroke="#9475a7" stroke-width="2.5"/>
+    <path d="M63 32c4-10 15-13 23-8M25 77c0-7 4-12 10-15" stroke="#fff" stroke-width="3.1"/>
+    <path d="M113 43c5 1 9 4 11 9" stroke="#fffdfd" stroke-width="2"/>
+    <ellipse cx="54" cy="75" rx="5" ry="2.8" fill="#ebc7d7"/>
+    <ellipse cx="98" cy="75" rx="5" ry="2.8" fill="#ebc7d7"/>
+    <path d="M64 64.5v3.4m24-3.4v3.4" stroke="#86628f" stroke-width="3.2"/>
+    <path d="M72 75c3 4 7 4 10 0" stroke="#946e9b" stroke-width="2.1"/>
+    <path d="M27 98c19-7 34-4 52 6 19-10 36-14 56-6v41c-21-4-39 0-56 9-18-9-34-13-52-9Z" fill="#d9c7e5" opacity=".65"/>
+    <path d="M27 96c19-7 34-4 52 6 19-10 36-14 56-6v41c-21-4-39 0-56 9-18-9-34-13-52-9Z" fill="url(#may-cover)" stroke="#9475a7" stroke-width="2.3"/>
+    <path d="M31 94c16-4 31-2 48 7v40c-18-9-31-11-48-7Z" fill="#eae0f0" stroke="#bca7c9" stroke-width="1.3"/>
+    <path d="M79 101c18-9 35-13 52-7v40c-19-4-35-1-52 7Z" fill="#e7dced" stroke="#bca7c9" stroke-width="1.3"/>
+    <path d="M34 131c17-4 30 0 45 8 17-8 33-12 51-6" stroke="#f8f0fc" stroke-width="1.4"/>
+    <path d="M34 90c15-4 30-1 45 9v36c-16-8-30-11-45-7Z" fill="url(#may-left-page)" stroke="#b6a0c7" stroke-width="1.5"/>
+    <path d="M79 99c16-10 31-13 49-9v38c-17-4-33 0-49 7Z" fill="url(#may-right-page)" stroke="#b6a0c7" stroke-width="1.5"/>
+    <path d="M77.2 99h3.6v35L79 136l-1.8-2Z" fill="#d9c9df" opacity=".5"/>
+    <path d="M79 101v31" stroke="#bda6cb" stroke-width="1.1"/>
+    <path d="M38 93c11-2 24 .8 36 7m10 0c11-6 24-9 39-7" stroke="#fff" stroke-width="1.4"/>
+    <circle cx="49.5" cy="106.5" r="10" fill="url(#may-coin)" stroke="#bfa16c" stroke-width="1.25"/>
+    <circle cx="49.5" cy="106.5" r="7.3" stroke="#e1bf7e" stroke-width=".9"/>
+    <path d="M43 103c.8-2.1 2.6-3.5 4.6-3.7" stroke="#fff8df" stroke-width="1.5"/>
+    <path d="M51.5 100v9.5m-5-8h7.5m-2.5 3.5c-1.7-3.2-6-2.7-6 1s4.3 4.2 6 1M45 112.5h8.5" stroke="#a27f46" stroke-width="1.35"/>
+    <path d="m63 101 7 2.4m-7 3 7 2.4" stroke="#c8b6d2" stroke-width="1.25"/>
+    <path d="M40 120h4m-2-2v4" stroke="#89a37d" stroke-width="1.6"/>
+    <path d="M50 118c7 1 13 3 20 6" stroke="#b3bda3" stroke-width="1.5"/>
+    <path d="M40 125h4" stroke="#bd8e80" stroke-width="1.6"/>
+    <path d="m50 124 12 3" stroke="#d4b8ae" stroke-width="1.5"/>
+    <path d="M87 101c5-2.6 10-4.6 15-5.7m-15 10.5c5-2.6 10-4.6 15-5.7" stroke="#c4b1cf" stroke-width="1.25"/>
+    <rect x="89" y="118" width="4.5" height="10" rx="1.4" fill="#c6d9b9" stroke="#99b18b" stroke-width=".9"/>
+    <rect x="98" y="114" width="4.5" height="13" rx="1.4" fill="#d1bcdf" stroke="#b29bc2" stroke-width=".9"/>
+    <rect x="107" y="109" width="4.5" height="17" rx="1.4" fill="#efd7a4" stroke="#c8ad79" stroke-width=".9"/>
+    <path d="M87 130c8-3 17-5 27-5" stroke="#c8b8d1" stroke-width="1"/>
+    <path d="M76 136h6v15l-3-2.4-3 2.4Z" fill="#c9ddbf" stroke="#8fa581" stroke-width="1.2"/>
+    <path d="M78 139v7" stroke="#e9f1df" stroke-width=".8"/>
+    <g transform="translate(137 70) rotate(18)">
+      <path d="M-3 1h6v34h-6Z" fill="url(#may-pencil)" stroke="#8fa67e" stroke-width="1.3"/>
+      <path d="M-1.1 5v26" stroke="#edf4e7" stroke-width="1.1"/>
+      <path d="m-3 35 3 9 3-9Z" fill="#f1dabb" stroke="#b39479" stroke-width="1"/>
+      <path d="m-1 41 1 3 1-3Z" fill="#88718e" stroke="#88718e" stroke-width=".5"/>
+      <rect x="-3" y="-7" width="6" height="9" rx="2.5" fill="#eccbd5" stroke="#b38ca3" stroke-width="1.1"/>
+      <path d="M-3 0h6v4h-6Z" fill="#f6ecd6" stroke="#c3b59a" stroke-width=".8"/>
+      <path d="M-1 1h3" stroke="#fffaf0" stroke-width=".8"/>
+    </g>
+    <path d="M35 100c-6-4-10 0-7 4l7 3c3-1 4-4 0-7Z" fill="url(#may-cloud)" stroke="#9475a7" stroke-width="1.9"/>
+    <path d="M31.5 101c1.5.2 2.8 1.1 3.3 2.2" stroke="#d4bddf" stroke-width="1"/>
+    <path d="M135 88c-5-5-11-1-8 4l6 4c3 1 6-3 4-5Z" fill="url(#may-cloud)" stroke="#9475a7" stroke-width="1.9"/>
+    <path d="m130 88 3 3" stroke="#d4bddf" stroke-width="1"/>
+  </g>
+</svg>

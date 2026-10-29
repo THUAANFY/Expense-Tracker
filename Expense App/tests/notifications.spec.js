@@ -27,6 +27,7 @@ function fixture() {
   const data = createSampleData()
   data.profile.budget = 1000000
   data.budgets = Object.fromEntries(Object.keys(data.budgets).map((id) => [id, 1000000]))
+  data.monthlyCategoryBudgets = { '2026-10': { ...data.budgets } }
   data.transactions = [
     transaction('Ăn uống tháng này', 850000),
     transaction('Mua sắm tháng này', 350000, 'shopping'),

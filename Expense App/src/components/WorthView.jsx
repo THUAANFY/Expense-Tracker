@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { isClosedMonth } from '../closedMonths'
 import {
   ArrowUpRight,
   BookOpen,
@@ -227,7 +228,7 @@ export default function WorthView({
                           <button
                             className="worth-transaction-title"
                             onClick={() => onEditTransaction(item)}
-                            aria-label={`Sửa giao dịch ${item.title}`}
+                            aria-label={`${isClosedMonth(item.date) ? 'Xem' : 'Sửa'} giao dịch ${item.title}`}
                           >
                             <strong title={item.title}>{item.title}</strong>
                             <ArrowUpRight size={12} aria-hidden="true" />
@@ -259,6 +260,10 @@ export default function WorthView({
                               data-mood={option.id}
                               aria-label={option.label}
                               aria-pressed={item.review?.rating === option.id}
+                              disabled={isClosedMonth(item.date)}
+                              title={
+                                isClosedMonth(item.date) ? 'Tháng đã qua chỉ được xem' : undefined
+                              }
                               onClick={() => {
                                 if (item.review?.rating !== option.id)
                                   onRate(item.id, {
@@ -281,7 +286,7 @@ export default function WorthView({
                         </div>
                         <button
                           className={`worth-reason-button ${item.review?.note ? 'has-reason' : ''}`}
-                          aria-label={`${item.review ? 'Sửa cảm nhận' : 'Thêm lý do cho'} ${item.title}`}
+                          aria-label={`${isClosedMonth(item.date) ? 'Xem cảm nhận' : item.review ? 'Sửa cảm nhận' : 'Thêm lý do cho'} ${item.title}`}
                           title={item.review ? 'Sửa cảm nhận và lý do' : 'Thêm cảm nhận và lý do'}
                           onClick={() => onReason(item)}
                         >

@@ -2,7 +2,9 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=may-ledger-detail" />
+    <link rel="preload" as="image" type="image/svg+xml" href="/logo-may.svg?v=ledger-detail" />
+    <link rel="stylesheet" href="/src/startup.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#a48bc8" />
     <meta
@@ -11,24 +13,33 @@
     />
     <title>mây. — Gọn chi tiêu, nhẹ cuộc sống</title>
   </head>
-  <body>
-    <div id="root">
-      <div
-        role="status"
-        style="
-          min-height: 100svh;
-          display: grid;
-          place-items: center;
-          background: #f7f8fc;
-          color: #65596f;
-          font:
-            14px system-ui,
-            sans-serif;
-        "
-      >
-        Đang mở mây…
+  <body class="is-starting">
+    <div id="startup-screen" class="startup-screen" role="status" aria-label="Đang mở mây">
+      <div class="startup-content" aria-hidden="true">
+        <div class="startup-art">
+          <img
+            class="startup-logo"
+            src="/logo-may.svg?v=ledger-detail"
+            width="156"
+            height="156"
+            alt=""
+            fetchpriority="high"
+          />
+        </div>
+        <span class="startup-wordmark">mây<span>.</span></span>
+        <p class="startup-slogan"><span>Gọn chi tiêu,</span> <span>nhẹ cuộc sống.</span></p>
+        <span class="startup-wait"><span></span><span></span><span></span></span>
       </div>
     </div>
+    <div id="root" inert aria-hidden="true" aria-busy="true"></div>
+    <noscript>
+      <style>
+        #startup-screen {
+          display: none;
+        }
+      </style>
+      <section class="startup-failure"><p>Bật JavaScript trong trình duyệt để mở mây.</p></section>
+    </noscript>
     <script type="module" src="/src/bootstrap.js"></script>
   </body>
 </html>

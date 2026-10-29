@@ -1,4 +1,7 @@
 import { isValidData, normalizeData, STORAGE_KEY, uid } from './data'
+import { monthlyBudgetFundingError } from './monthlyBudgets'
+import { closedMonthChangeError } from './closedMonths'
+import { createCategoryBudgetPolicy } from './categoryBudgets'
 
 export const RECOVERY_PREFIX = `${STORAGE_KEY}:recovery:`
 const LOCK_DATABASE = 'may-book-writes-v1'
@@ -26,6 +29,13 @@ const conflict = () => {
 function mergeValue(base, next, latest, key = '') {
   if (same(next, base)) return latest
   if (same(latest, base) || same(next, latest)) return next
+  if (
+    (['monthlyBudgets', 'monthlyCategoryBudgets', 'monthlyCategoryWeights'].includes(key) ||
+      /^\d{4}-\d{2}$/.test(key)) &&
+    [base, next, latest].every((value) => value === undefined || object(value))
+  ) {
+    return mergeValue(base || {}, next || {}, latest || {})
+  }
   if (
     COLLECTIONS.has(key) &&
     [base, next, latest].every((value) => value === undefined || Array.isArray(value))
@@ -164,7 +174,7 @@ export function persistBook(base, next, { baseRaw, replace = false, recover = fa
         'Chưa đọc được bản lưu hiện tại nên không thể khôi phục an toàn. Hãy thử lại sau khi cho phép bộ nhớ trình duyệt.',
       )
     }
-    const saved =
+    let saved =
       replace || raw === null
         ? normalizeData(next)
         : mergeValue(normalizeData(base), normalizeData(next), latest)
@@ -173,6 +183,34 @@ export function persistBook(base, next, { baseRaw, replace = false, recover = fa
         'conflict',
         'Các thay đổi không còn phù hợp với dữ liệu mới ở tab khác. Chưa lưu; hãy giữ nội dung cần thiết rồi mở lại bản mới.',
       )
+    }
+    if (saved.categoryBudgetPolicy === undefined) {
+      saved = {
+        ...saved,
+        categoryBudgetPolicy: latest?.categoryBudgetPolicy || createCategoryBudgetPolicy(),
+      }
+    }
+    // Initial restore/recovery can recover historical records. Replacing an existing
+    // financial book must preserve its closed months just like an ordinary save.
+    const previous = latest || normalizeData(base)
+    const restoringEmptyBook =
+      replace &&
+      (!latest ||
+        (!latest.transactions.length &&
+          !(latest.sourceTransfers || []).length &&
+          !Object.keys(latest.monthlyBudgets || {}).length &&
+          !Object.keys(latest.monthlyCategoryWeights || {}).length &&
+          !Object.keys(latest.monthlyCategoryBudgets || {}).length))
+    if (!restoringEmptyBook) {
+      const error = closedMonthChangeError(previous, saved)
+      if (error) throw new BookStorageError('closed-month', error)
+    }
+    if (!replace) {
+      for (const [month, amount] of Object.entries(saved.monthlyBudgets || {})) {
+        if (amount === latest?.monthlyBudgets?.[month]) continue
+        const error = monthlyBudgetFundingError(saved, amount)
+        if (error) throw new BookStorageError('budget-funds', error)
+      }
     }
     let recovery = null
     if (raw !== null && !latest) recovery = { key: archiveOriginal(raw), raw }

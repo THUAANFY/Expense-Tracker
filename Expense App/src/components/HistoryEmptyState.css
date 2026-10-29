@@ -1,0 +1,119 @@
+.history-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  min-width: 0;
+  min-height: 190px;
+  padding: 20px 12px 30px;
+}
+.history-empty-art {
+  display: block;
+  flex: 0 0 160px;
+  width: 160px;
+  height: auto;
+}
+.history-empty-copy {
+  width: 100%;
+  min-width: 0;
+  max-width: 360px;
+}
+.history-empty h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--font-section);
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+}
+.history-empty p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
+  line-height: 1.7;
+}
+.history-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 14px;
+}
+.history-empty .button,
+.history-empty-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  font-size: var(--font-control);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.history-empty .button {
+  padding: 8px 12px;
+  border-radius: 9px;
+}
+.history-empty-add {
+  padding: 6px 2px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-decoration-color: #d9c7e7;
+  text-underline-offset: 4px;
+}
+.history-empty-magnifier {
+  transform-origin: 148px 91px;
+  transition: transform 350ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .history-empty:hover .history-empty-magnifier {
+    transform: rotate(-5deg);
+  }
+  .history-empty-add:hover {
+    text-decoration-color: var(--text-accent);
+  }
+}
+@media (max-width: 760px) {
+  .history-empty {
+    gap: 16px;
+    padding-inline: 0;
+  }
+  .history-empty-art {
+    flex-basis: 128px;
+    width: 128px;
+  }
+}
+@media (max-width: 480px) {
+  .history-empty {
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    padding: 8px 0 22px;
+    text-align: center;
+  }
+  .history-empty-art {
+    flex: 0 0 auto;
+    width: 112px;
+  }
+  .history-empty-copy {
+    max-width: 310px;
+  }
+  .history-empty-actions {
+    justify-content: center;
+    gap: 8px 16px;
+    margin-top: 12px;
+  }
+  .history-empty .button,
+  .history-empty-add {
+    min-height: 42px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .history-empty .history-empty-magnifier {
+    transform: none;
+    transition: none;
+  }
+}

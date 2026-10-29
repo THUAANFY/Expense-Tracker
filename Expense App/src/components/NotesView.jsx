@@ -1,4 +1,5 @@
 import { useId, useRef, useState } from 'react'
+import { isClosedMonth } from '../closedMonths'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowUpRight,
@@ -306,7 +307,7 @@ export default function NotesView({
                   <button
                     key={item.id}
                     className="notebook-transaction-card"
-                    aria-label={`Chỉnh sửa giao dịch ${item.title}`}
+                    aria-label={`${isClosedMonth(item.date) ? 'Xem' : 'Chỉnh sửa'} giao dịch ${item.title}`}
                     onClick={() => onEditTransaction(item)}
                   >
                     <span className="notebook-transaction-heading">

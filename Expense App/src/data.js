@@ -2,6 +2,13 @@ import { isValidReview } from './reviews.js'
 import { isValidBag } from './bags.js'
 import { dateKey, isValidDate } from './dates.js'
 import { isValidMoneySource, isValidSourceTransfer, sourceName } from './moneySources.js'
+import { isValidMonthlyBudgets, isValidMonthlyCategoryBudgets } from './monthlyBudgets.js'
+import {
+  createCategoryBudgetPolicy,
+  isValidCategoryBudgetPolicy,
+  isValidMonthlyCategoryWeights,
+  LEGACY_CATEGORY_BUDGETS,
+} from './categoryBudgets.js'
 export { dateKey, monthKey, isValidDate } from './dates.js'
 
 export const CATEGORIES = [
@@ -11,7 +18,6 @@ export const CATEGORIES = [
     color: '#f2997e',
     textColor: '#89412b',
     background: '#fff0e9',
-    budget: 3000000,
     description: 'Một bữa ngon, một ngày vui',
   },
   {
@@ -20,7 +26,6 @@ export const CATEGORIES = [
     color: '#a998e3',
     textColor: '#604383',
     background: '#f0eafa',
-    budget: 2500000,
     description: 'Những điều nhỏ mình yêu',
   },
   {
@@ -29,7 +34,6 @@ export const CATEGORIES = [
     color: '#70b8ad',
     textColor: '#2d6357',
     background: '#e9f6f1',
-    budget: 1200000,
     description: 'Đi đâu cũng là trải nghiệm',
   },
   {
@@ -38,7 +42,6 @@ export const CATEGORIES = [
     color: '#7e9dcf',
     textColor: '#385983',
     background: '#eaf0fa',
-    budget: 4500000,
     description: 'Chăm chút tổ ấm của mình',
   },
   {
@@ -47,7 +50,6 @@ export const CATEGORIES = [
     color: '#e2b75b',
     textColor: '#75591c',
     background: '#fff7df',
-    budget: 1000000,
     description: 'Dành chỗ cho niềm vui',
   },
   {
@@ -56,7 +58,6 @@ export const CATEGORIES = [
     color: '#d88fa5',
     textColor: '#873e58',
     background: '#fcecf2',
-    budget: 800000,
     description: 'Đầu tư cho chính mình',
   },
   {
@@ -65,7 +66,6 @@ export const CATEGORIES = [
     color: '#81adc2',
     textColor: '#305e75',
     background: '#eaf4fa',
-    budget: 1000000,
     description: 'Tốt hơn một chút mỗi ngày',
   },
   {
@@ -74,13 +74,15 @@ export const CATEGORIES = [
     color: '#a2a8b8',
     textColor: '#51566a',
     background: '#eff1f5',
-    budget: 1000000,
     description: 'Những khoản chi nho nhỏ',
   },
 ]
 
 export const getCategory = (id) =>
   CATEGORIES.find((item) => item.id === id) || CATEGORIES[CATEGORIES.length - 1]
+// The shared record schema keeps a category code on income; it does not describe that income.
+export const transactionCategoryName = (item) =>
+  item.type === 'income' ? 'Thu nhập' : getCategory(item.category).name
 export const money = (value) =>
   new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -106,7 +108,8 @@ export function createEmptyData() {
     sourceTransfers: [],
     notes: [],
     profile: { name: 'bạn', budget: 12000000 },
-    budgets: Object.fromEntries(CATEGORIES.map((category) => [category.id, category.budget])),
+    budgets: { ...LEGACY_CATEGORY_BUDGETS },
+    categoryBudgetPolicy: createCategoryBudgetPolicy(),
   }
 }
 
@@ -148,6 +151,16 @@ export function isValidData(data) {
     data.profile.budget <= 1e12 &&
     data.profile.budget > 0 &&
     data.budgets &&
+    isValidCategoryBudgetPolicy(
+      data.categoryBudgetPolicy,
+      CATEGORIES.map((item) => item.id),
+    ) &&
+    isValidMonthlyBudgets(data.monthlyBudgets) &&
+    isValidMonthlyCategoryWeights(data.monthlyCategoryWeights) &&
+    isValidMonthlyCategoryBudgets(
+      data.monthlyCategoryBudgets,
+      CATEGORIES.map((item) => item.id),
+    ) &&
     CATEGORIES.every(
       (category) =>
         Number.isSafeInteger(data.budgets[category.id]) &&
@@ -251,7 +264,7 @@ export function exportCSV(transactions, sources = []) {
       item.date,
       item.title,
       item.type === 'expense' ? 'Chi tiêu' : 'Thu nhập',
-      getCategory(item.category).name,
+      transactionCategoryName(item),
       item.amount,
       item.wallet,
       sourceName(sources, item.sourceId),

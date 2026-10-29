@@ -4,11 +4,11 @@
 .history-select-trigger {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--control-content-gap);
   width: 100%;
   min-width: 174px;
   height: 38px;
-  padding: 6px 10px;
+  padding: 6px var(--control-padding-inline);
   border: 1px solid #dfd3e9;
   border-radius: 8px;
   background: #fff;
@@ -69,7 +69,7 @@
 .history-select-popover {
   display: flex;
   flex-direction: column;
-  padding: 6px;
+  padding: var(--select-panel-padding);
   overflow: hidden;
   border-color: #d9c7e7;
   border-radius: 12px;
@@ -84,9 +84,9 @@
   flex-shrink: 0;
   gap: 10px;
   min-height: 32px;
-  padding: 5px 8px 9px;
+  padding: 5px var(--select-option-padding-inline) 9px;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: var(--font-control-label);
   font-weight: 500;
   letter-spacing: 0.35px;
 }
@@ -94,7 +94,7 @@
   color: var(--text-accent);
 }
 .history-select-caption > span:last-child {
-  font-size: 9px;
+  font-size: var(--font-caption);
   font-weight: 400;
   letter-spacing: 0;
   white-space: nowrap;
@@ -119,10 +119,11 @@
 .history-select-option {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--control-content-gap);
   width: 100%;
+  min-width: 0;
   min-height: 44px;
-  padding: 7px 8px;
+  padding: 7px var(--select-option-padding-inline);
   border: 1px solid transparent;
   border-radius: 8px;
   color: var(--text-primary);
@@ -152,6 +153,8 @@
   min-width: 0;
 }
 .history-select-option-copy > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 .history-select-option.is-selected .history-select-option-copy > span {
@@ -159,8 +162,9 @@
 }
 .history-select-option-copy > small {
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--font-caption);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 .history-select-check {
   display: grid;
@@ -181,7 +185,6 @@
   .history-select-trigger {
     min-width: 0;
     height: 40px;
-    padding-inline: 8px;
   }
   .history-panel .history-custom-filters .export-button {
     min-height: 40px;
@@ -216,10 +219,6 @@
     width: 36px;
     padding-inline: 8px;
   }
-  .history-select-trigger {
-    gap: 4px;
-    padding-inline: 6px;
-  }
   .history-select-chevron {
     width: 12px;
     height: 12px;
@@ -231,11 +230,6 @@
 @media (pointer: coarse) {
   .history-select-option {
     min-height: 46px;
-  }
-}
-@media (max-width: 359px) {
-  .history-select-trigger {
-    padding-inline: 4px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

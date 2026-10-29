@@ -1,4 +1,5 @@
-import { CATEGORIES, dateKey, uid } from '../../src/data.js'
+import { dateKey, uid } from '../../src/data.js'
+import { createCategoryBudgetPolicy, LEGACY_CATEGORY_BUDGETS } from '../../src/categoryBudgets.js'
 
 export function createSampleData() {
   const now = new Date()
@@ -172,7 +173,8 @@ export function createSampleData() {
       },
     ],
     profile: { name: 'bạn', budget: 12000000 },
-    budgets: Object.fromEntries(CATEGORIES.map((category) => [category.id, category.budget])),
+    budgets: { ...LEGACY_CATEGORY_BUDGETS },
+    categoryBudgetPolicy: createCategoryBudgetPolicy(),
   }
 }
 

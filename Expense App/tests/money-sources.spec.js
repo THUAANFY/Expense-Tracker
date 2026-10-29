@@ -69,6 +69,97 @@ async function saveSource(dialog) {
   await expect(dialog).not.toBeVisible()
 }
 
+test('a single source row navigates to later wallets and records spending against the visible source', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const data = {
+    ...book(),
+    moneySources: Array.from({ length: 7 }, (_, i) =>
+      source(`source-${i + 1}`, `Nguồn số ${i + 1}`, (i + 1) * 1000000),
+    ),
+  }
+  await seed(page, data)
+  await navigate(page)
+  const rail = page.getByRole('region', { name: 'Danh sách nguồn tiền', exact: true })
+  const next = rail.getByRole('button', { name: 'Xem nguồn tiền tiếp theo', exact: true })
+  const previous = rail.getByRole('button', { name: 'Xem nguồn tiền trước', exact: true })
+  await expect(rail.locator('.source-cards-range')).toContainText('1–3')
+  await expect(previous).toBeDisabled()
+  await expect(card(page, 'source-4')).not.toBeInViewport()
+  await next.click()
+  await expect(rail.locator('.source-cards-range')).toContainText('2–4')
+  await expect(card(page, 'source-4')).toBeInViewport({ ratio: 0.99 })
+  await rail.getByRole('group', { name: 'Các thẻ nguồn tiền', exact: true }).focus()
+  await page.keyboard.press('End')
+  await expect(rail.locator('.source-cards-range')).toContainText('5–7')
+  await expect(next).toBeDisabled()
+  await expect(card(page, 'source-7')).toBeInViewport({ ratio: 0.99 })
+  await card(page, 'source-7')
+    .getByRole('button', { name: 'Ghi khoản chi từ Nguồn số 7', exact: true })
+    .click()
+  const form = page.locator('.transaction-dialog')
+  await expect(
+    form.getByRole('combobox', { name: 'Nguồn tiền của giao dịch', exact: true }),
+  ).toContainText('Nguồn số 7')
+  await form.getByRole('textbox', { name: 'Tên giao dịch', exact: true }).fill('Chi từ nguồn cuối')
+  await form.getByRole('spinbutton', { name: 'Số tiền', exact: true }).fill('25000')
+  await form.getByRole('button', { name: 'Lưu giao dịch', exact: true }).click()
+  await expect(form).not.toBeVisible()
+  await expect(balance(page, 'source-7')).toHaveText(money(6975000))
+  await expect(page.locator('.sources-total > strong')).toHaveText(money(27975000))
+  expect((await stored(page)).transactions[0].sourceId).toBe('source-7')
+  await rail.getByRole('group', { name: 'Các thẻ nguồn tiền', exact: true }).focus()
+  await page.keyboard.press('Home')
+  await expect(previous).toBeDisabled()
+  await expect(card(page, 'source-1')).toBeInViewport({ ratio: 0.99 })
+})
+
+test.describe('touch source cards', () => {
+  test.use({
+    viewport: { width: 320, height: 844 },
+    hasTouch: true,
+    isMobile: true,
+    reducedMotion: 'reduce',
+  })
+  test('one visible wallet stays usable when deleting the last source and adding a new source', async ({
+    page,
+  }) => {
+    const data = {
+      ...book(),
+      moneySources: Array.from({ length: 4 }, (_, i) =>
+        source(`source-${i + 1}`, `Nguồn số ${i + 1}`, (i + 1) * 1000000),
+      ),
+    }
+    await seed(page, data)
+    await navigate(page)
+    const rail = page.getByRole('region', { name: 'Danh sách nguồn tiền', exact: true })
+    const next = rail.getByRole('button', { name: 'Xem nguồn tiền tiếp theo', exact: true })
+    await expect(card(page, 'source-2')).not.toBeInViewport()
+    for (let i = 0; i < 3; i++) await next.tap()
+    await expect(card(page, 'source-4')).toBeInViewport({ ratio: 0.99 })
+    await expect(next).toBeDisabled()
+    await card(page, 'source-4')
+      .getByRole('button', { name: 'Sửa nguồn Nguồn số 4', exact: true })
+      .tap()
+    const editor = page.getByRole('dialog', { name: 'Chăm chút nguồn tiền', exact: true })
+    await editor.getByRole('button', { name: 'Xóa nguồn tiền', exact: true }).tap()
+    await editor.getByRole('button', { name: 'Xác nhận xóa nguồn', exact: true }).tap()
+    await expect(editor).not.toBeVisible()
+    await expect(card(page, 'source-3')).toBeInViewport({ ratio: 0.99 })
+    await expect(rail.locator('.source-cards-range')).toContainText('/ 3 nguồn')
+    await expect(next).toBeDisabled()
+    await saveSource(await createSource(page, 'Nguồn vừa thêm', 100000))
+    await expect(rail.locator('.source-card').first()).toContainText('Nguồn vừa thêm')
+    await expect(rail.locator('.source-card').first()).toBeInViewport({ ratio: 0.99 })
+    await expect(rail.locator('.source-cards-range')).toContainText('/ 4 nguồn')
+    await expect(next).toBeEnabled()
+    await expect(page.locator('.sources-total > strong')).toHaveText(money(6100000))
+    expect((await stored(page)).moneySources).toHaveLength(4)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320)
+  })
+})
+
 test('source arithmetic counts opening once, gates dates and keeps transfers neutral to total funds', () => {
   const cash = source('cash', 'Cash', 2000000, { openingDate: '2026-10-10' })
   const bank = source('bank', 'Bank', 5000000, { openingDate: '2026-10-10' })
@@ -170,6 +261,43 @@ test('backup validation accepts legacy books and rejects invalid sources, dangli
   expect(removeMoneySource(data, 'cash')).toBeNull()
 })
 
+test('source deletion refuses every linked income, expense and transfer, independent of the balance date', () => {
+  for (const type of ['income', 'expense']) {
+    for (const date of ['1970-01-01', dateKey(), '2099-01-01']) {
+      const data = book()
+      data.transactions = [transaction('linked', 2000000, { sourceId: 'cash', type, date })]
+      const before = structuredClone(data)
+      expect(removeMoneySource(data, 'cash')).toBeNull()
+      expect(data).toEqual(before)
+    }
+  }
+  const data = book()
+  data.sourceTransfers = [
+    {
+      id: 'future-transfer',
+      fromSourceId: 'bank',
+      toSourceId: 'cash',
+      amount: 100000,
+      date: '2099-01-01',
+      note: '',
+      createdAt: Date.now(),
+    },
+  ]
+  expect(removeMoneySource(data, 'cash')).toBeNull()
+  expect(removeMoneySource(data, 'bank')).toBeNull()
+  expect(removeMoneySource(data, 'missing')).toBeNull()
+  data.sourceTransfers = []
+  data.transactions = [
+    transaction('unrelated', 10000, { sourceId: 'bank' }),
+    transaction('unassigned', 20000),
+  ]
+  const removed = removeMoneySource(data, 'cash')
+  expect(removed.moneySources.map((item) => item.id)).toEqual(['bank'])
+  expect(removed.transactions).toBe(data.transactions)
+  expect(removed.sourceTransfers).toBe(data.sourceTransfers)
+  expect(isValidData(removed)).toBeTruthy()
+})
+
 test('a source starts with declared funds without adding fake income; linked spending updates balance and persists', async ({
   page,
 }) => {
@@ -268,7 +396,7 @@ test('new records require a source once configured, while old unassigned records
   )
 })
 
-test('assigning historical records respects the opening date; deleting a source keeps financial history', async ({
+test('assigning historical records respects the opening date and protects their source from deletion', async ({
   page,
 }) => {
   const data = book()
@@ -305,20 +433,14 @@ test('assigning historical records respects the opening date; deleting a source 
     .fill('3000000')
   await saveSource(editor)
   await expect(balance(page, 'cash')).toHaveText(money(2800000))
+  const beforeDelete = await stored(page)
   await page.getByRole('button', { name: 'Sửa nguồn Tiền mặt của tôi', exact: true }).click()
-  await editor.getByRole('button', { name: 'Xóa nguồn tiền', exact: true }).click()
-  await editor.getByRole('button', { name: 'Xác nhận xóa nguồn', exact: true }).click()
-  await expect(editor).not.toBeVisible()
-  const after = await stored(page)
-  expect(after.moneySources).toEqual([])
-  expect(after.transactions).toEqual(
-    data.transactions.map((item) => {
-      const original = { ...item }
-      delete original.sourceId
-      return original
-    }),
+  await expect(editor.getByRole('button', { name: 'Xóa nguồn tiền', exact: true })).toBeDisabled()
+  await expect(editor.getByRole('note')).toContainText('3 giao dịch thu/chi')
+  await expect(editor.getByRole('button', { name: 'Xác nhận xóa nguồn', exact: true })).toHaveCount(
+    0,
   )
-  expect(isValidData(after)).toBeTruthy()
+  expect(await stored(page)).toEqual(beforeDelete)
 })
 
 test('the ledger paginates and searches, and opening unassigned records clears an unrelated search', async ({
@@ -406,18 +528,18 @@ test('ledger kinds compose with source and search filters without changing any b
   expect(await stored(page)).toEqual(data)
 })
 
-test('deleting the currently filtered source returns the ledger to all sources and preserves records', async ({
+test('deleting a currently filtered empty source returns the ledger to all sources and preserves records', async ({
   page,
 }) => {
   const data = book()
   data.transactions = [
-    transaction('cash-entry', 10000, { sourceId: 'cash' }),
+    transaction('unassigned-entry', 10000),
     transaction('bank-entry', 20000, { sourceId: 'bank' }),
   ]
   await seed(page, data)
   await navigate(page)
   await chooseHistoryFilter(page, 'Lọc nhật ký nguồn tiền', 'Tiền mặt của tôi')
-  await expect(page.locator('.source-ledger-row')).toHaveCount(1)
+  await expect(page.locator('.source-ledger-row')).toHaveCount(0)
   await page.getByRole('button', { name: 'Sửa nguồn Tiền mặt của tôi', exact: true }).click()
   const editor = page.getByRole('dialog', { name: 'Chăm chút nguồn tiền', exact: true })
   await editor.getByRole('button', { name: 'Xóa nguồn tiền', exact: true }).click()
@@ -428,8 +550,7 @@ test('deleting the currently filtered source returns the ledger to all sources a
   ).toContainText('Mọi nguồn')
   await expect(page.locator('.source-ledger-row')).toHaveCount(2)
   const saved = await stored(page)
-  expect(saved.transactions[0].sourceId).toBeUndefined()
-  expect(saved.transactions[1].sourceId).toBe('bank')
+  expect(saved.transactions).toEqual(data.transactions)
   expect(isValidData(saved)).toBeTruthy()
 })
 
@@ -484,8 +605,10 @@ test('internal transfers can be recorded, edited and removed without changing in
   await expect(balance(page, 'cash')).toHaveText(money(1800000))
   await page.getByRole('button', { name: 'Sửa nguồn Tiền mặt của tôi', exact: true }).click()
   const sourceDialog = page.getByRole('dialog', { name: 'Chăm chút nguồn tiền', exact: true })
-  await sourceDialog.getByRole('button', { name: 'Xóa nguồn tiền', exact: true }).click()
-  await expect(sourceDialog.locator('.source-delete-confirm')).toContainText('bản ghi chuyển nguồn')
+  await expect(
+    sourceDialog.getByRole('button', { name: 'Xóa nguồn tiền', exact: true }),
+  ).toBeDisabled()
+  await expect(sourceDialog.getByRole('note')).toContainText('1 bản ghi chuyển nguồn')
   await expect(
     sourceDialog.getByRole('button', { name: 'Xác nhận xóa nguồn', exact: true }),
   ).toHaveCount(0)
@@ -560,6 +683,67 @@ test('JSON restores sources and transfers, while CSV names the actual source', a
   expect(await readFile(await csv.path(), 'utf8')).toContain('Tiền mặt của tôi')
   await navigate(page)
   await expect(balance(page, 'cash')).toHaveText(money(1600000))
+})
+
+test('a transaction added in another tab cancels a pending source deletion and a stale write cannot bypass it', async ({
+  page,
+  context,
+}) => {
+  const data = book()
+  const staleDeletion = removeMoneySource(data, 'cash')
+  await seed(page, data)
+  await navigate(page)
+  await page.getByRole('button', { name: 'Sửa nguồn Tiền mặt của tôi', exact: true }).click()
+  const editor = page.getByRole('dialog', { name: 'Chăm chút nguồn tiền', exact: true })
+  await editor.getByRole('button', { name: 'Xóa nguồn tiền', exact: true }).click()
+  await expect(
+    editor.getByRole('button', { name: 'Xác nhận xóa nguồn', exact: true }),
+  ).toBeVisible()
+  const other = await context.newPage()
+  await other.goto('/')
+  await navigate(other)
+  await card(other, 'cash')
+    .getByRole('button', { name: 'Ghi khoản chi từ Tiền mặt của tôi', exact: true })
+    .click()
+  const form = other.locator('.transaction-dialog')
+  await form
+    .getByRole('textbox', { name: 'Tên giao dịch', exact: true })
+    .fill('Khoản vừa ghi ở tab khác')
+  await form.getByRole('spinbutton', { name: 'Số tiền', exact: true }).fill('2000000')
+  await form.getByRole('button', { name: 'Lưu giao dịch', exact: true }).click()
+  await expect(form).not.toBeVisible()
+  await expect(editor.getByRole('button', { name: 'Xóa nguồn tiền', exact: true })).toBeDisabled()
+  await expect(editor.getByRole('note')).toContainText('1 giao dịch thu/chi')
+  await expect(editor.getByRole('button', { name: 'Xác nhận xóa nguồn', exact: true })).toHaveCount(
+    0,
+  )
+  const latestRaw = await page.evaluate(() => localStorage.getItem('may-expense-tracker-v1'))
+  const result = await page.evaluate(
+    async ({ base, next }) => {
+      const { persistBook } = await import('/src/bookStorage.js')
+      try {
+        await persistBook(base, next, { baseRaw: JSON.stringify(base) })
+        return 'unexpected-save'
+      } catch (error) {
+        return error.code
+      }
+    },
+    { base: data, next: staleDeletion },
+  )
+  expect(result).toBe('conflict')
+  expect(await page.evaluate(() => localStorage.getItem('may-expense-tracker-v1'))).toBe(latestRaw)
+  const latest = await stored(page)
+  expect(latest.moneySources).toEqual(data.moneySources)
+  expect(latest.transactions).toHaveLength(1)
+  expect(latest.transactions[0].sourceId).toBe('cash')
+  await editor
+    .getByRole('textbox', { name: 'Tên nguồn tiền', exact: true })
+    .fill('Tiền mặt đã đổi tên')
+  await saveSource(editor)
+  const saved = await stored(page)
+  expect(saved.moneySources.find((item) => item.id === 'cash').name).toBe('Tiền mặt đã đổi tên')
+  expect(saved.transactions).toEqual(latest.transactions)
+  await expect(balance(page, 'cash')).toHaveText(money(0))
 })
 
 test('two tabs can create independent sources without replacing each other', async ({

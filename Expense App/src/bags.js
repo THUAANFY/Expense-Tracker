@@ -1,3 +1,5 @@
+import { isClosedMonth } from './closedMonths.js'
+
 export const BAG_STYLES = [
   { id: 'trip', label: 'Chuyến đi' },
   { id: 'gift', label: 'Quà tặng' },
@@ -86,7 +88,7 @@ export function setTransactionBag(transaction, bagId) {
 export function linkBagTransactions(transactions, bagId, selectedIds) {
   const selected = new Set(selectedIds)
   return transactions.map((item) =>
-    item.type === 'expense' && (!item.bagId || item.bagId === bagId)
+    !isClosedMonth(item.date) && item.type === 'expense' && (!item.bagId || item.bagId === bagId)
       ? setTransactionBag(item, selected.has(item.id) ? bagId : null)
       : item,
   )

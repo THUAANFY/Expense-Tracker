@@ -327,6 +327,11 @@
   background: #f2f7ee;
   border-color: #dce7d2;
 }
+@media (min-width: 1051px) {
+  .overview-workspace .budget-panel + .overview-bags-card {
+    margin-top: var(--layout-gap);
+  }
+}
 .overview-budget-intro {
   display: flex;
   align-items: center;

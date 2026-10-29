@@ -9,15 +9,25 @@ import {
   FileText,
   PencilLine,
   SlidersHorizontal,
+  Sparkles,
   Tags,
   Wallet,
 } from 'lucide-react'
 import CategoryArt from './CategoryArt'
+import BudgetFilterEmpty from './BudgetFilterEmpty'
 import { money } from '../data'
 import './CategoriesView.css'
 
 const getState = (spent, budget) =>
-  spent > budget ? 'over' : spent >= budget * 0.8 ? 'near' : spent > 0 ? 'within' : 'empty'
+  spent > budget
+    ? 'over'
+    : spent > 0 && spent >= budget * 0.8
+      ? 'near'
+      : spent > 0
+        ? 'within'
+        : 'empty'
+const budgetPercent = (spent, budget) =>
+  budget > 0 ? Math.round((spent / budget) * 100) : spent > 0 ? 100 : 0
 const stateLabels = {
   over: 'Vượt hạn mức',
   near: 'Gần hạn mức',
@@ -26,7 +36,7 @@ const stateLabels = {
 }
 
 function BudgetProgress({ spent, budget, label, color }) {
-  const percent = Math.round((spent / budget) * 100)
+  const percent = budgetPercent(spent, budget)
   return (
     <div
       className="category-budget-progress"
@@ -35,7 +45,11 @@ function BudgetProgress({ spent, budget, label, color }) {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.min(100, percent)}
-      aria-valuetext={`${percent}% — đã chi ${money(spent)} trên hạn mức ${money(budget)}`}
+      aria-valuetext={
+        budget === 0
+          ? `Hạn mức 0 ₫ — đã chi ${money(spent)}`
+          : `${percent}% — đã chi ${money(spent)} trên hạn mức ${money(budget)}`
+      }
     >
       <span style={{ width: `${Math.min(100, percent)}%`, background: color }} />
     </div>
@@ -89,11 +103,22 @@ function BudgetOrbit({ spent, budget }) {
   )
 }
 
-function CategoryBudgetCard({ category, budget, count, number, onEdit, onView }) {
+function CategoryBudgetCard({
+  category,
+  budget,
+  count,
+  number,
+  onEdit,
+  onView,
+  readOnly,
+  automatic,
+  weight,
+  legacy,
+}) {
   const titleId = useId()
   const state = getState(category.spent, budget)
   const remaining = budget - category.spent
-  const percent = Math.round((category.spent / budget) * 100)
+  const percent = budgetPercent(category.spent, budget)
   const progressColor = state === 'over' ? '#bb5265' : state === 'near' ? '#bb843f' : category.color
   return (
     <motion.article
@@ -125,7 +150,8 @@ function CategoryBudgetCard({ category, budget, count, number, onEdit, onView })
           type="button"
           className="budget-category-edit"
           aria-label={`Chỉnh ngân sách ${category.name}`}
-          title="Điều chỉnh hạn mức"
+          title={readOnly ? 'Tháng đã qua chỉ được xem' : 'Điều chỉnh hạn mức'}
+          disabled={readOnly}
           onClick={() => onEdit(category)}
         >
           <PencilLine size={15} />
@@ -136,7 +162,7 @@ function CategoryBudgetCard({ category, budget, count, number, onEdit, onView })
           <span>Đã chi trong tháng</span>
           <span className={`budget-state is-${state}`}>
             <span aria-hidden="true" />
-            {category.spent === budget ? 'Đã dùng hết' : stateLabels[state]}
+            {category.spent > 0 && category.spent === budget ? 'Đã dùng hết' : stateLabels[state]}
           </span>
           <strong>{money(category.spent)}</strong>
         </div>
@@ -144,7 +170,7 @@ function CategoryBudgetCard({ category, budget, count, number, onEdit, onView })
           <span>
             Hạn mức <strong>{money(budget)}</strong>
           </span>
-          <span>{percent.toLocaleString('vi-VN')}%</span>
+          <span>{budget > 0 ? `${percent.toLocaleString('vi-VN')}%` : '—'}</span>
         </div>
         <BudgetProgress
           spent={category.spent}
@@ -163,8 +189,21 @@ function CategoryBudgetCard({ category, budget, count, number, onEdit, onView })
       </div>
       <div className="budget-category-footer">
         <span>
-          <FileText size={12} />
-          {count} giao dịch
+          <span
+            className={`budget-allocation-mode ${automatic ? 'is-auto' : ''}`}
+            title={
+              automatic
+                ? `Tỷ lệ phân bổ ${weight}%; chia theo phần ngân sách còn lại sau các mức đặt riêng.`
+                : 'Hạn mức đã đặt riêng cho tháng này'
+            }
+          >
+            {automatic ? <Sparkles size={11} /> : <PencilLine size={11} />}
+            {automatic ? 'Tự động' : legacy ? 'Đã lưu' : 'Đặt riêng'}
+          </span>
+          <span className="budget-transaction-count">
+            <FileText size={11} />
+            {count} giao dịch
+          </span>
         </span>
         <button
           type="button"
@@ -181,12 +220,15 @@ function CategoryBudgetCard({ category, budget, count, number, onEdit, onView })
 export default function CategoriesView({
   categories,
   budgets,
+  plan,
   totalBudget,
   spent,
   transactions,
   month,
+  readOnly = false,
   onEditBudget,
   onEditTotalBudget,
+  onResetBudgets,
   onViewTransactions,
 }) {
   const [filter, setFilter] = useState('all')
@@ -227,6 +269,7 @@ export default function CategoriesView({
               type="button"
               aria-label="Điều chỉnh ngân sách tháng"
               title="Điều chỉnh ngân sách tổng"
+              disabled={readOnly}
               onClick={onEditTotalBudget}
             >
               <SlidersHorizontal size={16} />
@@ -272,13 +315,15 @@ export default function CategoriesView({
               role="img"
               aria-label={`Tổng hạn mức ${money(totalLimits)}. ${categories.map((category) => `${category.name}: ${money(budgets[category.id])}`).join(', ')}`}
             >
-              {categories.map((category) => (
-                <span
-                  key={category.id}
-                  style={{ flex: budgets[category.id], background: category.color }}
-                  title={`${category.name}: ${money(budgets[category.id])}`}
-                />
-              ))}
+              {categories
+                .filter((category) => budgets[category.id] > 0)
+                .map((category) => (
+                  <span
+                    key={category.id}
+                    style={{ flex: budgets[category.id], background: category.color }}
+                    title={`${category.name}: ${money(budgets[category.id])}`}
+                  />
+                ))}
             </div>
             <div className="category-limits-status">
               <span className="is-active">
@@ -303,10 +348,37 @@ export default function CategoriesView({
                 </span>
               </span>
             </div>
-            <p>Ngân sách tổng và hạn mức danh mục được đặt riêng.</p>
+            <p>
+              {plan.mode === 'auto'
+                ? 'Tự chia theo tỷ lệ trong Cài đặt. Mức đặt riêng được giữ; phần còn lại chia cho các mục tự động.'
+                : 'Hạn mức lịch sử được giữ theo thiết lập đã lưu.'}
+            </p>
           </div>
         </div>
       </section>
+
+      {plan.mode === 'auto' && (
+        <div
+          className={`category-allocation-note ${plan.excess > 0 ? 'is-warning' : ''}`}
+          role="status"
+        >
+          {plan.excess > 0 ? <CircleAlert size={16} /> : <Sparkles size={16} />}
+          <p>
+            {plan.excess > 0
+              ? `Các mức đặt riêng vượt ngân sách tháng ${money(plan.excess)}. Các mục tự động hiện có hạn mức 0 ₫.`
+              : plan.unallocated > 0
+                ? `Còn ${money(plan.unallocated)} chưa phân bổ. Kiểm tra tỷ lệ và các mức đặt riêng.`
+                : plan.customIds.length > 0
+                  ? `${plan.customIds.length} mục đặt riêng · ${categories.length - plan.customIds.length} mục tự chia phần ngân sách còn lại.`
+                  : `${categories.length} phong bì tự chia vừa ngân sách tháng. Bạn vẫn có thể chỉnh riêng từng mục.`}
+          </p>
+          {plan.customIds.length > 0 && !readOnly && (
+            <button type="button" onClick={onResetBudgets}>
+              Dùng tỷ lệ tự động
+            </button>
+          )}
+        </div>
+      )}
 
       <section className="category-budget-library" aria-labelledby="category-budget-library-title">
         <div className="category-library-heading">
@@ -364,6 +436,10 @@ export default function CategoriesView({
                   key={category.id}
                   category={category}
                   budget={budgets[category.id]}
+                  readOnly={readOnly}
+                  automatic={plan.mode === 'auto' && !plan.customIds.includes(category.id)}
+                  weight={plan.weights[category.id]}
+                  legacy={plan.mode === 'legacy'}
                   count={counts.get(category.id) || 0}
                   number={categories.findIndex((item) => item.id === category.id) + 1}
                   onEdit={onEditBudget}
@@ -373,18 +449,7 @@ export default function CategoriesView({
             </AnimatePresence>
           </div>
         ) : (
-          <div className="category-budget-empty">
-            <span>
-              <Check size={25} strokeWidth={1.5} />
-            </span>
-            <h3>
-              {filter === 'over' ? 'Chưa có danh mục vượt hạn mức' : 'Chưa có danh mục gần hạn mức'}
-            </h3>
-            <p>Các khoản chi được cập nhật theo tháng bạn đang xem.</p>
-            <button className="button secondary" onClick={() => setFilter('all')}>
-              Xem tất cả danh mục
-            </button>
-          </div>
+          <BudgetFilterEmpty filter={filter} onShowAll={() => setFilter('all')} />
         )}
       </section>
     </div>

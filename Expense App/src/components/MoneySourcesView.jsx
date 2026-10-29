@@ -8,16 +8,19 @@ import {
   ChevronRight,
   CircleHelp,
   FileText,
+  Eye,
   PencilLine,
   Plus,
   Search,
+  Sparkles,
   WalletCards,
   X,
 } from 'lucide-react'
 import SourceArt from './SourceArt'
+import { isClosedMonth } from '../closedMonths'
 import SourceBadge from './SourceBadge'
+import SourceCardsRail from './SourceCardsRail'
 import SourceSummaryArt from './SourceSummaryArt'
-import SourceFlowConnector from './SourceFlowConnector'
 import SourceLedgerArt from './SourceLedgerArt'
 import CategoryArt from './CategoryArt'
 import FilterSelect from './FilterSelect'
@@ -159,63 +162,61 @@ export default function MoneySourcesView({
         className={`sources-summary ${unassigned > 0 ? 'has-unassigned' : ''}`}
         aria-label="Tổng quan nguồn tiền"
       >
+        <h2 className="sources-desk-title">
+          <Sparkles size={13} aria-hidden="true" /> Góc bàn của mây
+        </h2>
         <div className="sources-total">
-          <span className="sources-summary-caption">
-            <SourceSummaryArt variant="balance" />
-            Tổng tiền đang theo dõi
-          </span>
+          <SourceSummaryArt variant="balance" />
+          <span className="sources-summary-caption">Tổng tiền đang theo dõi</span>
           <strong className={total < 0 ? 'is-negative' : ''}>{money(total)}</strong>
           <p>
             <span className="sources-summary-source-count">{sources.length} nguồn</span>
             <span>Tính đến {formatDate(asOf)}</span>
           </p>
         </div>
-        <SourceFlowConnector />
         <button
-          className="sources-summary-note sources-transfer-action"
+          className="sources-transfer-action"
           type="button"
           aria-label="Ghi chuyển nguồn"
           disabled={sources.length < 2}
           onClick={() => onTransfer()}
         >
-          <span className="sources-transfer-orb">
-            <ArrowLeftRight size={17} />
-          </span>
+          <SourceSummaryArt variant="transfer" />
           <span className="sources-transfer-copy">
             <span className="sources-summary-caption">Chuyển nguồn</span>
             <span className="sources-transfer-description">
-              {sources.length < 2
-                ? 'Thêm ít nhất 2 nguồn để ghi chuyển.'
-                : 'Thu/chi giữ nguyên khi chuyển.'}
+              {sources.length < 2 ? 'Cần ít nhất 2 nguồn.' : 'Không đổi thu/chi.'}
+            </span>
+            <span className="sources-desk-link">
+              <span>Ghi chuyển</span> <ArrowUpRight size={13} aria-hidden="true" />
             </span>
           </span>
-          <ArrowUpRight className="sources-action-arrow" size={15} aria-hidden="true" />
         </button>
         {unassigned > 0 && (
-          <>
-            <SourceFlowConnector warm />
-            <button
-              className="sources-unassigned"
-              type="button"
-              onClick={showUnassigned}
-              aria-label={`${unassigned} giao dịch chưa gán nguồn · Gán dần`}
-            >
+          <button
+            className="sources-unassigned"
+            type="button"
+            onClick={showUnassigned}
+            aria-label={`${unassigned} giao dịch chưa gán nguồn · Gán dần`}
+          >
+            <span className="sources-unassigned-art" aria-hidden="true">
+              <SourceSummaryArt variant="pending" />
               <span className="sources-unassigned-count">{unassigned}</span>
-              <span className="sources-unassigned-copy">
-                <span className="sources-unassigned-heading">
-                  <strong>Chưa gán nguồn</strong>
-                </span>
-                <span className="sources-unassigned-description">Chưa tính vào số dư.</span>
+            </span>
+            <span className="sources-unassigned-copy">
+              <span className="sources-unassigned-heading">
+                <strong>Chưa gán nguồn</strong>
               </span>
-              <span className="sources-unassigned-link">
-                Gán dần <ArrowRight size={14} />
+              <span className="sources-unassigned-description">Chưa tính vào số dư.</span>
+              <span className="sources-desk-link">
+                <span>Gán dần</span> <ArrowRight size={13} aria-hidden="true" />
               </span>
-            </button>
-          </>
+            </span>
+          </button>
         )}
       </section>
       {sources.length ? (
-        <div className="source-cards">
+        <SourceCardsRail sourceIds={sources.map((source) => source.id)}>
           {summaries.map(
             ({
               source,
@@ -334,7 +335,7 @@ export default function MoneySourcesView({
               )
             },
           )}
-        </div>
+        </SourceCardsRail>
       ) : (
         <section className="sources-empty" aria-label="Bắt đầu theo dõi nguồn tiền">
           <h2>Một chỗ cho từng nguồn tiền</h2>
@@ -489,9 +490,11 @@ export default function MoneySourcesView({
                       data-transaction-id={transfer ? undefined : item.id}
                       data-transfer-id={transfer ? item.id : undefined}
                       aria-label={
-                        transfer
-                          ? `Sửa chuyển nguồn ${item.title}`
-                          : `${source ? 'Sửa giao dịch' : 'Gán nguồn cho'} ${item.title}`
+                        isClosedMonth(item.date, asOf.slice(0, 7))
+                          ? `Xem ${transfer ? 'chuyển nguồn' : 'giao dịch'} ${item.title}`
+                          : transfer
+                            ? `Sửa chuyển nguồn ${item.title}`
+                            : `${source ? 'Sửa giao dịch' : 'Gán nguồn cho'} ${item.title}`
                       }
                       onClick={() =>
                         transfer
@@ -558,7 +561,11 @@ export default function MoneySourcesView({
                         </small>
                       </span>
                       <span className="source-ledger-pencil" aria-hidden="true">
-                        <PencilLine size={14} />
+                        {isClosedMonth(item.date, asOf.slice(0, 7)) ? (
+                          <Eye size={14} />
+                        ) : (
+                          <PencilLine size={14} />
+                        )}
                       </span>
                     </button>
                   )
