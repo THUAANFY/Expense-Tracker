@@ -1,0 +1,176 @@
+html[data-theme='dark'] .overview-workspace .overview-journal-corner.fintech-journal-corner {
+  container: journal-corner / inline-size;
+  width: 100%;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 0 0 8px;
+}
+html[data-theme='dark'] .fintech-journal-corner > .fintech-journal-art {
+  width: min(100%, 340px);
+  margin-top: 2px;
+}
+html[data-theme='dark'] .fintech-journal-art .journal-writing-hand {
+  transform-origin: 258px 147px;
+}
+html[data-theme='dark'] .fintech-journal-corner[data-scrolling='true'] .journal-desk-art * {
+  animation-play-state: paused;
+}
+html[data-theme='dark'] .overview-workspace .fintech-journal-corner .fintech-journal-receipt {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 14px 16px 17px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1.2px solid transparent;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at -10% -20%, #427fff1f, transparent 70%) padding-box,
+    radial-gradient(ellipse at 110% 0, #9251f52b, transparent 65%) padding-box,
+    linear-gradient(135deg, #1a263a, #171e30 70%, #20203b) padding-box,
+    linear-gradient(115deg, #7bccff, #6177f4 20%, #66709966 47%, #9b66eecc 80%, #b27bff) border-box;
+  box-shadow:
+    inset 0 0 0 1px #c4c0ff08,
+    0 5px 20px #080b2129,
+    0 0 14px #8b5cf610;
+  transform: none;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-wave {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  width: 58%;
+  height: 52%;
+  pointer-events: none;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-label {
+  color: #adbad8;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-action {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #af88f93b;
+  border-radius: 9px;
+  background: linear-gradient(145deg, #7851b94d, #3e315d66);
+  color: #d5b9ff;
+  box-shadow: inset 0 1px 0 #dec6ff0d;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-body {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-category-art {
+  display: block;
+  width: 46px;
+  height: 46px;
+  transform: none;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-entry-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+html[data-theme='dark'] .overview-workspace .fintech-journal-receipt .journal-receipt-title {
+  color: #f5f3ff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-entry-meta {
+  min-width: 0;
+  overflow: hidden;
+  color: #b0bbd8;
+  font-size: 12px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+html[data-theme='dark'] .fintech-journal-receipt .journal-entry-amount {
+  max-width: 100%;
+  background: linear-gradient(115deg, #ac93ff, #c38bf5);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+html[data-theme='dark'] .fintech-journal-receipt.has-long-amount .journal-receipt-body {
+  grid-template-columns: 46px minmax(0, 1fr);
+}
+html[data-theme='dark'] .fintech-journal-receipt.has-long-amount .journal-entry-amount {
+  grid-column: 2;
+  font-size: 18px;
+}
+html[data-theme='dark'] .fintech-journal-corner .journal-empty-note {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #a58acf30;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1c263bcc, #28213c80);
+  color: #bbc5df;
+  font-size: 13px;
+  line-height: 1.75;
+}
+html[data-theme='dark'] .fintech-journal-corner .journal-empty-note > button {
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border: 1px solid #ad88ec47;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #744cbe66, #48316b66);
+  color: #e6d8ff;
+  font-size: 12px;
+}
+@container journal-corner (max-width: 320px) {
+  html[data-theme='dark'] .overview-workspace .fintech-journal-corner .fintech-journal-receipt {
+    padding: 12px;
+  }
+  html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-label {
+    font-size: 11px;
+  }
+  html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-body {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 8px;
+  }
+  html[data-theme='dark'] .fintech-journal-receipt .journal-category-art {
+    width: 42px;
+    height: 42px;
+  }
+  html[data-theme='dark'] .fintech-journal-receipt .journal-entry-amount {
+    grid-column: 2;
+    font-size: 19px;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme='dark']
+    .overview-workspace
+    .fintech-journal-corner
+    .fintech-journal-receipt:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 1px #d4c2ff14,
+      0 7px 22px #080b2145,
+      0 0 16px #8b5cf620;
+  }
+  html[data-theme='dark'] .fintech-journal-corner .journal-empty-note > button:hover {
+    background: linear-gradient(135deg, #8154c985, #563578);
+    text-decoration: none;
+  }
+}

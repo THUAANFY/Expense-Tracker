@@ -127,3 +127,42 @@ test('long titles and large amounts fit the narrow desktop column', async ({ pag
   await expect(corner(page).getByRole('button')).toBeInViewport()
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(1051)
 })
+
+test('dark decorative motion pauses during real scrolling and resumes at rest without changing the book', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 700 })
+  await page.addInitScript(() => {
+    localStorage.setItem('may-appearance-v1', JSON.stringify({ version: 1, mode: 'dark' }))
+  })
+  const raw = await seed(page, [tx('Bữa trưa', 50000)])
+  await page.locator('.startup-screen').waitFor({ state: 'detached' })
+  await corner(page).scrollIntoViewIfNeeded()
+  const cloud = corner(page).locator('.journal-cloud')
+  await expect(corner(page)).toHaveAttribute('data-animate', 'true')
+  await expect(cloud).toHaveCSS('animation-play-state', 'running')
+  const duringScroll = await page.evaluate(
+    () =>
+      new Promise((resolve) => {
+        window.addEventListener(
+          'scroll',
+          () => {
+            requestAnimationFrame(() => {
+              const scene = document.querySelector('.fintech-journal-corner')
+              resolve({
+                visible: scene.dataset.animate,
+                state: getComputedStyle(scene.querySelector('.journal-cloud')).animationPlayState,
+              })
+            })
+          },
+          { once: true },
+        )
+        window.scrollBy({ top: -12, behavior: 'instant' })
+      }),
+  )
+  expect(duringScroll).toEqual({ visible: 'true', state: 'paused' })
+  await expect(cloud).toHaveCSS('animation-play-state', 'running')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(cloud).toHaveCSS('animation-name', 'none')
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).toBe(raw)
+})

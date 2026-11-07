@@ -145,6 +145,28 @@ test('calendar and payment popups stay visible above the scrolling form at all v
   }
 })
 
+test('dark glass dialogs keep the calendar and payment list visible above the form', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('may-appearance-v1', JSON.stringify({ version: 1, mode: 'dark' }))
+  })
+  for (const [width, height] of [
+    [320, 740],
+    [1440, 900],
+  ]) {
+    await page.setViewportSize({ width, height })
+    const form = await openTransaction(page)
+    await form.getByRole('button', { name: /Ngày giao dịch/ }).click()
+    await expectFitsViewport(page.getByRole('dialog', { name: 'Chọn ngày giao dịch', exact: true }))
+    await page.keyboard.press('Escape')
+    await form.getByRole('combobox', { name: /Thanh toán/ }).click()
+    await expectFitsViewport(page.getByRole('listbox', { name: 'Phương thức thanh toán' }))
+    await page.keyboard.press('Escape')
+    await expect(form).toBeVisible()
+  }
+})
+
 test.describe('touch controls', () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
   test('today and a payment option can be selected by touch', async ({ page }) => {

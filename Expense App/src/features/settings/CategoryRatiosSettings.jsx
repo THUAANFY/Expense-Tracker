@@ -8,7 +8,8 @@ import {
   getCategoryBudgetWeights,
   isValidCategoryWeights,
 } from '../budgets/categoryBudgets'
-import CategoryArt from '../../shared/illustrations/CategoryArt'
+import SettingsCategoryMark from './SettingsCategoryMark'
+import ActionButton from '../../shared/components/ActionButton'
 import './CategoryRatiosSettings.css'
 
 export default function CategoryRatiosSettings({
@@ -127,7 +128,7 @@ export default function CategoryRatiosSettings({
         <div className="settings-ratios-grid">
           {CATEGORIES.map((category) => (
             <div className="settings-ratio-row" key={category.id}>
-              <CategoryArt category={category.id} size={32} />
+              <SettingsCategoryMark category={category.id} size={32} />
               <label htmlFor={`${id}-${category.id}`}>{category.name}</label>
               <div className="settings-ratio-control">
                 <input
@@ -191,14 +192,10 @@ export default function CategoryRatiosSettings({
             <RotateCcw size={13} />
             Tỷ lệ ban đầu
           </button>
-          <button
-            type="submit"
-            className="button primary"
-            disabled={readOnly || storageBlocked || !valid || !changed}
-          >
+          <ActionButton type="submit" disabled={readOnly || storageBlocked || !valid || !changed}>
             <Check size={15} />
             Lưu tỷ lệ
-          </button>
+          </ActionButton>
         </div>
       </div>
     </form>

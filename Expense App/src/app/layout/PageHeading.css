@@ -1,0 +1,140 @@
+/* One title scale and layout for every page, in both themes. */
+html[data-theme] body .page-heading[data-page-heading] {
+  --page-title-size: 27px;
+  --page-title-gradient: linear-gradient(100deg, #8749ad, #6e54b8 55%, #356fae);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-bottom: 18px;
+}
+html[data-theme='dark'] body .page-heading[data-page-heading] {
+  --page-title-gradient: linear-gradient(100deg, #c17bf8, #a38bff 55%, #68b7f3);
+}
+html[data-theme] body .page-heading[data-page-heading] > .page-heading-copy {
+  display: flex;
+  flex: 1 1 240px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+html[data-theme] body .page-heading[data-page-heading] .page-heading-copy > .greeting {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body);
+  font-weight: 400;
+  line-height: 1.5;
+}
+html[data-theme] body .page-heading[data-page-heading] .greeting > span:first-of-type {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+html[data-theme] body .page-heading[data-page-heading] .greeting > svg {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+}
+html[data-theme] body .page-heading[data-page-heading] .greeting-dot {
+  flex-shrink: 0;
+  margin-left: 2px;
+}
+html[data-theme] body .page-heading[data-page-heading] .page-heading-copy > h1 {
+  align-self: auto;
+  margin: 0;
+  max-width: 100%;
+  color: var(--text-primary);
+  font-size: var(--page-title-size);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.55px;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+html[data-theme] body .page-heading[data-page-heading] h1 > span {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  white-space: normal;
+}
+html[data-theme] body .page-heading[data-page-heading] .page-title-accent {
+  background-image: var(--page-title-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+html[data-theme] body .page-heading[data-page-heading] > .page-actions {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: auto;
+  max-width: 100%;
+  margin-left: auto;
+  padding-top: 0;
+}
+html[data-theme] body .page-heading[data-page-heading] .page-parent-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 36px;
+  padding: 6px 8px;
+  border: 1px solid var(--surface-border, #dfd1eb);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-accent);
+  font-size: var(--font-control);
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+html[data-theme] body .page-heading[data-page-heading] .page-parent-link:hover {
+  background: var(--surface-tint, #b491d414);
+}
+html[data-theme] body .page-heading[data-page-heading] .page-parent-link:focus-visible {
+  outline: 2px solid var(--text-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 1023px) {
+  html[data-theme] body .page-heading[data-page-heading] {
+    --page-title-size: 25px;
+  }
+}
+@media (max-width: 760px) {
+  html[data-theme] body .page-heading[data-page-heading] {
+    --page-title-size: 23px;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  html[data-theme] body .page-heading[data-page-heading] .page-heading-copy > .greeting {
+    font-size: var(--font-caption);
+  }
+  html[data-theme] body .page-heading[data-page-heading] > .page-actions {
+    gap: 8px;
+  }
+}
+@media (max-width: 374px) {
+  html[data-theme] body .page-heading[data-page-heading] {
+    --page-title-size: 21px;
+  }
+}
+@media (max-width: 560px) {
+  html[data-theme] body .page-heading[data-page-heading] .page-parent-link {
+    width: 36px;
+    padding-inline: 0;
+  }
+  html[data-theme] body .page-heading[data-page-heading] .page-parent-link > span {
+    display: none;
+  }
+}

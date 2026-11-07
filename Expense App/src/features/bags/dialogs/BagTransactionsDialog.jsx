@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, ChevronLeft, ChevronRight, Search } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, LockKeyhole, Search } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
 import CategoryArt from '../../../shared/illustrations/CategoryArt'
 import { isClosedMonth } from '../../../shared/lib/closedMonths'
@@ -69,7 +69,7 @@ export default function BagTransactionsDialog({ bag, transactions, onSave, onClo
           <div className="bag-picker-list">
             {filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE).map((item) => (
               <label
-                className={`bag-picker-row ${selected.has(item.id) ? 'is-selected' : ''}`}
+                className={`bag-picker-row ${selected.has(item.id) ? 'is-selected' : ''} ${isClosedMonth(item.date) ? 'is-locked' : ''}`}
                 key={item.id}
               >
                 <input
@@ -80,14 +80,15 @@ export default function BagTransactionsDialog({ bag, transactions, onSave, onClo
                   }
                   aria-label={item.title}
                   checked={selected.has(item.id)}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const checked = event.currentTarget.checked
                     setSelected((previous) => {
                       const next = new Set(previous)
-                      if (event.target.checked) next.add(item.id)
+                      if (checked) next.add(item.id)
                       else next.delete(item.id)
                       return next
                     })
-                  }
+                  }}
                 />
                 <span
                   className="bag-picker-art"
@@ -100,6 +101,11 @@ export default function BagTransactionsDialog({ bag, transactions, onSave, onClo
                   <span>
                     {formatDate(item.date)} · {getCategory(item.category).name}
                   </span>
+                  {isClosedMonth(item.date) && (
+                    <span className="bag-picker-locked-label">
+                      <LockKeyhole size={11} aria-hidden="true" /> Chỉ xem · Tháng đã qua
+                    </span>
+                  )}
                 </span>
                 <strong>{money(item.amount)}</strong>
               </label>

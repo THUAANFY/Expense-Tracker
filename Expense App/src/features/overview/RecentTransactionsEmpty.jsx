@@ -1,8 +1,13 @@
+import useAppearance from '../../app/theme/useAppearance'
+import RecentReceiptArt from './RecentReceiptArt'
 import { useId } from 'react'
 import { Plus } from 'lucide-react'
+import ActionButton from '../../shared/components/ActionButton'
 import './RecentTransactionsEmpty.css'
 
 function FirstReceiptArt({ id }) {
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <RecentReceiptArt id={id} />
   return (
     <svg
       className="recent-empty-art"
@@ -93,9 +98,9 @@ export default function RecentTransactionsEmpty({ onAdd }) {
       <div className="recent-empty-copy">
         <h3 id={`${id}-title`}>Chưa có giao dịch trong tháng</h3>
         <p>Bắt đầu với một khoản thu hoặc chi.</p>
-        <button className="button primary" type="button" onClick={onAdd}>
+        <ActionButton onClick={onAdd}>
           <Plus size={14} aria-hidden="true" /> Thêm giao dịch
-        </button>
+        </ActionButton>
       </div>
     </section>
   )

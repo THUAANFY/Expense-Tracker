@@ -1,14 +1,20 @@
 import { SOURCE_TYPES } from './moneySources'
+import useAppearance from '../../app/theme/useAppearance'
+import DarkSourceIcon from '../../app/theme/DarkSourceIcon'
 import './SourceBadge.css'
 
 const sourceLabels = {
   ...Object.fromEntries(SOURCE_TYPES.map(({ id, label }) => [id, label])),
+  all: 'Mọi nguồn',
   unassigned: 'Chưa gán nguồn',
 }
-const badgeType = (type) => (SOURCE_TYPES.some(({ id }) => id === type) ? type : 'unassigned')
+const badgeType = (type) =>
+  type === 'all' || SOURCE_TYPES.some(({ id }) => id === type) ? type : 'unassigned'
 
 export function SourceBadgeIcon({ type, size = 24 }) {
   const kind = badgeType(type)
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <DarkSourceIcon type={kind} size={size} />
   return (
     <svg
       className={`source-badge-icon source-badge-icon--${kind}`}
@@ -20,7 +26,19 @@ export function SourceBadgeIcon({ type, size = 24 }) {
       focusable="false"
     >
       <g strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-        {kind === 'bank' ? (
+        {kind === 'all' ? (
+          <>
+            <g transform="rotate(-10 15 12)">
+              <rect x="3" y="4" width="23" height="15" rx="4" fill="#dfeddf" stroke="#7da58a" />
+              <path d="M7 9h5m4 0h6" stroke="#91b49b" />
+            </g>
+            <rect x="8" y="10" width="22" height="15" rx="4" fill="#e9d9f8" stroke="#a184bc" />
+            <path d="M12 15h13" stroke="#c2a7db" />
+            <rect x="3" y="17" width="24" height="13" rx="4" fill="#fbe3eb" stroke="#be8b9e" />
+            <path d="M23 21h6v5h-6a2.5 2.5 0 0 1 0-5Z" fill="#f2cedd" stroke="#be8b9e" />
+            <path d="M7 21h9m-9 5h5" stroke="#cf9eb0" />
+          </>
+        ) : kind === 'bank' ? (
           <>
             <rect x="2.5" y="3" width="27" height="27" rx="9" fill="#dfeaf7" />
             <path d="m6 12 10-6 10 6H6Z" fill="#fffdf5" stroke="#6685a6" />

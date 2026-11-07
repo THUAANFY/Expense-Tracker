@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, RotateCcw, X } from 'lucide-react'
 import { monthKey } from '../storage/data'
 import './MonthPicker.css'
+import './CalendarDark.css'
 
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
@@ -11,7 +12,13 @@ const YEAR_PAGE_SIZE = 12
 const pageForYear = (year) =>
   MIN_YEAR + Math.floor((year - MIN_YEAR) / YEAR_PAGE_SIZE) * YEAR_PAGE_SIZE
 
-export default function MonthPicker({ value, onChange, label = 'Chọn tháng thống kê' }) {
+export default function MonthPicker({
+  value,
+  onChange,
+  label = 'Chọn tháng thống kê',
+  compact = false,
+  displayLabel,
+}) {
   const [selectedYear, selectedMonth] = value.split('-').map(Number)
   const currentMonth = monthKey()
   const currentYear = Number(currentMonth.slice(0, 4))
@@ -172,16 +179,21 @@ export default function MonthPicker({ value, onChange, label = 'Chọn tháng th
 
   return (
     <>
-      <div className={`month-picker ${open ? 'is-open' : ''}`} ref={pickerRef}>
-        <button
-          type="button"
-          className="month-arrow"
-          aria-label="Tháng trước"
-          disabled={value <= '1900-01'}
-          onClick={() => shiftMonth(-1)}
-        >
-          <ChevronLeft size={15} />
-        </button>
+      <div
+        className={`month-picker ${compact ? 'month-picker--compact' : ''} ${open ? 'is-open' : ''}`}
+        ref={pickerRef}
+      >
+        {!compact && (
+          <button
+            type="button"
+            className="month-arrow"
+            aria-label="Tháng trước"
+            disabled={value <= '1900-01'}
+            onClick={() => shiftMonth(-1)}
+          >
+            <ChevronLeft size={15} />
+          </button>
+        )}
         <button
           type="button"
           ref={triggerRef}
@@ -192,21 +204,23 @@ export default function MonthPicker({ value, onChange, label = 'Chọn tháng th
           aria-controls={open ? popoverId : undefined}
           onClick={toggle}
         >
-          <CalendarDays size={15} />
+          {!compact && <CalendarDays size={15} />}
           <span>
-            Tháng {String(selectedMonth).padStart(2, '0')}, {selectedYear}
+            {displayLabel || `Tháng ${String(selectedMonth).padStart(2, '0')}, ${selectedYear}`}
           </span>
           <ChevronDown size={13} className="month-picker-chevron" />
         </button>
-        <button
-          type="button"
-          className="month-arrow"
-          aria-label="Tháng sau"
-          disabled={value >= '2100-12'}
-          onClick={() => shiftMonth(1)}
-        >
-          <ChevronRight size={15} />
-        </button>
+        {!compact && (
+          <button
+            type="button"
+            className="month-arrow"
+            aria-label="Tháng sau"
+            disabled={value >= '2100-12'}
+            onClick={() => shiftMonth(1)}
+          >
+            <ChevronRight size={15} />
+          </button>
+        )}
       </div>
       {createPortal(
         <AnimatePresence>

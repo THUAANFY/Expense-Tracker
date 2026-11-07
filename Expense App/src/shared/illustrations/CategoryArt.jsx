@@ -1,8 +1,13 @@
+import useAppearance from '../../app/theme/useAppearance'
+import DarkCategoryArt from '../../app/theme/DarkCategoryArt'
 import { useId } from 'react'
 
 // Each category has its own detailed SVG rather than a generic UI icon.
 export default function CategoryArt({ category = 'other', size = 56, className = '' }) {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (theme === 'dark')
+    return <DarkCategoryArt category={category} size={size} className={className} />
   const drawings = {
     food: (
       <>

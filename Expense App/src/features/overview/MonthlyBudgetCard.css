@@ -1,0 +1,357 @@
+.budget-panel[data-budget-level] {
+  --budget-progress-start: #24b978;
+  --budget-progress-middle: #48d68c;
+  --budget-progress-end: #8befb3;
+  --budget-badge-text: #21764b;
+}
+.budget-panel[data-budget-level='near'] {
+  --budget-progress-start: #e7a72d;
+  --budget-progress-middle: #ffce55;
+  --budget-progress-end: #ffe99b;
+  --budget-badge-text: #8a620a;
+}
+.budget-panel[data-budget-level='over'] {
+  --budget-progress-start: #e84c57;
+  --budget-progress-middle: #ff7078;
+  --budget-progress-end: #ffb0b1;
+  --budget-badge-text: #bd3544;
+}
+.overview-workspace .budget-panel[data-budget-level] .progress-track > span {
+  background: repeating-linear-gradient(
+    115deg,
+    var(--budget-progress-middle) 0 8px,
+    var(--budget-progress-end) 8px 15px
+  );
+}
+.overview-workspace .budget-panel[data-budget-level] .budget-numbers > .budget-percent {
+  border-color: color-mix(in srgb, var(--budget-progress-middle) 45%, #fff);
+  background: color-mix(in srgb, var(--budget-progress-middle) 13%, #fff);
+  color: var(--budget-badge-text);
+}
+html[data-theme='dark'] .overview-workspace .budget-panel.fintech-budget-panel {
+  container: monthly-budget / inline-size;
+  position: relative;
+  min-width: 0;
+  padding: 18px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1.5px solid transparent;
+  border-radius: 21px;
+  background:
+    radial-gradient(ellipse at -10% -30%, #437fff2b, transparent 65%) padding-box,
+    radial-gradient(ellipse at 110% 10%, #8955ff24, transparent 65%) padding-box,
+    linear-gradient(135deg, #1b2639, #161d30 65%, #1e2040) padding-box,
+    linear-gradient(
+        125deg,
+        #75caff,
+        #596fff 20%,
+        #57668780 43%,
+        #8a61daaa 65%,
+        #a270ff 90%,
+        #7052f5
+      )
+      border-box;
+  box-shadow:
+    inset 0 0 0 1px #c8bdff0c,
+    0 0 16px #4932da16,
+    0 8px 24px #03071333;
+}
+html[data-theme='dark'] .overview-workspace .fintech-budget-panel .panel-heading {
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+}
+html[data-theme='dark'] .fintech-budget-panel .overview-budget-intro {
+  gap: 10px;
+}
+html[data-theme='dark'] .fintech-budget-panel .overview-budget-art {
+  width: 62px;
+  height: 58px;
+}
+html[data-theme='dark'] .fintech-budget-panel .overview-budget-intro > div {
+  min-width: 0;
+}
+html[data-theme='dark'] .fintech-budget-panel .overview-budget-intro > div > span {
+  margin-bottom: 4px;
+  font-size: 9px;
+  line-height: 1.45;
+  letter-spacing: 0.35px;
+  color: #61ebca;
+}
+html[data-theme='dark'] .overview-workspace .budget-panel.fintech-budget-panel .panel-heading h2 {
+  color: #f5f3ff;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+html[data-theme='dark']
+  .overview-workspace
+  .budget-panel.fintech-budget-panel
+  .panel-heading
+  > .icon-button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ac82fa66;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #6242a766, #30285877 60%, #362d6480);
+  box-shadow:
+    inset 0 1px 4px #be9bff26,
+    0 3px 9px #080b242e;
+  color: #e7d9ff;
+}
+html[data-theme='dark'] .overview-workspace .fintech-budget-panel .budget-numbers {
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px 7px;
+  margin-top: 12px;
+}
+html[data-theme='dark'] .overview-workspace .fintech-budget-panel .budget-numbers > strong {
+  max-width: 100%;
+  background: linear-gradient(160deg, #9dffe7, #48e7c2 80%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.8px;
+  overflow-wrap: anywhere;
+}
+html[data-theme='dark'] .overview-workspace .fintech-budget-panel .budget-numbers > span {
+  font-size: 15px;
+  color: #c4bfee;
+}
+html[data-theme='dark']
+  .overview-workspace
+  .fintech-budget-panel
+  .budget-numbers
+  > span:last-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  max-width: 100%;
+  margin-left: auto;
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--budget-progress-middle) 25%, transparent);
+  border-radius: 10px;
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--budget-progress-middle) 12%, transparent),
+    color-mix(in srgb, var(--budget-progress-middle) 5%, #1c263a)
+  );
+  box-shadow: inset 0 1px 0 #ffffff0a;
+  color: var(--budget-progress-middle);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+html[data-theme='dark']
+  .overview-workspace
+  .fintech-budget-panel.has-long-budget
+  .budget-numbers
+  > strong {
+  font-size: 25px;
+}
+html[data-theme='dark'] .overview-workspace .fintech-budget-panel .progress-track {
+  height: 10px;
+  margin-top: 13px;
+  border: 1px solid color-mix(in srgb, var(--budget-progress-middle) 25%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--budget-progress-middle) 8%, #0e1929);
+  box-shadow: inset 0 1px 3px #050f2466;
+}
+html[data-theme='dark'] .overview-workspace .fintech-budget-panel.is-used .progress-track {
+  box-shadow:
+    0 0 13px color-mix(in srgb, var(--budget-progress-middle) 22%, transparent),
+    inset 0 1px 3px #050f2466;
+}
+html[data-theme='dark'] .overview-workspace .fintech-budget-panel .progress-track > span {
+  position: relative;
+  min-width: 0;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 24%,
+      #ffffff26 24%,
+      #ffffff26 39%,
+      transparent 39%,
+      transparent 67%,
+      #ffffff33 67%,
+      #ffffff33 79%,
+      transparent 79%
+    ),
+    linear-gradient(
+      90deg,
+      var(--budget-progress-start),
+      var(--budget-progress-middle) 45%,
+      var(--budget-progress-end)
+    );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--budget-progress-end) 55%, transparent);
+}
+html[data-theme='dark'] .fintech-budget-panel.is-used .progress-track > span::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--budget-progress-end) 60%, #fff);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--budget-progress-end) 70%, transparent);
+}
+html[data-theme='dark'] .fintech-budget-panel .budget-status {
+  position: relative;
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 14px;
+  padding: 9px 10px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #8c92d12e;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #1a2335cc, #1b213799);
+  color: #c5bfee;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  box-shadow: inset 0 1px 0 #c9bdff06;
+}
+html[data-theme='dark'] .fintech-budget-panel .budget-status-wave {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  width: 46%;
+  height: 100%;
+  pointer-events: none;
+}
+html[data-theme='dark'] .fintech-budget-panel .budget-status :is(.online-dot, .over-dot) {
+  width: 7px;
+  height: 7px;
+  margin: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #9bffe1, #46d3a7);
+  box-shadow: 0 0 0 4px #61e6c20a;
+}
+html[data-theme='dark'] .fintech-budget-panel .budget-status .over-dot {
+  background: linear-gradient(145deg, #ffd392, #ffab65);
+  box-shadow: 0 0 0 4px #ffc17c0a;
+}
+html[data-theme='dark'] .budget-status-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1px 5px;
+  min-width: 0;
+}
+html[data-theme='dark'] .budget-status-copy > strong {
+  max-width: 100%;
+  color: #f5f3ff;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+@container monthly-budget (max-width: 250px) {
+  html[data-theme='dark'] .overview-workspace .fintech-budget-panel .panel-heading {
+    gap: 4px;
+  }
+  html[data-theme='dark'] .fintech-budget-panel .overview-budget-intro {
+    gap: 6px;
+  }
+  html[data-theme='dark'] .fintech-budget-panel .overview-budget-art {
+    width: 40px;
+    height: 40px;
+  }
+  html[data-theme='dark'] .fintech-budget-panel .overview-budget-intro > div > span {
+    font-size: 8px;
+    letter-spacing: 0;
+  }
+  html[data-theme='dark'] .overview-workspace .budget-panel.fintech-budget-panel .panel-heading h2 {
+    font-size: 14px;
+  }
+  html[data-theme='dark']
+    .overview-workspace
+    .budget-panel.fintech-budget-panel
+    .panel-heading
+    > .icon-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+  }
+  html[data-theme='dark'] .overview-workspace .fintech-budget-panel .budget-numbers > strong {
+    font-size: 26px;
+  }
+  html[data-theme='dark'] .overview-workspace .fintech-budget-panel .budget-numbers > span {
+    font-size: 13px;
+  }
+  html[data-theme='dark']
+    .overview-workspace
+    .fintech-budget-panel
+    .budget-numbers
+    > span:last-child {
+    gap: 4px;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+  html[data-theme='dark'] .fintech-budget-panel .budget-status {
+    font-size: 12px;
+    gap: 7px;
+    padding-inline: 8px;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme='dark'] .fintech-budget-panel .budget-status:hover {
+    border-color: #a594f26b;
+    background: linear-gradient(120deg, #20293d, #292446);
+  }
+  html[data-theme='dark']
+    .overview-workspace
+    .budget-panel.fintech-budget-panel
+    .panel-heading
+    > .icon-button:hover {
+    border-color: #bc9cffb3;
+    background: linear-gradient(145deg, #6f4bb085, #42316c);
+  }
+}
+@media (max-width: 600px) {
+  html[data-theme='dark'] .overview-workspace .budget-panel.fintech-budget-panel {
+    padding: 16px;
+    border-radius: 19px;
+  }
+  html[data-theme='dark'] .fintech-budget-panel .overview-budget-intro {
+    gap: 8px;
+  }
+  html[data-theme='dark'] .fintech-budget-panel .overview-budget-art {
+    width: 52px;
+    height: 50px;
+  }
+  html[data-theme='dark'] .overview-workspace .budget-panel.fintech-budget-panel .panel-heading h2 {
+    font-size: 16px;
+  }
+  html[data-theme='dark'] .fintech-budget-panel .overview-budget-intro > div > span {
+    font-size: 8px;
+  }
+  html[data-theme='dark']
+    .overview-workspace
+    .budget-panel.fintech-budget-panel
+    .panel-heading
+    > .icon-button {
+    width: 32px;
+    height: 32px;
+  }
+  html[data-theme='dark'] .overview-workspace .fintech-budget-panel .budget-numbers > strong {
+    font-size: 29px;
+  }
+  html[data-theme='dark']
+    .overview-workspace
+    .fintech-budget-panel.has-long-budget
+    .budget-numbers
+    > strong {
+    font-size: 23px;
+  }
+}

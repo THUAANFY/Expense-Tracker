@@ -1,0 +1,262 @@
+/* Compact occasion cards, with type accents and the user's selected bag color. */
+html[data-theme='dark'] .bags-workspace .bags-grid .bag-card {
+  isolation: isolate;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background:
+    radial-gradient(
+        ellipse at 100% 10%,
+        color-mix(in srgb, var(--bag-card-accent) 15%, transparent),
+        transparent 57%
+      )
+      padding-box,
+    radial-gradient(
+        ellipse at 0 100%,
+        color-mix(in srgb, var(--bag-card-foil) 15%, transparent),
+        transparent 65%
+      )
+      padding-box,
+    linear-gradient(140deg, #1d2840, #141d30 65%, #20243b) padding-box,
+    linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--bag-card-accent) 80%, #b5c2ea),
+        #6f7fa24d 48%,
+        var(--bag-card-foil)
+      )
+      border-box;
+  box-shadow:
+    inset 0 1px 2px #d3e4ff21,
+    0 3px 12px #090e2026;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+html[data-theme='dark'] .bags-workspace .bags-grid .bag-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 2px #d3e4ff33,
+    0 0 13px color-mix(in srgb, var(--bag-card-accent) 18%, transparent);
+}
+html[data-theme='dark'] .bags-workspace .bags-grid .bag-card:focus-visible {
+  outline: 2px solid #cfbdff;
+  outline-offset: 3px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-header {
+  gap: 8px;
+  padding: 12px 14px 0;
+  background: transparent;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-index {
+  gap: 7px;
+  background: transparent;
+  color: #cbd5eb;
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-index > span {
+  width: 23px;
+  height: 23px;
+  border: 1px solid color-mix(in srgb, var(--bag-card-accent) 40%, transparent);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--bag-card-accent) 12%, #17243b);
+  color: color-mix(in srgb, var(--bag-card-accent) 70%, white);
+  font-size: 11px;
+  font-weight: 600;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-status {
+  gap: 5px;
+  padding: 3px 7px;
+  border: 1px solid #b3bbdf38;
+  border-radius: 999px;
+  background: #1320374d;
+  color: #d2dcef;
+  font-size: var(--font-caption);
+  font-weight: 400;
+  line-height: 1.4;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-status > span {
+  width: 5px;
+  height: 5px;
+  background: var(--bag-card-accent);
+}
+html[data-theme='dark'] .bags-workspace .bag-card[data-bag-status='done'] .bag-card-status {
+  border-color: #6ac9ae59;
+  background: #4fba9f12;
+  color: #97dfc5;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-main {
+  grid-template-columns: minmax(0, 1fr) 116px;
+  gap: 8px;
+  min-height: 108px;
+  padding: 8px 14px;
+  background: transparent;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-copy {
+  gap: 5px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-name {
+  color: #f2f4ff;
+  font-size: var(--font-section);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-description {
+  color: #becce3;
+  font-size: var(--font-body);
+  font-weight: 400;
+  line-height: 1.5;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  height: 94px;
+  background: transparent;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene::before,
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene::after {
+  display: none;
+  content: none;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene > .bag-art {
+  width: 132px;
+  max-width: none;
+  height: auto;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-footer {
+  gap: 10px;
+  margin: 0 14px;
+  padding: 11px 0 12px;
+  border-top: 1px solid #a5b8dc2e;
+  background: transparent;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-footer::before,
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-footer::after {
+  display: none;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers {
+  align-items: flex-start;
+  gap: 12px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers > span {
+  gap: 4px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers small {
+  color: #bdc9e3;
+  font-size: var(--font-caption);
+  font-weight: 400;
+  line-height: 1.4;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers strong {
+  color: #f1f4ff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers > span > span {
+  color: #dbe3f5;
+  font-size: var(--font-body);
+  font-weight: 500;
+  line-height: 1.5;
+}
+html[data-theme='dark'] .bags-workspace .bag-card[data-large-values] .bag-card-numbers {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card[data-large-values] .bag-card-numbers strong {
+  overflow: visible;
+  font-size: 18px;
+}
+html[data-theme='dark']
+  .bags-workspace
+  .bag-card[data-large-values]
+  .bag-card-numbers
+  > span:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-bottom {
+  gap: 10px;
+  align-items: flex-end;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-line {
+  display: grid;
+  gap: 6px;
+  color: #c6d3eb;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-track {
+  height: 6px;
+  background: #53617c66;
+  box-shadow: inset 0 1px 1px #0e152633;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-track > span {
+  background: linear-gradient(
+    90deg,
+    var(--bag-card-accent),
+    color-mix(in srgb, var(--bag-card-accent) 65%, white)
+  );
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-line.is-near {
+  color: #f0c58b;
+}
+html[data-theme='dark']
+  .bags-workspace
+  .bag-card
+  .bag-budget-line.is-near
+  .bag-budget-track
+  > span {
+  background: linear-gradient(90deg, #e0a856, #ffd694);
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-line.is-over {
+  color: #ff9bb6;
+}
+html[data-theme='dark']
+  .bags-workspace
+  .bag-card
+  .bag-budget-line.is-over
+  .bag-budget-track
+  > span {
+  background: linear-gradient(90deg, #e9669a, #ff9ab8);
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-line > span:last-child,
+html[data-theme='dark'] .bags-workspace .bag-card .bag-no-budget {
+  color: inherit;
+  font-size: var(--font-caption);
+  font-weight: 400;
+  line-height: 1.4;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-open {
+  width: 31px;
+  height: 31px;
+  border: 1px solid color-mix(in srgb, var(--bag-card-accent) 40%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bag-card-accent) 12%, #19283e);
+  color: color-mix(in srgb, var(--bag-card-accent) 65%, white);
+  box-shadow: inset 0 1px 1px #c3d6ff14;
+}
+@container bags (max-width: 580px) {
+  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-main {
+    grid-template-columns: minmax(0, 1fr) 104px;
+    gap: 10px;
+    min-height: 100px;
+    padding-right: 13px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-name {
+    font-size: var(--font-content);
+  }
+  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene > .bag-art {
+    width: 120px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='dark'] .bags-workspace .bags-grid .bag-card {
+    transition: none;
+  }
+  html[data-theme='dark'] .bags-workspace .bags-grid .bag-card:hover {
+    transform: none;
+  }
+}

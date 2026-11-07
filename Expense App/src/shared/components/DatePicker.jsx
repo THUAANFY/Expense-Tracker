@@ -3,6 +3,7 @@ import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, RotateCcw, X } fr
 import { dateKey, formatDate } from '../storage/data'
 import { FieldPopover, useFieldPopover } from './FieldPopover'
 import './MonthPicker.css'
+import './CalendarDark.css'
 
 const MIN_DATE = '1900-01-01'
 const MAX_DATE = '2100-12-31'
@@ -199,7 +200,7 @@ export default function DatePicker({ value, onChange, labelId, name = 'date', mi
       <button
         type="button"
         ref={popover.triggerRef}
-        className={`transaction-field-trigger ${popover.open ? 'is-open' : ''}`}
+        className={`transaction-field-trigger date-picker-trigger ${popover.open ? 'is-open' : ''}`}
         aria-labelledby={`${labelId} ${valueId}`}
         aria-haspopup="dialog"
         aria-expanded={popover.open}

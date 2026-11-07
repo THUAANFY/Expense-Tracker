@@ -1,5 +1,47 @@
+/* Scale only the dong sign so its underline stays compact beside amounts. */
+@font-face {
+  font-family: 'May Currency';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-400-normal.woff2')
+    format('woff2');
+  unicode-range: U+20AB;
+  size-adjust: 82%;
+}
+@font-face {
+  font-family: 'May Currency';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-500-normal.woff2')
+    format('woff2');
+  unicode-range: U+20AB;
+  size-adjust: 82%;
+}
+@font-face {
+  font-family: 'May Currency';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-600-normal.woff2')
+    format('woff2');
+  unicode-range: U+20AB;
+  size-adjust: 82%;
+}
+@font-face {
+  font-family: 'May Currency';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-700-normal.woff2')
+    format('woff2');
+  unicode-range: U+20AB;
+  size-adjust: 82%;
+}
+
 :root {
-  font-family: 'Be Vietnam Pro', sans-serif;
+  font-family: 'May Currency', 'Be Vietnam Pro', sans-serif;
   color: var(--text-primary);
   background: #f7f8fc;
   font-synthesis: none;

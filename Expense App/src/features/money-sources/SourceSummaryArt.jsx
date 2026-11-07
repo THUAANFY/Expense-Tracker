@@ -1,7 +1,25 @@
+import useAppearance from '../../app/theme/useAppearance'
+import DarkThemeArt from '../../app/theme/DarkThemeArt'
+import SourceTransferArt from './SourceTransferArt'
 import { useId } from 'react'
 
 export default function SourceSummaryArt({ variant = 'balance' }) {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (variant === 'transfer')
+    return (
+      <SourceTransferArt
+        dark={theme === 'dark'}
+        className="source-summary-art source-summary-art--transfer"
+      />
+    )
+  if (theme === 'dark')
+    return (
+      <DarkThemeArt
+        variant={variant === 'balance' ? 'wallet' : 'unassigned'}
+        className={`source-summary-art source-summary-art--${variant}`}
+      />
+    )
   return (
     <svg
       className={`source-summary-art source-summary-art--${variant}`}
@@ -103,58 +121,6 @@ export default function SourceSummaryArt({ variant = 'balance' }) {
               stroke="#cfad70"
             />
             <path d="m106 13 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z" fill="#e4c9e0" stroke="#b998bf" />
-          </>
-        ) : variant === 'transfer' ? (
-          <>
-            <path
-              d="M17 38c4-21 30-29 49-22 13-7 36-2 43 14 11 25-3 49-28 52H43c-22 0-31-20-26-44Z"
-              fill="#edf1eb"
-              stroke="none"
-            />
-            <path
-              d="M25 29c8-14 24-18 36-15m-4-4 5 4-5 3m43 64c-9 11-25 14-37 10m4 5-5-5 5-2"
-              stroke="#c1adce"
-              strokeDasharray="2 4"
-            />
-            <g transform="rotate(-9 31 61)">
-              <rect x="18" y="30" width="31" height="38" rx="3" fill="#dce9ca" stroke="#91aa7b" />
-              <path d="M23 35h21v27H23z" stroke="#b2c59d" strokeDasharray="1.5 3" />
-              <circle cx="33.5" cy="45" r="5" fill="#f4f8e8" stroke="#b2c59d" />
-              <rect x="8" y="47" width="48" height="38" rx="8" fill="#f3f8e8" stroke="#8fa77d" />
-              <path d="M13 55v21c0 3 2 4 5 4h29" stroke="#bacda7" strokeDasharray="2 3" />
-              <path d="M48 58h10v15H48a7.5 7.5 0 0 1 0-15Z" fill="#dbe8ca" stroke="#8fa77d" />
-              <circle cx="49" cy="65.5" r="1.8" fill="#9bb588" stroke="none" />
-              <path d="M20 63q1.5-2 3 0m9 0q1.5-2 3 0m-10 6q2 2 4 0" stroke="#7d9871" />
-              <path d="M18 68h3m12 0h3" stroke="#e5bac5" strokeWidth="2.5" />
-            </g>
-            <g transform="rotate(8 94 61)">
-              <rect x="76" y="34" width="40" height="34" rx="5" fill="#d9c5e9" stroke="#a286b5" />
-              <path d="M80 42h31" stroke="#bba0d0" strokeWidth="4" />
-              <rect x="73" y="48" width="46" height="37" rx="8" fill="#faf3ff" stroke="#a286b5" />
-              <path d="M79 55v20c0 3 2 4 5 4h27" stroke="#d5c1e4" strokeDasharray="2 3" />
-              <path d="M111 59h10v14h-10a7 7 0 0 1 0-14Z" fill="#e6d8ef" stroke="#a286b5" />
-              <circle cx="112" cy="66" r="1.7" fill="#ae8bc4" stroke="none" />
-              <path d="M84 64q1.5-2 3 0m9 0q1.5-2 3 0m-10 6q2 2 4 0" stroke="#9a78af" />
-              <path d="M82 69h3m12 0h3" stroke="#e5bac5" strokeWidth="2.5" />
-            </g>
-            <g className="desk-transfer-coin">
-              <circle cx="65" cy="31" r="14" fill="#f7dfa0" stroke="#c3a06b" />
-              <circle
-                cx="65"
-                cy="31"
-                r="10.3"
-                fill="#fff0c4"
-                stroke="#d4b77c"
-                strokeDasharray="1 2.5"
-              />
-              <path d="M61 29h8m-8 5h8m-4-11v16" stroke="#b3935d" strokeWidth="1.6" />
-              <path d="M59 22q4-3 8-2" stroke="#fff9e6" strokeWidth="2" />
-            </g>
-            <path
-              d="m115 19 1.3 4.2L121 25l-4.7 1.5L115 31l-1.4-4.5L109 25l4.6-1.8 1.4-4.2Z"
-              fill="#fff0c0"
-              stroke="#cfb078"
-            />
           </>
         ) : (
           <>

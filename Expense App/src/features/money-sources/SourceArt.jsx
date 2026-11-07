@@ -1,9 +1,13 @@
+import useAppearance from '../../app/theme/useAppearance'
+import SourceWalletArt from './SourceWalletArt'
 import { useId } from 'react'
 import { getSourceColor } from './moneySources'
 
-export default function SourceArt({ type = 'cash', color = 'lilac', className = '' }) {
+export default function SourceArt({ type = 'cash', className = '' }) {
   const id = useId().replaceAll(':', '')
-  const c = getSourceColor(color)
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <SourceWalletArt type={type} className={className} />
+  const c = getSourceColor({ cash: 'mint', bank: 'peach', ewallet: 'lilac' }[type] || 'mint')
   return (
     <svg className={`source-art ${className}`} viewBox="0 0 180 126" fill="none" aria-hidden="true">
       <defs>

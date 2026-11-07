@@ -7,19 +7,26 @@ import {
   ChevronRight,
   Check,
   Heart,
+  LayoutGrid,
   MessageCircle,
   PencilLine,
   Plus,
   Search,
+  ShieldCheck,
+  Star,
   Tags,
   X,
 } from 'lucide-react'
 import CategoryArt from '../../shared/illustrations/CategoryArt'
 import MoodArt from './MoodArt'
+import WorthEmptyArt from './WorthEmptyArt'
+import useAppearance from '../../app/theme/useAppearance'
 import FilterSelect from '../../shared/components/FilterSelect'
+import ActionButton from '../../shared/components/ActionButton'
 import { CATEGORIES, compactMoney, formatDate, getCategory, money } from '../../shared/storage/data'
 import { REVIEW_OPTIONS, summarizeReviews } from './reviews'
 import './WorthView.css'
+import './FintechWorth.css'
 
 const categories = [
   { value: 'all', label: 'Mọi danh mục', icon: Tags },
@@ -47,6 +54,7 @@ export default function WorthView({
   onAdd,
   onOpenNotes,
 }) {
+  const { theme } = useAppearance()
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
@@ -83,6 +91,9 @@ export default function WorthView({
     setCategory('all')
     setPage(1)
   }
+  const emptyMood = REVIEW_OPTIONS.some((option) => option.id === filter) ? filter : 'happy'
+  const allReviewed = summary.total > 0 && filter === 'pending' && !search && category === 'all'
+  const emptyVariant = allReviewed ? 'complete' : hasFilters ? 'filter' : 'start'
   return (
     <div className="worth-workspace">
       <div className="worth-summary" role="group" aria-label="Lọc theo cảm nhận">
@@ -146,12 +157,17 @@ export default function WorthView({
           </div>
         </div>
         <div className="worth-toolbar">
-          <div className="worth-status-tabs" role="group" aria-label="Trạng thái đánh giá">
+          <div
+            data-filter-tabs
+            className="worth-status-tabs"
+            role="group"
+            aria-label="Trạng thái đánh giá"
+          >
             {[
-              ['all', 'Tất cả', summary.total],
-              ['pending', 'Chưa đánh giá', summary.pending],
-              ['reviewed', 'Đã đánh giá', summary.reviewed],
-            ].map(([id, label, count]) => (
+              ['all', 'Tất cả', summary.total, LayoutGrid],
+              ['pending', 'Chưa đánh giá', summary.pending, ShieldCheck],
+              ['reviewed', 'Đã đánh giá', summary.reviewed, Star],
+            ].map(([id, label, count, Icon]) => (
               <button
                 key={id}
                 aria-pressed={
@@ -159,8 +175,11 @@ export default function WorthView({
                 }
                 onClick={() => selectFilter(id)}
               >
+                {theme === 'dark' && <Icon size={14} aria-hidden="true" />}
                 {label}
-                <span aria-hidden="true">{count}</span>
+                <span data-filter-count aria-hidden="true">
+                  {count}
+                </span>
               </button>
             ))}
           </div>
@@ -327,25 +346,33 @@ export default function WorthView({
           </>
         ) : (
           <div className="worth-empty">
-            <MoodArt mood={filter === 'regret' ? 'regret' : 'happy'} />
+            {theme === 'dark' ? (
+              <WorthEmptyArt mood={emptyMood} variant={emptyVariant} />
+            ) : (
+              <MoodArt mood={emptyMood} />
+            )}
             <h3>
-              {summary.total === 0
-                ? 'Chờ một khoản chi để nhìn lại'
-                : filter === 'pending' && !search && category === 'all'
-                  ? 'Bạn đã nhìn lại hết rồi!'
-                  : 'Chưa có khoản chi phù hợp'}
+              {summary.total === 0 && !hasFilters ? (
+                <>
+                  Chờ một khoản chi để <span className="worth-title-accent">nhìn lại</span>
+                </>
+              ) : filter === 'pending' && !search && category === 'all' ? (
+                'Bạn đã nhìn lại hết rồi!'
+              ) : (
+                'Chưa có khoản chi phù hợp'
+              )}
             </h3>
             <p>
-              {summary.total === 0
+              {summary.total === 0 && !hasFilters
                 ? 'Thêm khoản chi, rồi chọn cảm nhận của riêng bạn.'
                 : filter === 'pending' && !search && category === 'all'
                   ? 'Mọi cảm nhận đã được lưu. Bạn có thể xem lại hoặc đổi ý bất cứ lúc nào.'
                   : 'Tìm một từ khác hoặc đổi bộ lọc để xem thêm.'}
             </p>
-            {summary.total === 0 ? (
-              <button className="button secondary" onClick={onAdd}>
+            {summary.total === 0 && !hasFilters ? (
+              <ActionButton onClick={onAdd}>
                 <Plus size={14} /> Thêm khoản chi
-              </button>
+              </ActionButton>
             ) : (
               hasFilters && (
                 <button className="text-button" onClick={clearFilters}>
@@ -359,10 +386,12 @@ export default function WorthView({
           <span>
             <PencilLine size={13} aria-hidden="true" /> Thêm lý do bằng nút bút chì
           </span>
-          <button className="worth-archive-button" onClick={onOpenNotes}>
-            <BookOpen size={14} aria-hidden="true" /> Ghi chú đã lưu{' '}
-            <ChevronRight size={13} aria-hidden="true" />
-          </button>
+          {onOpenNotes && (
+            <button className="worth-archive-button" onClick={onOpenNotes}>
+              <BookOpen size={14} aria-hidden="true" /> Ghi chú đã lưu{' '}
+              <ChevronRight size={13} aria-hidden="true" />
+            </button>
+          )}
         </div>
       </section>
     </div>

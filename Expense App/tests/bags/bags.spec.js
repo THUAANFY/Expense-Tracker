@@ -305,6 +305,61 @@ test('backup validates bag links, supports old books and restores bags with thei
   expect((await stored(page)).transactions).toEqual(data.transactions)
 })
 
+for (const width of [1440, 320]) {
+  test(`dark bag picker supports row clicks and keyboard selection at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 700 })
+    await page.addInitScript(() =>
+      localStorage.setItem('may-appearance-v1', JSON.stringify({ version: 1, mode: 'dark' })),
+    )
+    const data = fixture()
+    data.transactions.push(expense('picker-second', 'Cà phê mới', 45000))
+    await seed(page, data)
+    await navigate(page)
+    await openBag(page)
+    await page.getByRole('button', { name: 'Chọn giao dịch', exact: true }).click()
+    const dialog = page.getByRole('dialog')
+    const first = dialog.getByRole('checkbox', { name: 'Bữa trưa cùng bạn', exact: true })
+    const firstRow = first.locator('..')
+    await firstRow.locator('.bag-picker-copy > strong').click()
+    await expect(first).toBeChecked()
+    await expect(dialog.locator('.bag-selection-total')).toContainText('1 khoản')
+    await firstRow.click({ position: { x: 3, y: 3 } })
+    await expect(first).not.toBeChecked()
+    await firstRow.locator('.bag-picker-art').click()
+    await expect(first).toBeChecked()
+
+    const locked = dialog.getByRole('checkbox', { name: 'Vé xe tháng trước', exact: true })
+    await expect(locked).toBeDisabled()
+    await expect(locked.locator('..').locator('.bag-picker-locked-label')).toBeVisible()
+    await expect(locked).not.toBeChecked()
+
+    const second = dialog.getByRole('checkbox', { name: 'Cà phê mới', exact: true })
+    await second.focus()
+    await page.keyboard.press('Space')
+    await expect(second).toBeChecked()
+    await dialog.getByRole('textbox', { name: 'Tìm giao dịch để thêm vào túi' }).fill('ca phe moi')
+    await expect(second).toBeChecked()
+    await expect(dialog.locator('.bag-selection-total')).toContainText('2 khoản')
+    await dialog.getByRole('button', { name: 'Lưu vào túi', exact: true }).click()
+    await expect(page.locator('.bag-expense-row')).toHaveCount(2)
+    const saved = await stored(page)
+    expect(saved.transactions.find((item) => item.id === 'old')).toEqual(
+      data.transactions.find((item) => item.id === 'old'),
+    )
+    expect(saved.transactions.map(({ bagId, ...item }) => item)).toEqual(
+      data.transactions.map(({ bagId, ...item }) => item),
+    )
+    expect(saved.notes).toEqual(data.notes)
+    expect(isValidData(saved)).toBeTruthy()
+    await page.reload()
+    await navigate(page)
+    await openBag(page)
+    await expect(page.locator('.bag-expense-row')).toHaveCount(2)
+  })
+}
+
 for (const width of [320, 390]) {
   test(`bag editing, selection and detail fit a short ${width}px phone`, async ({ page }) => {
     await page.setViewportSize({ width, height: 568 })

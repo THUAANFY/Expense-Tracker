@@ -1,9 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, MotionConfig } from 'motion/react'
 import {
   ArrowDownLeft,
   ArrowDownWideNarrow,
-  ArrowRight,
   ArrowUpRight,
   BookOpen,
   CalendarDays,
@@ -25,7 +24,6 @@ import {
   Search,
   Settings2,
   ShoppingBag,
-  SlidersHorizontal,
   Sun,
   Tags,
   TrendingDown,
@@ -35,18 +33,26 @@ import {
   X,
 } from 'lucide-react'
 import CategoryArt from '../shared/illustrations/CategoryArt'
-import SpendingChart from '../features/overview/SpendingChart'
+import useAppearance from './theme/useAppearance'
+import FintechStatDecor from './theme/FintechStatDecor'
+import SpendingChartPanel from '../features/overview/SpendingChartPanel'
+import CategoryDonut from '../features/overview/CategoryDonut'
 import MonthPicker from '../shared/components/MonthPicker'
 import NotesView from '../features/notes/NotesView'
 import WorthView from '../features/reviews/WorthView'
 import BagsView from '../features/bags/BagsView'
-import BagArt from '../features/bags/BagArt'
 import CategoriesView from '../features/budgets/CategoriesView'
 import FilterSelect from '../shared/components/FilterSelect'
 import HistoryOverview from '../features/transactions/HistoryOverview'
+import HistoryTransactionRow from '../features/transactions/HistoryTransactionRow'
+import { HistoryCategorySymbols } from '../features/transactions/HistoryCategoryArt'
 import HistoryArt from '../features/transactions/HistoryArt'
 import HistoryEmptyState from '../features/transactions/HistoryEmptyState'
 import RecentTransactionsEmpty from '../features/overview/RecentTransactionsEmpty'
+import RecentTransactions from '../features/overview/RecentTransactions'
+import QuickCategories from '../features/overview/QuickCategories'
+import MonthlyBudgetCard from '../features/overview/MonthlyBudgetCard'
+import OverviewBagsCard from '../features/overview/OverviewBagsCard'
 import ClosedMonthNotice from '../shared/components/ClosedMonthNotice'
 import AppFooter from './layout/AppFooter'
 import OverviewArt from '../features/overview/OverviewArt'
@@ -59,6 +65,7 @@ import MoneySourcesView, { OverviewMoneySources } from '../features/money-source
 import MoneySourceDialog from '../features/money-sources/dialogs/MoneySourceDialog'
 import SourceTransferDialog from '../features/money-sources/dialogs/SourceTransferDialog'
 import SourceBadge from '../features/money-sources/SourceBadge'
+import ActionButton from '../shared/components/ActionButton'
 import useBookData, { SaveFeedbackContext } from '../shared/hooks/useBookData'
 import Dialog from '../shared/components/Dialog'
 import TransactionDialog from '../features/transactions/dialogs/TransactionDialog'
@@ -69,7 +76,6 @@ import BagTransactionsDialog from '../features/bags/dialogs/BagTransactionsDialo
 import BudgetDialog from '../features/budgets/dialogs/BudgetDialog'
 import {
   CATEGORIES,
-  compactMoney,
   dateKey,
   exportCSV,
   formatDate,
@@ -94,6 +100,7 @@ import { isClosedMonth } from '../shared/lib/closedMonths'
 import './App.css'
 import '../features/transactions/TransactionList.css'
 import '../features/transactions/HistoryView.css'
+import '../features/transactions/FintechHistoryLedger.css'
 import '../features/overview/OverviewView.css'
 import './layout/Sidebar.css'
 
@@ -124,14 +131,14 @@ const SORT_OPTIONS = [
   },
 ]
 const TITLES = {
-  overview: ['Gọn chi tiêu. Nhẹ cuộc sống.', 'Một góc nhìn rõ ràng hơn về tài chính của bạn.'],
-  transactions: ['Mỗi khoản chi, một câu chuyện.', 'Lưu lại những điều nhỏ, hiểu hơn về mỗi ngày.'],
-  categories: ['Chi tiêu có một chỗ riêng.', 'Một ngân sách vừa vặn cho từng điều bạn quan tâm.'],
-  reviews: ['Đáng tiền không?', 'Nhìn lại một khoản chi, hiểu thêm điều mình cần.'],
-  bags: ['Túi chi tiêu theo dịp', 'Một chiếc túi nhỏ cho mỗi câu chuyện chi tiêu.'],
-  notes: ['Ghi chú đã lưu.', 'Những dòng ghi chép của bạn vẫn ở đây.'],
-  settings: ['Theo cách của bạn.', 'Một vài điều chỉnh để mây gần gũi với bạn hơn.'],
-  sources: ['Nguồn tiền của bạn.', 'Biết tiền đang ở đâu, ghi chép từng thay đổi.'],
+  overview: ['Gọn chi tiêu.', 'Nhẹ cuộc sống.'],
+  transactions: ['Mỗi khoản chi,', 'một câu chuyện.'],
+  categories: ['Chi tiêu có', 'một chỗ riêng.'],
+  reviews: ['Đáng tiền', 'không?'],
+  bags: ['Túi chi tiêu', 'theo dịp'],
+  notes: ['Ghi chú', 'đã lưu.'],
+  settings: ['Theo cách', 'của bạn.'],
+  sources: ['Nguồn tiền', 'của bạn.'],
 }
 const ease = [0.22, 1, 0.36, 1]
 const normalize = (value) =>
@@ -157,12 +164,31 @@ function Brand() {
   )
 }
 
-function Stats({ income, expense, previousExpense, budget, transactionCount }) {
+function Stats({ income, expense, previousIncome, previousExpense, budget, transactionCount }) {
+  const { theme } = useAppearance()
   const [showBalance, setShowBalance] = useState(true)
   const difference = previousExpense ? ((expense - previousExpense) / previousExpense) * 100 : null
+  const incomeDifference =
+    previousIncome > 0 ? ((income - previousIncome) / previousIncome) * 100 : null
+  const balance = income - expense
+  const previousBalance = previousIncome - previousExpense
+  const balanceDifference =
+    previousBalance > 0 ? ((balance - previousBalance) / previousBalance) * 100 : null
+  const balancePositive = balanceDifference !== null ? balanceDifference >= 0 : balance >= 0
+  const BalanceTrend = !showBalance
+    ? EyeOff
+    : balanceDifference === null
+      ? Wallet
+      : balanceDifference >= 0
+        ? TrendingUp
+        : TrendingDown
+  const IncomeTrend = incomeDifference !== null && incomeDifference < 0 ? TrendingDown : TrendingUp
+  const percent = (value) => `${Math.abs(value).toFixed(1).replace('.', ',')}%`
+  const amountClass = (value) => `stat-value${Math.abs(value) >= 1e9 ? ' is-long' : ''}`
   return (
     <div className="stats-grid">
       <section className="stat-card balance-card">
+        {theme === 'dark' && <FintechStatDecor kind="balance" />}
         <div className="stat-label">
           <span>
             <Wallet size={17} /> Chênh lệch thu − chi
@@ -175,13 +201,34 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
             {showBalance ? <Eye size={16} /> : <EyeOff size={16} />}
           </button>
         </div>
-        <strong className="stat-value">{showBalance ? money(income - expense) : '••••••••'}</strong>
+        <strong className={amountClass(showBalance ? balance : 0)}>
+          {showBalance ? money(balance) : '••••••••'}
+        </strong>
         <div className="stat-foot">
-          <span className="balance-dot" /> Thu nhập − chi tiêu trong tháng
+          {theme === 'dark' ? (
+            <>
+              <span className={`pill ${balancePositive ? 'green' : 'orange'}`}>
+                <BalanceTrend size={11} />
+                {!showBalance
+                  ? '•••'
+                  : balanceDifference !== null
+                    ? percent(balanceDifference)
+                    : 'Trong tháng'}
+              </span>
+              <span>
+                {balanceDifference !== null ? 'So với tháng trước' : 'Thu nhập − chi tiêu'}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="balance-dot" /> Thu nhập − chi tiêu trong tháng
+            </>
+          )}
         </div>
         <OverviewArt className="overview-balance-art" />
       </section>
       <section className="stat-card overview-income-card">
+        {theme === 'dark' && <FintechStatDecor kind="income" />}
         <div className="stat-label">
           <span>
             <span className="stat-icon income">
@@ -191,15 +238,28 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
           </span>
           <HistoryArt variant="income" className="overview-stat-art" />
         </div>
-        <strong className="stat-value">{money(income)}</strong>
+        <strong className={amountClass(income)}>{money(income)}</strong>
         <div className="stat-foot">
-          <span className="pill green">
-            <TrendingUp size={12} /> Khoản thu
-          </span>
-          <span>Cho những dự định mới</span>
+          {theme === 'dark' && incomeDifference !== null ? (
+            <>
+              <span className={`pill ${incomeDifference >= 0 ? 'green' : 'orange'}`}>
+                <IncomeTrend size={11} />
+                {percent(incomeDifference)}
+              </span>
+              <span>So với tháng trước</span>
+            </>
+          ) : (
+            <>
+              <span className="pill green">
+                <TrendingUp size={12} /> Khoản thu
+              </span>
+              <span>Cho những dự định mới</span>
+            </>
+          )}
         </div>
       </section>
       <section className="stat-card overview-expense-card">
+        {theme === 'dark' && <FintechStatDecor kind="expense" />}
         <div className="stat-label">
           <span>
             <span className="stat-icon expense">
@@ -209,7 +269,7 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
           </span>
           <HistoryArt variant="expense" className="overview-stat-art" />
         </div>
-        <strong className="stat-value">{money(expense)}</strong>
+        <strong className={amountClass(expense)}>{money(expense)}</strong>
         <div className="stat-foot">
           {difference !== null ? (
             <>
@@ -217,7 +277,7 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
                 {difference <= 0 ? <TrendingDown size={12} /> : <TrendingUp size={12} />}{' '}
                 {Math.abs(difference).toFixed(1).replace('.', ',')}%
               </span>
-              <span>so với tháng trước</span>
+              <span>{theme === 'dark' ? 'So với tháng trước' : 'so với tháng trước'}</span>
             </>
           ) : (
             <>
@@ -230,96 +290,6 @@ function Stats({ income, expense, previousExpense, budget, transactionCount }) {
         </div>
       </section>
     </div>
-  )
-}
-
-function CategoryDonut({ totals, expense, onCategory }) {
-  const sorted = [...totals]
-    .filter((category) => category.spent > 0)
-    .sort((a, b) => b.spent - a.spent)
-  let offset = 0
-  const ringPoint = (radius, angle) =>
-    `${87 + radius * Math.cos(angle)} ${87 + radius * Math.sin(angle)}`
-  const slicePath = (start, end) => {
-    const middle = (start + end) / 2
-    return `M ${ringPoint(73.5, start)} A 73.5 73.5 0 0 1 ${ringPoint(73.5, middle)} A 73.5 73.5 0 0 1 ${ringPoint(73.5, end)} L ${ringPoint(54.5, end)} A 54.5 54.5 0 0 0 ${ringPoint(54.5, middle)} A 54.5 54.5 0 0 0 ${ringPoint(54.5, start)} Z`
-  }
-  return (
-    <section className="panel category-panel">
-      <div className="panel-heading">
-        <h2>Chi tiêu theo danh mục</h2>
-        <span className="tiny-label">THÁNG NÀY</span>
-      </div>
-      <div className="donut-wrap">
-        <svg
-          viewBox="0 0 174 174"
-          role="img"
-          aria-label={`Phân bổ chi tiêu: ${sorted.map((category) => `${category.name} ${money(category.spent)}`).join(', ') || 'chưa có chi tiêu'}`}
-        >
-          <circle cx="87" cy="87" r="64" fill="none" stroke="#f1eef6" strokeWidth="19" />
-          {sorted.map((category) => {
-            const fraction = category.spent / expense
-            const start = offset * 2 * Math.PI - Math.PI / 2
-            offset += fraction
-            const end = offset * 2 * Math.PI - Math.PI / 2
-            return (
-              <path
-                key={category.id}
-                d={slicePath(start, end)}
-                fill={category.color}
-                data-category={category.id}
-              />
-            )
-          })}
-        </svg>
-        <div className="donut-center">
-          <span>Tổng chi tiêu</span>
-          <strong>{compactMoney(expense)}</strong>
-          <span>{sorted.length} danh mục</span>
-        </div>
-        <OverviewArt variant="flower" className="overview-donut-flower" />
-        <span className="donut-spark two" aria-hidden="true">
-          ✧
-        </span>
-      </div>
-      <div className="donut-legend">
-        {sorted.length ? (
-          sorted.slice(0, 3).map((category) => (
-            <button key={category.id} onClick={() => onCategory(category.id)}>
-              <span className="legend-name">
-                <span className="overview-legend-art" style={{ background: category.background }}>
-                  <CategoryArt category={category.id} size={26} />
-                </span>
-                {category.name}
-              </span>
-              <strong>
-                {((category.spent / expense) * 100).toFixed(1).replace('.', ',')}
-                <span>%</span>
-              </strong>
-            </button>
-          ))
-        ) : (
-          <p className="category-empty-message muted center">Chưa có chi tiêu trong tháng này.</p>
-        )}
-        {sorted.length > 3 && (
-          <button onClick={() => onCategory('all')}>
-            <span className="legend-name">
-              <i style={{ background: '#c8cbd4' }} />
-              Các danh mục khác
-            </span>
-            <strong>
-              {(
-                (sorted.slice(3).reduce((sum, category) => sum + category.spent, 0) / expense) *
-                100
-              )
-                .toFixed(1)
-                .replace('.', ',')}
-              <span>%</span>
-            </strong>
-          </button>
-        )}
-      </div>
-    </section>
   )
 }
 
@@ -339,6 +309,8 @@ function TransactionList({
   moneySources = [],
 }) {
   const highlightedRef = useRef(null)
+  const artPrefix = `history-category-${useId().replaceAll(':', '')}`
+  const { theme } = useAppearance()
   useEffect(() => {
     const row = highlightedRef.current
     if (!highlightedTransaction || !row) return
@@ -359,6 +331,19 @@ function TransactionList({
     )
   const renderRows = (items) =>
     items.map((item) => {
+      if (ledger && theme === 'dark')
+        return (
+          <HistoryTransactionRow
+            key={item.id}
+            item={item}
+            moneySources={moneySources}
+            onOpen={onEdit}
+            artPrefix={artPrefix}
+            showDate={!groupByDate}
+            highlighted={highlightedTransaction?.id === item.id}
+            rowRef={highlightedTransaction?.id === item.id ? highlightedRef : undefined}
+          />
+        )
       const category = getCategory(item.category)
       const income = item.type === 'income'
       const readOnly = isClosedMonth(item.date)
@@ -424,11 +409,6 @@ function TransactionList({
             <time dateTime={item.date}>{formatDate(item.date)}</time>
           </span>
           <strong className={`transaction-amount ${income ? 'income-text' : ''}`}>
-            {ledger && (
-              <span className="history-amount-kind" aria-hidden="true">
-                {income ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
-              </span>
-            )}
             {income ? '+' : '−'}
             {money(item.amount)}
           </strong>
@@ -450,7 +430,13 @@ function TransactionList({
     <>
       <div
         className={`transaction-table ${small ? 'small' : ''} ${ledger ? `history-ledger ${groupByDate ? 'is-grouped' : 'is-ranked'}` : ''}`}
+        data-has-long-amount={
+          (ledger && transactions.some((item) => item.amount >= 1e9)) || undefined
+        }
       >
+        {ledger && theme === 'dark' && (
+          <HistoryCategorySymbols prefix={artPrefix} transactions={transactions} />
+        )}
         <div className="table-head">
           <span>Giao dịch</span>
           <span>Danh mục</span>
@@ -529,7 +515,9 @@ function AppProviders({ saveError, saving, children }) {
 }
 
 export default function App() {
-  const [view, setView] = useState('overview')
+  const { theme } = useAppearance()
+  const [requestedView, setView] = useState('overview')
+  const view = theme === 'dark' && requestedView === 'notes' ? 'bags' : requestedView
   const [asOf, setAsOf] = useState(dateKey)
   const [month, setMonth] = useState(monthKey())
   const [search, setSearch] = useState('')
@@ -544,6 +532,7 @@ export default function App() {
   const [toast, setToast] = useState(null)
   const [highlightedTransaction, setHighlightedTransaction] = useState(null)
   const searchRef = useRef(null)
+  const historySearchRef = useRef(null)
   const toastSequence = useRef(0)
   const {
     data,
@@ -637,7 +626,7 @@ export default function App() {
       ) {
         if (document.querySelector('dialog[open]')) return
         event.preventDefault()
-        searchRef.current?.focus()
+        ;(historySearchRef.current || searchRef.current)?.focus()
       }
     }
     document.addEventListener('keydown', handler)
@@ -673,6 +662,8 @@ export default function App() {
     setToast(null)
   }
   function navigate(id) {
+    if (id === 'notes' && theme === 'dark') return
+    if (theme === 'dark' && modal?.type === 'note') setModal(null)
     if (id === view) scrollPageToTop()
     setHighlightedTransaction(null)
     setView(id)
@@ -744,6 +735,9 @@ export default function App() {
   const previousMonth = monthKey(new Date(year, monthNumber - 2, 1))
   const previousExpense = data.transactions
     .filter((item) => item.type === 'expense' && item.date.startsWith(previousMonth))
+    .reduce((total, item) => total + item.amount, 0)
+  const previousIncome = data.transactions
+    .filter((item) => item.type === 'income' && item.date.startsWith(previousMonth))
     .reduce((total, item) => total + item.amount, 0)
   const totals = CATEGORIES.map((category) => ({
     ...category,
@@ -845,18 +839,34 @@ export default function App() {
           </nav>
           <div className="sidebar-bottom">
             <div className="sidebar-prompt">
+              {theme === 'dark' && (
+                <button
+                  className="sidebar-help-button"
+                  aria-label="Hướng dẫn sử dụng mây"
+                  title="Hướng dẫn sử dụng"
+                  onClick={() => setModal({ type: 'help' })}
+                >
+                  <CircleHelp size={14} />
+                </button>
+              )}
               <div className="prompt-art">
                 <SidebarArt />
               </div>
-              <h3>Tích nhỏ, thành điều lớn.</h3>
+              <h3>{theme === 'dark' ? 'Chi tiêu thông minh.' : 'Tích nhỏ, thành điều lớn.'}</h3>
               <p>
                 Một thói quen nhỏ hôm nay.
                 <br />
                 Một tương lai nhẹ nhàng hơn.
               </p>
-              <button onClick={() => setModal({ type: 'help' })}>
-                Cùng mây bắt đầu <ArrowUpRight size={14} />
-              </button>
+              {theme === 'dark' ? (
+                <ActionButton onClick={addTransaction} disabled={storageBlocked}>
+                  <Plus size={15} /> Thêm giao dịch
+                </ActionButton>
+              ) : (
+                <button onClick={() => setModal({ type: 'help' })}>
+                  Cùng mây bắt đầu <ArrowUpRight size={14} />
+                </button>
+              )}
             </div>
             <button
               className={`nav-item settings-nav ${view === 'settings' ? 'active' : ''}`}
@@ -930,6 +940,7 @@ export default function App() {
           </header>
           <main id="main-content" tabIndex="-1">
             <div
+              data-page-heading
               className={
                 view === 'sources'
                   ? 'page-heading sources-page-heading'
@@ -950,26 +961,29 @@ export default function App() {
                                 : 'page-heading'
               }
             >
-              <div>
+              <div className="page-heading-copy">
                 <div className="greeting">
-                  <Sun size={15} /> Chào {data.profile.name}, một ngày thật nhẹ nhàng
-                  <span className="greeting-dot">✧</span>
+                  <Sun size={15} aria-hidden="true" />
+                  <span>Chào {data.profile.name}, một ngày thật nhẹ nhàng</span>
+                  <span className="greeting-dot" aria-hidden="true">
+                    ✧
+                  </span>
                 </div>
-                <h1>{TITLES[view][0]}</h1>
-                <p>
-                  {['notes', 'reviews'].includes(view) ? (
-                    <button
-                      className={view === 'notes' ? 'notes-parent-link' : 'worth-parent-link'}
-                      onClick={() => navigate('bags')}
-                    >
-                      <ChevronLeft size={13} /> Túi chi tiêu
-                    </button>
-                  ) : (
-                    TITLES[view][1]
-                  )}
-                </p>
+                <h1>
+                  {TITLES[view][0]} <span className="page-title-accent">{TITLES[view][1]}</span>
+                </h1>
               </div>
               <div className="page-actions">
+                {['notes', 'reviews'].includes(view) && (
+                  <button
+                    type="button"
+                    className={`page-parent-link ${view === 'notes' ? 'notes-parent-link' : 'worth-parent-link'}`}
+                    aria-label="Túi chi tiêu"
+                    onClick={() => navigate('bags')}
+                  >
+                    <ChevronLeft size={14} aria-hidden="true" /> <span>Túi chi tiêu</span>
+                  </button>
+                )}
                 {!['notes', 'bags', 'sources'].includes(view) && (
                   <MonthPicker
                     value={month}
@@ -980,8 +994,9 @@ export default function App() {
                     }}
                   />
                 )}
-                <button
-                  className="button primary add-button"
+                <ActionButton
+                  className="add-button"
+                  layout="header"
                   disabled={storageBlocked}
                   aria-label={
                     view === 'sources'
@@ -1012,7 +1027,7 @@ export default function App() {
                           ? 'Tạo túi'
                           : 'Thêm giao dịch'}
                   </span>
-                </button>
+                </ActionButton>
               </div>
             </div>
             {closedMonth && !['notes', 'bags', 'sources'].includes(view) && (
@@ -1051,6 +1066,7 @@ export default function App() {
                     <Stats
                       income={income}
                       expense={expense}
+                      previousIncome={previousIncome}
                       previousExpense={previousExpense}
                       budget={monthlyBudget}
                       transactionCount={monthTransactions.length}
@@ -1065,48 +1081,20 @@ export default function App() {
                     />
                     <div className="dashboard-columns">
                       <div className="dashboard-main">
-                        <section className="panel chart-panel">
-                          <div className="panel-heading">
-                            <div>
-                              <h2>
-                                Dòng chảy chi tiêu <span className="subtle-dot" />
-                              </h2>
-                              <p>Mỗi ngày một chút, nhìn lại cả tháng.</p>
-                            </div>
-                            <div className="overview-chart-corner">
-                              <OverviewArt variant="cloud" className="overview-cloud-art" />
-                              <span className="chart-legend">
-                                <i /> Chi tiêu
-                              </span>
-                            </div>
-                          </div>
-                          <div className="chart-summary">
-                            <strong>{money(expense)}</strong>
-                            <span>trong tháng {monthNumber}</span>
-                            <span className="chart-period">
-                              01 — {new Date(year, monthNumber, 0).getDate()} THÁNG {monthNumber}
-                            </span>
-                          </div>
-                          <SpendingChart
-                            key={month}
-                            transactions={monthTransactions}
-                            month={month}
-                          />
-                        </section>
-                        <section className="panel recent-panel">
-                          <div className="panel-heading">
-                            <div className="heading-with-count">
-                              <OverviewArt variant="receipt" className="overview-heading-art" />
-                              <h2>Giao dịch gần đây</h2>
-                              <span className="count-badge">{monthTransactions.length}</span>
-                            </div>
-                            <button
-                              className="text-button"
-                              onClick={() => navigate('transactions')}
-                            >
-                              Xem tất cả <ArrowRight size={14} />
-                            </button>
-                          </div>
+                        <SpendingChartPanel
+                          transactions={monthTransactions}
+                          month={month}
+                          expense={expense}
+                        />
+                        <RecentTransactions
+                          transactions={sortedTransactions.slice(0, 5)}
+                          total={monthTransactions.length}
+                          moneySources={sources}
+                          onEdit={editTransaction}
+                          onAdd={addTransaction}
+                          onViewAll={() => navigate('transactions')}
+                          onLocate={showSavedTransaction}
+                        >
                           <TransactionList
                             moneySources={sources}
                             transactions={sortedTransactions.slice(0, 5)}
@@ -1114,117 +1102,35 @@ export default function App() {
                             onAdd={addTransaction}
                             small
                           />
-                        </section>
-                        <section className="category-strip">
-                          <div className="section-heading">
-                            <h2>Chi tiêu theo cách của bạn</h2>
-                            <button className="text-button" onClick={() => navigate('categories')}>
-                              Tất cả danh mục <ArrowRight size={14} />
-                            </button>
-                          </div>
-                          <div className="quick-categories">
-                            {CATEGORIES.slice(0, 5).map((category) => (
-                              <button
-                                key={category.id}
-                                style={{
-                                  '--quick-tint': category.background,
-                                  '--quick-accent': category.color,
-                                }}
-                                onClick={() =>
-                                  setModal({ type: 'transaction', category: category.id })
-                                }
-                              >
-                                <span style={{ background: category.background }}>
-                                  <CategoryArt category={category.id} size={58} />
-                                </span>
-                                <strong>{category.name}</strong>
-                                <span className="quick-category-plus">
-                                  <Plus size={13} />
-                                </span>
-                              </button>
-                            ))}
-                          </div>
-                        </section>
+                        </RecentTransactions>
+                        <QuickCategories
+                          onCategory={(category) => setModal({ type: 'transaction', category })}
+                          onViewAll={() => navigate('categories')}
+                        />
                       </div>
                       <div className="dashboard-side">
                         <CategoryDonut
                           totals={totals}
                           expense={expense}
                           onCategory={categoryFilter}
+                          month={month}
+                          onMonthChange={(value) => {
+                            setMonth(value)
+                            setPage(1)
+                          }}
                         />
-                        <section className="panel budget-panel">
-                          <div className="panel-heading">
-                            <div className="overview-budget-intro">
-                              <OverviewArt variant="jar" className="overview-budget-art" />
-                              <div>
-                                <span>TÍCH TỪNG CHÚT NHỎ</span>
-                                <h2>Ngân sách tháng</h2>
-                              </div>
-                            </div>
-                            <button
-                              className="icon-button"
-                              aria-label="Điều chỉnh ngân sách tháng"
-                              onClick={() => navigate('settings')}
-                            >
-                              <SlidersHorizontal size={16} />
-                            </button>
-                          </div>
-                          <div className="budget-numbers">
-                            <strong>{compactMoney(expense)}</strong>
-                            <span>/ {compactMoney(monthlyBudget)}</span>
-                            <span className={budgetPercent > 100 ? 'over-budget' : ''}>
-                              {budgetPercent}%
-                            </span>
-                          </div>
-                          <div
-                            className={`progress-track ${budgetPercent > 100 ? 'over' : ''}`}
-                            role="progressbar"
-                            aria-label="Ngân sách đã sử dụng"
-                            aria-valuenow={Math.min(budgetPercent, 100)}
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                            aria-valuetext={`Đã sử dụng ${budgetPercent}% ngân sách`}
-                          >
-                            <motion.span
-                              initial={{ width: 0 }}
-                              animate={{ width: `${Math.min(100, budgetPercent)}%` }}
-                              transition={{ duration: 0.8, ease }}
-                            />
-                          </div>
-                          <p>
-                            {remaining >= 0 ? (
-                              <>
-                                <span className="online-dot" /> Còn{' '}
-                                <strong>{money(remaining)}</strong> để chi tiêu.
-                              </>
-                            ) : (
-                              <>
-                                <span className="over-dot" /> Vượt ngân sách{' '}
-                                <strong>{money(-remaining)}</strong>.
-                              </>
-                            )}
-                          </p>
-                        </section>
-                        <button className="overview-bags-card" onClick={() => navigate('bags')}>
-                          <BagArt />
-                          <span>
-                            <strong>Túi chi tiêu</strong>
-                            <span>
-                              {bags.some((bag) => bag.status === 'active')
-                                ? `${bags.filter((bag) => bag.status === 'active').length} dịp đang được chăm chút`
-                                : 'Gom khoản chi cho từng dịp riêng'}
-                            </span>
-                          </span>
-                          <ArrowUpRight size={16} />
-                        </button>
-                        <div className="little-message">
-                          <OverviewArt variant="flower" className="overview-message-art" />
-                          <p>
-                            Chi tiêu thông minh.
-                            <br />
-                            Sống theo cách mình muốn.
-                          </p>
-                        </div>
+                        <MonthlyBudgetCard
+                          expense={expense}
+                          monthlyBudget={monthlyBudget}
+                          budgetPercent={budgetPercent}
+                          remaining={remaining}
+                          onAdjust={() => navigate('settings')}
+                          onDetails={() => navigate('categories')}
+                        />
+                        <OverviewBagsCard
+                          activeCount={bags.filter((bag) => bag.status === 'active').length}
+                          onOpen={() => navigate('bags')}
+                        />
                         <OverviewJournalCorner
                           expenses={expenses}
                           month={month}
@@ -1247,7 +1153,12 @@ export default function App() {
                     <section className="panel history-panel">
                       <div className="history-control-deck">
                         <div className="history-toolbar">
-                          <div className="filter-tabs" role="group" aria-label="Loại giao dịch">
+                          <div
+                            data-filter-tabs
+                            className="filter-tabs"
+                            role="group"
+                            aria-label="Loại giao dịch"
+                          >
                             {[
                               ['all', 'Tất cả'],
                               ['expense', 'Khoản chi'],
@@ -1274,7 +1185,11 @@ export default function App() {
                                   )}
                                 </span>
                                 {label}
-                                <span className="history-type-count" aria-hidden="true">
+                                <span
+                                  data-filter-count
+                                  className="history-type-count"
+                                  aria-hidden="true"
+                                >
                                   {id === 'all'
                                     ? monthTransactions.length
                                     : monthTransactions.filter((item) => item.type === id).length}
@@ -1304,8 +1219,8 @@ export default function App() {
                                 setPage(1)
                               }}
                             />
-                            <button
-                              className="button secondary export-button"
+                            <ActionButton
+                              layout="export"
                               aria-label="Xuất CSV"
                               onClick={() => {
                                 exportCSV(filtered, sources)
@@ -1314,12 +1229,13 @@ export default function App() {
                             >
                               <Download size={15} />
                               <span>Xuất CSV</span>
-                            </button>
+                            </ActionButton>
                           </div>
                         </div>
                         <div className="history-search">
                           <Search size={17} />
                           <input
+                            ref={historySearchRef}
                             aria-label="Tìm trong lịch sử giao dịch"
                             value={search}
                             onChange={(event) => {
@@ -1334,8 +1250,13 @@ export default function App() {
                               aria-label="Xóa bộ lọc"
                               onClick={clearHistoryFilters}
                             >
-                              <X size={13} /> Xóa bộ lọc
+                              <X size={13} /> <span>Xóa bộ lọc</span>
                             </button>
+                          )}
+                          {!search && filterCategory === 'all' && filterType === 'all' && (
+                            <kbd className="history-search-key" aria-hidden="true">
+                              <span>Ctrl</span>K
+                            </kbd>
                           )}
                         </div>
                       </div>
@@ -1347,6 +1268,12 @@ export default function App() {
                             <span>{filtered.length}</span>
                           </div>
                           <span>
+                            {theme === 'dark' &&
+                              (sort === 'highest' ? (
+                                <ArrowDownWideNarrow size={13} aria-hidden="true" />
+                              ) : (
+                                <CalendarDays size={13} aria-hidden="true" />
+                              ))}
                             {search || filterCategory !== 'all' || filterType !== 'all'
                               ? 'Kết quả đang lọc'
                               : sort === 'highest'
@@ -1434,7 +1361,7 @@ export default function App() {
                         'Đã bỏ khỏi túi, giao dịch vẫn được giữ',
                       )
                     }
-                    onOpenNotes={() => navigate('notes')}
+                    onOpenNotes={theme === 'dark' ? undefined : () => navigate('notes')}
                     onOpenReviews={() => navigate('reviews')}
                   />
                 )}
@@ -1468,7 +1395,7 @@ export default function App() {
                     onReason={(transaction) => setModal({ type: 'review', transaction })}
                     onEditTransaction={editTransaction}
                     onAdd={addTransaction}
-                    onOpenNotes={() => navigate('notes')}
+                    onOpenNotes={theme === 'dark' ? undefined : () => navigate('notes')}
                   />
                 )}
                 {view === 'notes' && (
@@ -1695,7 +1622,7 @@ export default function App() {
           }}
         />
       )}
-      {modal?.type === 'note' && (
+      {modal?.type === 'note' && theme !== 'dark' && (
         <NoteDialog
           note={modal.note}
           onClose={() => setModal(null)}

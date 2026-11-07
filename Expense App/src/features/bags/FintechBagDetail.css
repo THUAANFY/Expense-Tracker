@@ -1,0 +1,456 @@
+/* Detail panels use static gradients, with no blur or animated backgrounds. */
+html[data-theme='dark'] .bags-page-heading.is-bag-detail > div:first-child {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+html[data-theme='dark'] .bags-page-heading.is-bag-detail .bags-heading-mark {
+  display: grid;
+  grid-row: 1;
+  width: 44px;
+  height: 44px;
+}
+html[data-theme='dark'] .bags-page-heading.is-bag-detail h1 {
+  grid-column: 2;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-sheet {
+  display: grid;
+  gap: 16px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-hero,
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-panel,
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-panel {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 0 0, #9239d342, transparent 60%) padding-box,
+    radial-gradient(ellipse at 100% 100%, #603fb63d, transparent 60%) padding-box,
+    linear-gradient(125deg, #232545, #131e34 65%, #262341) padding-box,
+    linear-gradient(115deg, #d18bfa, #687bb280 40%, #68b9ff 65%, #c283f1) border-box;
+  box-shadow:
+    inset 0 1px 3px #e6c9ff3b,
+    0 0 12px #8c52d421;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-hero {
+  gap: 18px;
+  min-height: 176px;
+  padding: 18px;
+  overflow: hidden;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-hero::before {
+  position: absolute;
+  z-index: -1;
+  bottom: -160px;
+  left: 15%;
+  width: 550px;
+  height: 200px;
+  border: 1px solid #9970df55;
+  border-radius: 50%;
+  background: linear-gradient(130deg, #8c4edb33, #4d42a90a);
+  transform: rotate(-16deg);
+  content: '';
+  pointer-events: none;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-hero > .bag-art {
+  flex-shrink: 0;
+  width: 144px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-intro {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 1fr);
+  gap: 20px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-stamp {
+  gap: 5px;
+  padding: 4px 7px;
+  border: 1px solid #a398d280;
+  border-radius: 8px;
+  background: #2b3b5b70;
+  color: #e2e9ff;
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-stamp > svg {
+  color: #75e2c7;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-copy h2 {
+  margin: 8px 0 4px;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-copy > p {
+  color: #c6d1e9;
+  font-size: var(--font-body);
+  font-weight: 400;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-budget {
+  padding: 14px 16px;
+  border: 1px solid #a584d296;
+  border-radius: 15px;
+  background: linear-gradient(125deg, #5141894d, #24314b85 60%, #60318b3d);
+  box-shadow: inset 0 1px 2px #cfb3ff26;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers > span {
+  min-width: 0;
+  color: #c8d4ec;
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers > span + span {
+  padding-left: 14px;
+  border-left: 1px solid #b4a7d24d;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers strong {
+  color: #f4f2ff;
+  font-size: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers > span:last-child strong {
+  font-size: 18px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-budget-line {
+  --detail-progress: #6cdbb6;
+  gap: 10px;
+  color: #d2dfef;
+  font-size: var(--font-caption);
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-budget-line.is-near {
+  --detail-progress: #f1c274;
+  color: #f2d09a;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-budget-line.is-over {
+  --detail-progress: #f284a6;
+  color: #ffb2ca;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-budget-track {
+  height: 7px;
+  border: 1px solid #aaa1dc59;
+  background: #a793e333;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-budget-track > span {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--detail-progress) 65%, #5265a5),
+    var(--detail-progress)
+  );
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-columns {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.36fr);
+  align-items: start;
+  gap: 16px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-panel {
+  background:
+    radial-gradient(ellipse at 100% 0, #8750b333, transparent 75%) padding-box,
+    linear-gradient(130deg, #1d3352, #162339 70%) padding-box,
+    linear-gradient(130deg, #78daff, #768bcc99 50%, #c584fa) border-box;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-heading {
+  gap: 12px;
+  margin: 0 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #a097ce59;
+  background: transparent;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-heading > div:first-child,
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-panel > summary > span {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 3px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-heading-mark {
+  display: grid;
+  place-items: center;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #b38ce55e;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #9061c7, #413575);
+  box-shadow: inset 0 1px 1px #e4c4ff40;
+  color: #e7c4ff;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-heading-mark.is-categories {
+  background: linear-gradient(135deg, #416eb8, #2a386a);
+  color: #bdcaff;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-heading h3,
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-panel h3 {
+  grid-column: 2;
+  font-size: var(--font-section);
+  font-weight: 600;
+  line-height: 1.5;
+}
+html[data-theme='dark']
+  .bag-detail
+  .bag-expenses-heading
+  > div:first-child
+  > span:not(.bag-detail-heading-mark),
+html[data-theme='dark']
+  .bag-detail
+  .bag-category-panel
+  > summary
+  > span
+  > span:not(.bag-detail-heading-mark) {
+  grid-column: 2;
+  color: #becce6;
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-back,
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-small-button {
+  min-height: 35px;
+  padding: 7px 11px;
+  border: 1px solid #9b90d480;
+  border-radius: 11px;
+  background: linear-gradient(125deg, #59438640, #27385680);
+  color: #e1d8ff;
+  font-size: var(--font-control);
+  font-weight: 500;
+  box-shadow: inset 0 1px 1px #d4c4ff1a;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-small-button.is-primary {
+  border-color: #b79cf2;
+  background: linear-gradient(110deg, #ae57e1, #733bce 50%, #368fe3);
+  color: #fff;
+  box-shadow: inset 0 1px 2px #f0d2ff55;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-empty {
+  position: relative;
+  isolation: isolate;
+  min-height: 224px;
+  align-content: center;
+  align-content: center;
+  padding: 18px 16px 25px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0 0 20px 20px;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-empty::after {
+  position: absolute;
+  z-index: -1;
+  right: -85px;
+  bottom: -120px;
+  width: 370px;
+  height: 160px;
+  border: 1px solid #9a71d35c;
+  border-radius: 50%;
+  background: #7b3ec426;
+  transform: rotate(-18deg);
+  pointer-events: none;
+  content: '';
+}
+html[data-theme='dark'] .bags-workspace .bag-detail-empty > .bag-detail-empty-art {
+  width: 122px;
+  height: auto;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-empty h3 {
+  font-size: var(--font-section);
+  font-weight: 600;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail-title-accent {
+  background: linear-gradient(95deg, #d58bed, #ae88ff);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-empty p {
+  max-width: 490px;
+  color: #c5d1e9;
+  font-size: var(--font-body);
+  font-weight: 400;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-panel > summary {
+  padding: 14px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-panel > summary > svg {
+  width: 18px;
+  height: 18px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-content {
+  padding: 0 14px 14px;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-content > p {
+  margin: 0 0 14px;
+  font-size: var(--font-body);
+  font-weight: 400;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-footnote {
+  border-top: 1px solid #a298c059;
+  font-size: var(--font-caption);
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-expense-row {
+  border: 1px solid #9a92bc38;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #28334c, #1b263c);
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-expense-amount {
+  border: 0;
+  background: transparent;
+  color: #f3d4e4;
+  font-size: var(--font-body);
+  font-weight: 600;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail .bag-unlink {
+  border-color: #9d8bb759;
+  background: #293451;
+  color: #c2cde8;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail[data-large-values] .bag-detail-numbers {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+}
+html[data-theme='dark']
+  .bags-workspace
+  .bag-detail[data-large-values]
+  .bag-detail-numbers
+  > span
+  + span {
+  padding-left: 0;
+  border: 0;
+}
+html[data-theme='dark'] .bags-workspace .bag-detail[data-large-values] .bag-detail-numbers strong {
+  font-size: 18px;
+}
+@container bags (max-width: 980px) {
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@container bags (max-width: 580px) {
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-sheet,
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-columns {
+    gap: 12px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-hero {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
+    border-radius: 17px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-hero > .bag-art {
+    position: static;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    width: 84px;
+    max-width: 100%;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-intro {
+    display: contents;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-copy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-copy h2 {
+    max-width: none;
+    margin: 7px 0 4px;
+    font-size: 18px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-copy > p {
+    margin-top: 0;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-budget {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding: 12px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers strong,
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-numbers > span:last-child strong {
+    font-size: 18px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-budget-line {
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-heading {
+    margin-inline: 12px;
+    padding: 12px 0;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-heading h3,
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-category-panel h3 {
+    font-size: var(--font-content);
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-heading > div:last-child {
+    gap: 7px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-expenses-heading .bag-small-button {
+    padding-inline: 6px;
+    font-size: var(--font-caption);
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-empty {
+    min-height: 220px;
+    padding-inline: 12px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-empty h3 {
+    font-size: var(--font-content);
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-empty::after {
+    bottom: -146px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-nav {
+    gap: 8px;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-detail-nav .bag-small-button,
+  html[data-theme='dark'] .bags-workspace .bag-detail .bag-back {
+    padding-inline: 7px;
+    font-size: var(--font-caption);
+  }
+  html[data-theme='dark'] .bags-workspace .bag-detail[data-large-values] .bag-detail-numbers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html[data-theme='dark']
+    .bags-workspace
+    .bag-detail[data-large-values]
+    .bag-detail-numbers
+    strong {
+    font-size: 16px;
+  }
+}
+@media (max-width: 760px) {
+  html[data-theme='dark'] .bags-page-heading.is-bag-detail > div:first-child {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 9px;
+  }
+  html[data-theme='dark'] .bags-page-heading.is-bag-detail .bags-heading-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+  html[data-theme='dark'] .bags-page-heading.is-bag-detail h1 {
+    font-size: 23px;
+  }
+}

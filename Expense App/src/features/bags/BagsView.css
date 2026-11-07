@@ -1015,6 +1015,8 @@
   }
   .bag-expenses-heading > div:last-child {
     width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 152px), 1fr));
   }
   .bag-expenses-heading .bag-small-button {
     flex: 1;

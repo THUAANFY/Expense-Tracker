@@ -2,6 +2,9 @@
   --badge-paper: #edf3fc;
   --badge-border: #c8d8eb;
   --badge-ink: #3f5c7b;
+  --badge-accent: #72ddbd;
+  --badge-glass: #203b40;
+  --badge-label: #d6fff0;
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
@@ -21,24 +24,41 @@
   white-space: nowrap;
 }
 .source-badge--cash {
+  --badge-accent: #ee97bc;
+  --badge-glass: #3c293e;
+  --badge-label: #ffe0ed;
   --badge-paper: #f1f7e9;
   --badge-border: #ccdcbd;
   --badge-ink: #45663c;
   border-radius: 11px 7px 7px 11px;
 }
 .source-badge--ewallet {
+  --badge-accent: #bf9bf8;
+  --badge-glass: #302748;
+  --badge-label: #f0e3ff;
   --badge-paper: #f4ebfc;
   --badge-border: #dec8ed;
   --badge-ink: #6b4384;
   border-radius: 8px 11px 11px 8px;
 }
 .source-badge--unassigned {
+  --badge-accent: #9abaf4;
+  --badge-glass: #253451;
+  --badge-label: #dfebff;
   --badge-paper: #fff7e5;
   --badge-border: #e4c68d;
   --badge-ink: #81582a;
   border-style: dashed;
   border-radius: 7px;
   box-shadow: none;
+}
+.source-badge--all {
+  --badge-paper: #eef0fc;
+  --badge-border: #ced2ed;
+  --badge-ink: #4d5684;
+  --badge-accent: #a7afff;
+  --badge-glass: #2b2f50;
+  --badge-label: #e8e8ff;
 }
 .source-badge-icon {
   display: block;

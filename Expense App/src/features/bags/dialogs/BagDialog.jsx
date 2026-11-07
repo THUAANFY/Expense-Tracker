@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { Check, ShoppingBag, Trash2 } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
+import ActionButton from '../../../shared/components/ActionButton'
 import BagArt from '../BagArt'
 import { BAG_COLORS, BAG_STYLES } from '../bags'
+import { getBagArtPalette } from '../bagArtPalette'
+import useAppearance from '../../../app/theme/useAppearance'
 import { uid } from '../../../shared/storage/data'
 import './BagDialogs.css'
 
 export default function BagDialog({ bag, deleteBlocked = false, onSave, onDelete, onClose }) {
+  const { theme } = useAppearance()
   const [form, setForm] = useState(
     bag || {
       name: '',
@@ -105,20 +109,34 @@ export default function BagDialog({ bag, deleteBlocked = false, onSave, onDelete
             </div>
           </fieldset>
           <div className="bag-color-picker" role="group" aria-label="Màu túi">
-            <span>Màu giấy</span>
-            {BAG_COLORS.map((color) => (
-              <button
-                key={color.id}
-                type="button"
-                title={color.label}
-                aria-label={color.label}
-                aria-pressed={form.color === color.id}
-                style={{ background: color.body, color: color.ink }}
-                onClick={() => update('color', color.id)}
-              >
-                {form.color === color.id && <Check size={14} />}
-              </button>
-            ))}
+            <span>Màu túi</span>
+            <div className="bag-color-options">
+              {BAG_COLORS.map((color) => {
+                const palette = getBagArtPalette(form.style, color.id, theme)
+                return (
+                  <button
+                    key={color.id}
+                    type="button"
+                    aria-label={color.label}
+                    aria-pressed={form.color === color.id}
+                    data-bag-color={color.id}
+                    style={{
+                      '--swatch-paper': palette.paper,
+                      '--swatch-body': palette.body,
+                      '--swatch-ink': palette.ink,
+                    }}
+                    onClick={() => update('color', color.id)}
+                  >
+                    <span className="bag-color-swatch" aria-hidden="true">
+                      {form.color === color.id && <Check size={14} />}
+                    </span>
+                    <span className="bag-color-tooltip" aria-hidden="true">
+                      {color.label}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
           <label className="field">
             <span>
@@ -168,10 +186,10 @@ export default function BagDialog({ bag, deleteBlocked = false, onSave, onDelete
           <button type="button" className="button secondary" onClick={onClose}>
             Để sau
           </button>
-          <button className="button primary" type="submit">
+          <ActionButton type="submit">
             <ShoppingBag size={15} />
             {bag ? 'Lưu túi' : 'Tạo túi'}
-          </button>
+          </ActionButton>
         </div>
       </form>
     </Dialog>

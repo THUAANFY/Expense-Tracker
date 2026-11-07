@@ -1,7 +1,17 @@
+import useAppearance from '../../app/theme/useAppearance'
+import DarkThemeArt from '../../app/theme/DarkThemeArt'
 import { useId } from 'react'
 
 export default function OverviewArt({ variant = 'savings', className = '' }) {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (theme === 'dark')
+    return (
+      <DarkThemeArt
+        variant={className.includes('balance') ? 'wallet' : variant}
+        className={className}
+      />
+    )
   const ink = '#89677e'
 
   if (variant === 'flower') {

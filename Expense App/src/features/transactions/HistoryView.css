@@ -370,7 +370,7 @@
   white-space: nowrap;
 }
 .history-ledger .transaction-row {
-  min-height: 73px;
+  min-height: 76px;
   margin-top: 7px;
   padding: 12px 14px;
   border: 1px solid #e9deef;
@@ -393,6 +393,8 @@
   display: none;
 }
 .history-ledger .transaction-art {
+  width: 46px;
+  height: 46px;
   border: 2px solid #fff;
   border-radius: 14px;
   box-shadow:
@@ -402,34 +404,24 @@
   transition: transform 180ms ease;
 }
 .history-ledger .transaction-art svg {
+  width: 42px;
+  height: 42px;
   transform: rotate(4deg);
+}
+.history-ledger .transaction-copy > strong {
+  font-size: 14px;
 }
 .history-ledger .transaction-amount {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--font-body);
+  font-size: 14px;
 }
 .history-ledger [data-type='expense'] .transaction-amount {
   color: #70435a;
 }
-.history-amount-kind {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 21px;
-  height: 21px;
-  border-radius: 50%;
-  background: #f8eaf0;
-  color: #8c4e65;
-}
-[data-type='income'] .history-amount-kind {
-  background: #eaf5ee;
-  color: var(--text-success);
-}
 .history-ledger .category-badge {
   border-radius: 8px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .history-ledger .row-edit {
   border-radius: 10px;
@@ -499,7 +491,7 @@
     display: inline-flex;
     grid-area: category;
     padding: 3px 7px;
-    font-size: 10px;
+    font-size: 11px;
   }
   .history-ledger .row-edit {
     position: absolute;
@@ -714,9 +706,6 @@
   .history-month-eyebrow {
     gap: 3px;
     font-size: 7px;
-  }
-  .history-amount-kind {
-    display: none;
   }
   .history-workspace .filter-tabs > button {
     padding-inline: 7px;

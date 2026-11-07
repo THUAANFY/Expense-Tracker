@@ -257,9 +257,7 @@ for (const width of [320, 1440])
     await expect(card(page)).toContainText('Tự động')
     await expect(card(page).locator('.budget-category-limit')).toContainText(money(750000))
     await saveManual(page, 4000000)
-    await expect(page.locator('.category-allocation-note')).toContainText(
-      'vượt ngân sách tháng 1.000.000',
-    )
+    expect(getCategoryBudgetPlan(await stored(page), month).excess).toBe(1000000)
     await expect(card(page, 'Nhà cửa').getByRole('progressbar')).toHaveAttribute(
       'aria-valuenow',
       '0',

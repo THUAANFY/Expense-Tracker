@@ -249,6 +249,7 @@
   border-radius: 4px;
 }
 .category-limits-distribution > span {
+  background: var(--distribution-color);
   min-width: 2px;
   border-radius: 2px;
 }
@@ -306,52 +307,8 @@
 .is-over > .category-status-dot {
   background: #b45467;
 }
-.category-limits-details > p {
-  margin-top: 18px;
-  padding-top: 12px;
-  border-top: 1px solid #ebe4f0;
-  color: var(--budget-muted);
-  font-size: var(--font-caption);
-  line-height: 1.7;
-}
 .category-limits-toggle {
   display: none;
-}
-.category-allocation-note {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 10px;
-  padding: 11px 14px;
-  border-radius: 10px;
-  background: #efe8f7;
-  color: var(--text-accent);
-  font-size: var(--font-caption);
-  line-height: 1.7;
-}
-.category-allocation-note > svg {
-  flex-shrink: 0;
-}
-.category-allocation-note > p {
-  flex: 1 1 180px;
-}
-.category-allocation-note > button {
-  min-height: 34px;
-  padding: 5px 10px;
-  border: 1px solid #d8c6e6;
-  border-radius: 7px;
-  background: #fffafc;
-  color: var(--text-accent);
-  font-size: inherit;
-  font-weight: 500;
-}
-.category-allocation-note > button:hover {
-  background: #fff;
-  border-color: #a78abf;
-}
-.category-allocation-note.is-warning {
-  background: #fff2df;
-  color: var(--text-warning);
 }
 .budget-allocation-mode,
 .budget-transaction-count {
@@ -433,6 +390,31 @@
   flex-wrap: wrap;
   gap: 9px 12px;
   padding: 15px 0;
+}
+.category-library-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.category-reset-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 1px solid #d5c6e1;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text-accent);
+  font-size: var(--font-control-label);
+  white-space: nowrap;
+}
+html[data-theme='dark'] .categories-workspace .category-reset-button {
+  border-color: #b69deb4f;
+  background: #8070b226;
+  color: #e4d9ff;
 }
 .category-status-filters {
   display: flex;
@@ -837,9 +819,6 @@
   .category-limits-details {
     display: contents;
   }
-  .category-limits-details > p {
-    grid-column: 1 / -1;
-  }
 }
 @media (max-width: 760px) {
   .categories-workspace {
@@ -927,11 +906,6 @@
   }
   .category-limits-status > span > span {
     font-size: 10px;
-  }
-  .category-limits-details > p {
-    margin-top: 13px;
-    padding-top: 11px;
-    font-size: 11px;
   }
   .category-library-heading h2 {
     font-size: 17px;

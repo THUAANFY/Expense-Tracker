@@ -1,0 +1,278 @@
+/* Shared day/month/year styling; popovers also render inside native dialogs. */
+html[data-theme='dark'] .month-picker:not(.month-picker--compact) {
+  min-height: 38px;
+  padding: 3px;
+  border-color: #8fb8f173;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #334665, #17243d 45%, #25316a);
+  box-shadow:
+    inset 0 1px 3px #d5e6ff2e,
+    inset 0 -1px 3px #74a8ff26;
+}
+html[data-theme='dark'] .month-picker .month-picker-trigger {
+  min-height: 30px;
+  padding-block: 4px;
+  border-radius: 8px;
+  background: transparent;
+  color: #e5e9fb;
+  font-weight: 500;
+}
+html[data-theme='dark'] .month-picker .month-arrow {
+  width: 26px;
+  border: 1px solid #9aa9dd1f;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #adc5ff0f, #1b294355);
+  color: #d5e3ff;
+  box-shadow: none;
+}
+html[data-theme='dark'] .month-picker:not(.month-picker--compact).is-open,
+html[data-theme='dark'] .month-picker:not(.month-picker--compact):focus-within {
+  border-color: #c1c6ff;
+  box-shadow:
+    inset 0 1px 2px #c8d0ff26,
+    0 0 0 2px #9689f02b;
+}
+html[data-theme='dark'] .month-picker .month-picker-trigger:focus-visible,
+html[data-theme='dark'] .month-picker .month-arrow:focus-visible {
+  outline: 2px solid #baa8ed;
+  outline-offset: 1px;
+  background: linear-gradient(135deg, #51467a, #2a395b);
+  color: #f2edff;
+}
+html[data-theme='dark'] .month-picker .month-arrow:disabled {
+  background: transparent;
+  border-color: transparent;
+  color: #7b8cab;
+  box-shadow: none;
+}
+html[data-theme='dark'] .transaction-field-trigger.date-picker-trigger {
+  border-color: #7d86ab70;
+  background: linear-gradient(135deg, #2b2b45, #1b263b 70%, #29263f);
+  box-shadow: inset 0 1px 2px #c2d2ff0d;
+  color: #e3eaff;
+  font-size: var(--font-control);
+  font-weight: 400;
+}
+html[data-theme='dark'] .date-picker-trigger > svg {
+  color: #bdabed;
+}
+html[data-theme='dark'] .transaction-field-trigger.date-picker-trigger:hover {
+  border-color: #ab99db;
+}
+html[data-theme='dark'] .transaction-field-trigger.date-picker-trigger.is-open,
+html[data-theme='dark'] .transaction-field-trigger.date-picker-trigger:focus-visible {
+  border-color: #bc9cfa;
+  outline: none;
+  box-shadow: 0 0 0 3px #b18ae421;
+}
+html[data-theme='dark'] .field-popover.date-picker-popover,
+html[data-theme='dark'] .month-popover[role='dialog'] {
+  --calendar-text: #e1e8fa;
+  --calendar-secondary: #b1c0db;
+  --calendar-accent: #c4a8ff;
+  --calendar-border: #8791b15c;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 100% 100%, #aa45cd1f, transparent 55%) padding-box,
+    radial-gradient(ellipse at 0 0, #7a7fb726, transparent 60%) padding-box,
+    linear-gradient(135deg, #22263e, #191e31 60%, #29223d) padding-box,
+    linear-gradient(130deg, #a49dd480, #6267c659 45%, #b080db80) border-box;
+  color: var(--calendar-text);
+  box-shadow:
+    0 12px 32px #050b2059,
+    inset 0 1px 2px #d5c4ff21;
+  font-size: var(--font-control);
+  font-weight: 400;
+  scrollbar-color: #69799f #182238;
+}
+html[data-theme='dark'] .date-picker-popover .field-popover-caption,
+html[data-theme='dark'] .month-popover .month-popover-caption {
+  margin-bottom: 9px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #a89bc02b;
+}
+html[data-theme='dark'] .date-picker-popover .field-popover-caption > span,
+html[data-theme='dark'] .month-popover .month-popover-caption > span {
+  color: var(--calendar-secondary);
+  font-size: var(--font-caption);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-navigation,
+html[data-theme='dark'] .month-popover .month-popover-navigation {
+  gap: 8px;
+  margin-bottom: 10px;
+  border: 0;
+  background: transparent;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-heading,
+html[data-theme='dark'] .month-popover .month-year-toggle {
+  min-height: 33px;
+  padding: 5px 9px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--calendar-text);
+  font-size: var(--font-picker-title);
+  font-weight: 600;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-heading > svg,
+html[data-theme='dark'] .month-popover .month-year-toggle > svg {
+  color: var(--calendar-accent);
+}
+html[data-theme='dark'] .date-picker-popover .month-browse-arrow,
+html[data-theme='dark'] .month-popover .month-browse-arrow,
+html[data-theme='dark'] .date-picker-popover .field-popover-close,
+html[data-theme='dark'] .month-popover .month-popover-close {
+  border: 1px solid var(--calendar-border);
+  border-radius: 9px;
+  background: #d1dcff09;
+  color: #d1dcf3;
+  box-shadow: none;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-weekdays {
+  color: var(--calendar-secondary);
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-day,
+html[data-theme='dark'] .date-picker-popover .month-option,
+html[data-theme='dark'] .month-popover .month-option {
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: #dce5f8;
+  font-size: var(--font-control-option);
+  font-weight: 400;
+  box-shadow: none;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-day {
+  height: 34px;
+}
+html[data-theme='dark'] .date-picker-popover .month-option,
+html[data-theme='dark'] .month-popover .month-option {
+  min-height: 40px;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-day.is-outside {
+  color: #94a5c4;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-day.is-today:not(.is-selected) {
+  border-color: #7edbc470;
+  background: #5dd5b40a;
+  color: #a1f0d7;
+  font-weight: 500;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-day.is-today:not(.is-selected)::after,
+html[data-theme='dark'] .month-popover .month-option.is-current:not(.is-selected)::after {
+  position: absolute;
+  bottom: 3px;
+  left: calc(50% - 2px);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #7cddbf;
+  content: '';
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-day.is-selected,
+html[data-theme='dark'] .date-picker-popover .date-picker-day.is-selected:hover,
+html[data-theme='dark'] .date-picker-popover .month-option.is-selected,
+html[data-theme='dark'] .date-picker-popover .month-option.is-selected:hover,
+html[data-theme='dark'] .month-popover .month-option.is-selected,
+html[data-theme='dark'] .month-popover .month-option.is-selected:hover {
+  border-color: #cab0fc;
+  background: linear-gradient(135deg, #aa77e0, #7857cf 55%, #567ed7);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 1px #f2dfff59,
+    0 2px 6px #7650be33;
+  font-weight: 500;
+}
+html[data-theme='dark'] .date-picker-popover button:disabled,
+html[data-theme='dark'] .month-popover button:disabled {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: #697c9d;
+  opacity: 1;
+  cursor: not-allowed;
+}
+html[data-theme='dark'] .date-picker-popover button:disabled::after,
+html[data-theme='dark'] .month-popover button:disabled::after {
+  display: none;
+}
+html[data-theme='dark'] .date-picker-popover button:focus-visible,
+html[data-theme='dark'] .month-popover button:focus-visible {
+  outline: 2px solid #d1b8ff;
+  outline-offset: 2px;
+}
+html[data-theme='dark'] .date-picker-popover .field-popover-footer,
+html[data-theme='dark'] .month-popover .month-popover-footer {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid #a89bc03d;
+  background: transparent;
+  color: var(--calendar-secondary);
+  font-size: var(--font-caption);
+}
+html[data-theme='dark'] .date-picker-popover .field-popover-footer > span,
+html[data-theme='dark'] .month-popover .month-popover-footer > span {
+  color: var(--calendar-secondary);
+}
+html[data-theme='dark'] .date-picker-popover .field-popover-footer strong,
+html[data-theme='dark'] .month-popover .month-popover-footer strong {
+  color: var(--calendar-text);
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+html[data-theme='dark'] .date-picker-popover .field-popover-footer > button,
+html[data-theme='dark'] .month-popover .month-popover-footer > button {
+  min-height: 30px;
+  padding: 5px 8px;
+  border: 1px solid #aa91dc5c;
+  border-radius: 8px;
+  background: #9e75ce1a;
+  color: #d6c0ff;
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+html[data-theme='dark'] .date-picker-popover .date-picker-content {
+  scrollbar-color: #69799f transparent;
+}
+@media (hover: hover) {
+  html[data-theme='dark'] .month-picker .month-picker-trigger:hover,
+  html[data-theme='dark'] .month-picker .month-arrow:hover:not(:disabled) {
+    border-color: #a69bd75c;
+    background: linear-gradient(135deg, #51467a, #2a395b);
+    color: #f2edff;
+  }
+  html[data-theme='dark']
+    .date-picker-popover
+    .date-picker-day:hover:not(:disabled):not(.is-selected),
+  html[data-theme='dark'] .date-picker-popover .month-option:hover:not(:disabled):not(.is-selected),
+  html[data-theme='dark'] .month-popover .month-option:hover:not(:disabled):not(.is-selected) {
+    border-color: #9d94c770;
+    background: #a78ce32b;
+    color: #f0eaff;
+  }
+  html[data-theme='dark'] .date-picker-popover .month-browse-arrow:hover:not(:disabled),
+  html[data-theme='dark'] .month-popover .month-browse-arrow:hover:not(:disabled),
+  html[data-theme='dark'] .date-picker-popover .date-picker-heading:hover,
+  html[data-theme='dark'] .month-popover .month-year-toggle:hover,
+  html[data-theme='dark'] .date-picker-popover .field-popover-close:hover,
+  html[data-theme='dark'] .month-popover .month-popover-close:hover,
+  html[data-theme='dark'] .date-picker-popover .field-popover-footer > button:hover,
+  html[data-theme='dark'] .month-popover .month-popover-footer > button:hover {
+    border-color: #b69bdf;
+    background: #b18dde29;
+    color: #f0e6ff;
+  }
+}
+@media (max-width: 760px) {
+  html[data-theme='dark'] .month-picker .month-arrow {
+    width: 22px;
+  }
+}

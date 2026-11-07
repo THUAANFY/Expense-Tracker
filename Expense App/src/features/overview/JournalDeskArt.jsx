@@ -1,7 +1,11 @@
+import useAppearance from '../../app/theme/useAppearance'
+import FintechJournalArt from './FintechJournalArt'
 import { useId } from 'react'
 
 export default function JournalDeskArt() {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <FintechJournalArt />
   return (
     <svg
       className="journal-desk-art"

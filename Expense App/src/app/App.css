@@ -1010,22 +1010,6 @@ h1 {
 .green .note-bottom {
   color: var(--text-secondary);
 }
-.little-message {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  align-items: flex-start;
-  color: var(--text-secondary);
-  margin: 24px 0 0;
-}
-.little-message > p {
-  font-size: var(--font-caption);
-  line-height: 1.85;
-  letter-spacing: 0.2px;
-}
-.little-message svg {
-  margin-top: 3px;
-}
 .category-strip {
   margin-top: var(--section-gap);
 }
@@ -1510,9 +1494,6 @@ button:hover > span > .category-art {
   padding: 15px;
   font-size: var(--font-small);
 }
-.little-message + .new-note-tile {
-  margin-top: 10px;
-}
 .field {
   display: flex;
   flex-direction: column;
@@ -1985,9 +1966,6 @@ button:hover > span > .category-art {
   .note-bottom {
     font-size: var(--font-small);
   }
-  .little-message > p {
-    font-size: var(--font-small);
-  }
   .section-heading h2 {
     font-size: 14px;
   }
@@ -2284,9 +2262,6 @@ button:hover > span > .category-art {
   }
   .dashboard-side .note-card {
     grid-column: 2;
-  }
-  .little-message {
-    display: none;
   }
   .dashboard-side .new-note-tile {
     grid-column: 2;
@@ -2650,9 +2625,6 @@ button:hover > span > .category-art {
   .note-bottom {
     font-size: var(--font-caption);
     margin-top: 17px;
-  }
-  .little-message {
-    display: none;
   }
   .dashboard-side .new-note-tile {
     grid-column: 2;
@@ -3070,13 +3042,6 @@ button:hover > span > .category-art {
   .dashboard-side .new-note-tile {
     grid-column: auto;
     min-height: 135px;
-    font-size: var(--font-small);
-  }
-  .little-message {
-    display: flex;
-    margin: 4px 0 0;
-  }
-  .little-message > p {
     font-size: var(--font-small);
   }
   .quick-categories {

@@ -1,0 +1,171 @@
+/* Colored paper in dark mode, with static highlights and no backdrop blur. */
+html[data-theme='dark'] .notes-workspace .notebook-grid article.notebook-card {
+  --note-accent: #f2c17f;
+  --note-tint: #b7793b;
+  --note-edge: #ab875b;
+  position: relative;
+  isolation: isolate;
+  min-height: 112px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--note-edge) 60%, transparent);
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      ellipse at 0 0,
+      color-mix(in srgb, var(--note-tint) 22%, transparent),
+      transparent 75%
+    ),
+    linear-gradient(145deg, #253046, #1b2336 70%);
+  box-shadow:
+    inset 0 1px 1px #e8edff12,
+    0 3px 10px #0c10201a;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+html[data-theme='dark'] .notes-workspace .notebook-grid article.notebook-card.purple {
+  --note-accent: #cea7ff;
+  --note-tint: #a36adb;
+  --note-edge: #9e7cc9;
+}
+html[data-theme='dark'] .notes-workspace .notebook-grid article.notebook-card.green {
+  --note-accent: #8ee8cb;
+  --note-tint: #48b49e;
+  --note-edge: #67aa9e;
+}
+html[data-theme='dark'] .notes-workspace .notebook-grid article.notebook-card::after {
+  display: block;
+  top: -1px;
+  right: -1px;
+  bottom: auto;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-bottom-left-radius: 8px;
+  border-top-left-radius: 0;
+  background: linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--note-accent) 28%, #263047) 48%,
+    #dde6ff33 50%,
+    #161f32 54%
+  );
+  opacity: 0.8;
+  pointer-events: none;
+}
+html[data-theme='dark'] .notes-workspace .notebook-grid article.notebook-card.is-pinned {
+  border-color: color-mix(in srgb, var(--note-accent) 70%, transparent);
+  box-shadow:
+    inset 0 1px 2px #f0dfff21,
+    0 0 0 1px color-mix(in srgb, var(--note-accent) 8%, transparent);
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-card-top {
+  position: relative;
+  z-index: 1;
+  padding-right: 8px;
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-card-date {
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #bfcce0;
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+html[data-theme='dark'] .notes-workspace .notebook-card-mark {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid color-mix(in srgb, var(--note-accent) 38%, transparent);
+  border-radius: 9px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--note-accent) 18%, transparent),
+    #ffffff04
+  );
+  color: var(--note-accent);
+}
+html[data-theme='dark'] .notes-workspace .notebook-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-pin,
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-edit {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #a7b7d126;
+  border-radius: 50%;
+  background: #1b243533;
+  box-shadow: none;
+  color: #b9c8df;
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-pin.is-active {
+  border-color: color-mix(in srgb, var(--note-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--note-accent) 15%, #1b2435);
+  color: var(--note-accent);
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-pin.is-active svg {
+  fill: color-mix(in srgb, var(--note-accent) 24%, transparent);
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .note-body {
+  flex: 0 0 auto;
+  gap: 0;
+  padding: 6px 0 0;
+  border-radius: 0;
+  background: transparent;
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-title-row h3 {
+  color: #f0f3ff;
+  font-size: var(--font-content);
+  font-weight: 600;
+}
+html[data-theme='dark'] .notes-workspace .notebook-grid .notebook-card .note-body > p {
+  min-height: 0;
+  margin: 4px 0 0;
+  background: none;
+  color: #c3cfe3;
+  font-size: var(--font-body);
+  font-weight: 400;
+  line-height: 1.65;
+}
+html[data-theme='dark'] .notes-workspace .notebook-grid {
+  align-items: start;
+}
+html[data-theme='dark'] .notes-workspace .notebook-card .note-body:focus-visible,
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-pin:focus-visible,
+html[data-theme='dark'] .notes-workspace .notebook-card .notebook-edit:focus-visible {
+  outline: 2px solid var(--note-accent);
+  outline-offset: 3px;
+}
+@media (hover: hover) {
+  html[data-theme='dark'] .notes-workspace .notebook-grid article.notebook-card:hover {
+    border-color: var(--note-accent);
+    box-shadow:
+      inset 0 1px 2px #e8ddff1a,
+      0 4px 12px #090e2026;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-card .notebook-pin:hover,
+  html[data-theme='dark'] .notes-workspace .notebook-card .notebook-edit:hover {
+    border-color: var(--note-accent);
+    color: var(--note-accent);
+  }
+}
+@media (pointer: coarse) {
+  html[data-theme='dark'] .notes-workspace .notebook-card .notebook-pin,
+  html[data-theme='dark'] .notes-workspace .notebook-card .notebook-edit {
+    width: 36px;
+    height: 36px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='dark'] .notes-workspace .notebook-grid article.notebook-card {
+    transition: none;
+  }
+}

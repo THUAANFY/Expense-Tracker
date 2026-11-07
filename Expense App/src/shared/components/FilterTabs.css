@@ -1,0 +1,147 @@
+/* Shared filter appearance, loaded after feature and theme styles. */
+html[data-theme] body [data-filter-tabs][role] {
+  --filter-face: linear-gradient(145deg, #fff, #f7f2fb);
+  --filter-edge: #ddd0e9;
+  --filter-text: #634d76;
+  --filter-hover: linear-gradient(145deg, #fbf7ff, #eee3f7);
+  --filter-active: linear-gradient(115deg, #e7d5f5, #ded6f6 55%, #dce7fb);
+  --filter-active-edge: #b291d0;
+  --filter-active-text: #573471;
+  --filter-count: #76529c12;
+  --filter-active-count: #ffffff80;
+  --filter-shadow: inset 0 1px 0 #ffffffa6;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  padding-block: 2px;
+  border: 0;
+  border-radius: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-theme='dark'] body [data-filter-tabs][role] {
+  --filter-face: linear-gradient(145deg, #252d46, #192237);
+  --filter-edge: #8994bf4d;
+  --filter-text: #d5dcf1;
+  --filter-hover: linear-gradient(145deg, #333453, #252d49);
+  --filter-active: linear-gradient(115deg, #9851d0, #6d48ca 55%, #4168be);
+  --filter-active-edge: #bd98ef;
+  --filter-active-text: #fff;
+  --filter-count: #abb5e11a;
+  --filter-active-count: #ede0ff24;
+  --filter-shadow: inset 0 1px 0 #e6d4ff33;
+}
+html[data-theme] body [data-filter-tabs][role]::-webkit-scrollbar {
+  display: none;
+}
+html[data-theme] body [data-filter-tabs][role] > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 6px;
+  width: auto;
+  height: 36px;
+  min-height: 36px;
+  padding: 6px 11px;
+  border: 1px solid var(--filter-edge);
+  border-radius: 999px;
+  background: var(--filter-face);
+  box-shadow: none;
+  color: var(--filter-text);
+  font-family: inherit;
+  font-size: var(--font-control);
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transform: none;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+html[data-theme] body [data-filter-tabs][role] > button::before,
+html[data-theme] body [data-filter-tabs][role] > button::after {
+  display: none;
+}
+html[data-theme] body [data-filter-tabs][role] > button > svg,
+html[data-theme] body [data-filter-tabs][role] > button .history-type-icon > svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.8;
+}
+html[data-theme] body [data-filter-tabs][role] > button > [data-filter-count] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--filter-count);
+  box-shadow: none;
+  color: inherit;
+  font-size: var(--font-caption);
+  font-weight: 500;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme]
+    body
+    [data-filter-tabs][role]
+    > button:not(:disabled):not([aria-pressed='true']):not([aria-selected='true']):hover {
+    border-color: var(--filter-active-edge);
+    background: var(--filter-hover);
+  }
+}
+html[data-theme] body [data-filter-tabs][role] > button[aria-pressed='true'],
+html[data-theme] body [data-filter-tabs][role] > button[aria-selected='true'] {
+  border-color: var(--filter-active-edge);
+  background: var(--filter-active);
+  box-shadow: var(--filter-shadow);
+  color: var(--filter-active-text);
+}
+html[data-theme] body [data-filter-tabs][role] > button[aria-pressed='true'] > svg,
+html[data-theme] body [data-filter-tabs][role] > button[aria-selected='true'] > svg {
+  color: inherit;
+}
+html[data-theme] body [data-filter-tabs][role] > button[aria-pressed='true'] > [data-filter-count],
+html[data-theme]
+  body
+  [data-filter-tabs][role]
+  > button[aria-selected='true']
+  > [data-filter-count] {
+  background: var(--filter-active-count);
+}
+html[data-theme] body [data-filter-tabs][role] > button:focus-visible {
+  outline: 2px solid var(--filter-active-edge);
+  outline-offset: -4px;
+}
+html[data-theme] body [data-filter-tabs][role] > button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+@media (max-width: 560px) {
+  html[data-theme] body [data-filter-tabs][role] > button {
+    gap: 5px;
+    padding-inline: 9px;
+    font-size: var(--font-caption);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] body [data-filter-tabs][role] > button {
+    transition: none;
+  }
+}

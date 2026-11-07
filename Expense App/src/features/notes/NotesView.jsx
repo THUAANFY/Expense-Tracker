@@ -3,20 +3,27 @@ import { isClosedMonth } from '../../shared/lib/closedMonths'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowUpRight,
-  BookOpen,
+  Bookmark,
   CalendarDays,
   Check,
+  FileText,
+  LayoutGrid,
   PencilLine,
   Pin,
   Plus,
+  RotateCcw,
   Search,
   Wallet,
   X,
 } from 'lucide-react'
 import CategoryArt from '../../shared/illustrations/CategoryArt'
+import useAppearance from '../../app/theme/useAppearance'
+import NotesEmptyArt from './NotesEmptyArt'
 import MonthPicker from '../../shared/components/MonthPicker'
 import { formatDate, money } from '../../shared/storage/data'
 import './NotesView.css'
+import './FintechNotes.css'
+import './FintechNoteCard.css'
 
 const normalize = (value) =>
   value
@@ -26,7 +33,7 @@ const normalize = (value) =>
     .replaceAll('đ', 'd')
 
 const filters = [
-  { id: 'all', label: 'Tất cả' },
+  { id: 'all', label: 'Tất cả', icon: LayoutGrid },
   { id: 'pinned', label: 'Đã ghim', icon: Pin },
   { id: 'yellow', label: 'Vàng' },
   { id: 'purple', label: 'Tím' },
@@ -34,6 +41,8 @@ const filters = [
 ]
 
 function NotebookArt({ className = '' }) {
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <NotesEmptyArt className={`notebook-art ${className}`} />
   return (
     <svg
       className={`notebook-art ${className}`}
@@ -94,6 +103,8 @@ function NotebookArt({ className = '' }) {
 
 function NotebookCard({ note, onEdit, onPin }) {
   const titleId = useId()
+  const { theme } = useAppearance()
+  const dark = theme === 'dark'
   return (
     <motion.article
       layout="position"
@@ -106,21 +117,40 @@ function NotebookCard({ note, onEdit, onPin }) {
     >
       <div className="notebook-card-top">
         <span className="notebook-card-date">
-          <CalendarDays size={12} aria-hidden="true" />
+          {dark ? (
+            <span className="notebook-card-mark" aria-hidden="true">
+              <FileText size={16} strokeWidth={1.6} />
+            </span>
+          ) : (
+            <CalendarDays size={12} aria-hidden="true" />
+          )}
           <time dateTime={note.date}>
             {formatDate(note.date, { day: '2-digit', month: '2-digit', year: 'numeric' })}
           </time>
         </span>
-        <button
-          type="button"
-          className={`notebook-pin ${note.pinned ? 'is-active' : ''}`}
-          aria-label={note.pinned ? 'Bỏ ghim ghi chú' : 'Ghim ghi chú'}
-          aria-pressed={Boolean(note.pinned)}
-          title={note.pinned ? 'Bỏ ghim' : 'Ghim lên đầu'}
-          onClick={() => onPin(note.id)}
-        >
-          <Pin size={15} />
-        </button>
+        <div className="notebook-card-actions">
+          {dark && (
+            <button
+              type="button"
+              className="notebook-edit"
+              aria-label={`Sửa ghi chú ${note.title}`}
+              title="Chỉnh sửa"
+              onClick={() => onEdit(note)}
+            >
+              <PencilLine size={14} aria-hidden="true" />
+            </button>
+          )}
+          <button
+            type="button"
+            className={`notebook-pin ${note.pinned ? 'is-active' : ''}`}
+            aria-label={note.pinned ? 'Bỏ ghim ghi chú' : 'Ghim ghi chú'}
+            aria-pressed={Boolean(note.pinned)}
+            title={note.pinned ? 'Bỏ ghim' : 'Ghim lên đầu'}
+            onClick={() => onPin(note.id)}
+          >
+            <Pin size={15} />
+          </button>
+        </div>
       </div>
       <button
         className="note-body"
@@ -129,7 +159,7 @@ function NotebookCard({ note, onEdit, onPin }) {
       >
         <span className="notebook-title-row">
           <h3 id={titleId}>{note.title}</h3>
-          <PencilLine size={13} aria-hidden="true" />
+          {!dark && <PencilLine size={13} aria-hidden="true" />}
         </span>
         <p>{note.content}</p>
       </button>
@@ -147,6 +177,7 @@ export default function NotesView({
   onPin,
   onEditTransaction,
 }) {
+  const { theme } = useAppearance()
   const [tab, setTab] = useState('personal')
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
@@ -198,12 +229,13 @@ export default function NotesView({
         <div className="notebook-toolbar">
           <div
             className="notebook-tabs"
+            data-filter-tabs
             role="tablist"
             aria-label="Nguồn ghi chú"
             onKeyDown={handleTabKeys}
           >
             {[
-              { key: 'personal', label: 'Ghi chú của tôi', count: notes.length, icon: BookOpen },
+              { key: 'personal', label: 'Ghi chú của tôi', count: notes.length, icon: Bookmark },
               {
                 key: 'transactions',
                 label: 'Từ giao dịch',
@@ -223,7 +255,9 @@ export default function NotesView({
               >
                 <Icon size={15} />
                 <span>{label}</span>
-                <span className="notebook-tab-count">{count}</span>
+                <span data-filter-count className="notebook-tab-count">
+                  {count}
+                </span>
               </button>
             ))}
           </div>
@@ -253,7 +287,12 @@ export default function NotesView({
 
         <div className="notebook-filter-row">
           {tab === 'personal' ? (
-            <div className="notebook-filters" role="group" aria-label="Lọc ghi chú">
+            <div
+              data-filter-tabs
+              className="notebook-filters"
+              role="group"
+              aria-label="Lọc ghi chú"
+            >
               {filters.map(({ id: key, label, icon: Icon }) => (
                 <button
                   key={key}
@@ -272,7 +311,7 @@ export default function NotesView({
                   ) : null}
                   {label}
                   {key === 'pinned' && pinnedCount > 0 && (
-                    <span className="notebook-pin-count" aria-hidden="true">
+                    <span data-filter-count className="notebook-pin-count" aria-hidden="true">
                       {pinnedCount}
                     </span>
                   )}
@@ -336,37 +375,45 @@ export default function NotesView({
               </div>
             )
           ) : (
-            <div className="notebook-empty">
+            <div className={`notebook-empty ${hasFilters ? 'is-filtered' : ''}`}>
               {hasFilters ? (
-                <span className="notebook-empty-icon">
-                  <Search size={25} strokeWidth={1.5} />
-                </span>
+                <NotesEmptyArt
+                  variant="search"
+                  dark={theme === 'dark'}
+                  className="notebook-art notebook-filter-art"
+                />
               ) : (
                 <NotebookArt />
               )}
-              <h3>
-                {hasFilters
-                  ? 'Chưa tìm thấy ghi chú phù hợp'
-                  : tab === 'personal'
-                    ? 'Bắt đầu bằng một điều muốn nhớ'
-                    : 'Chưa có ghi chú giao dịch'}
-              </h3>
-              <p>
-                {hasFilters
-                  ? 'Thử một từ khóa khác hoặc đổi bộ lọc nhé.'
-                  : tab === 'personal'
-                    ? 'Một dự định, một lời nhắc. Trang giấy này dành cho bạn.'
-                    : 'Thêm ghi chú khi tạo hoặc chỉnh sửa giao dịch trong tháng này.'}
-              </p>
-              {hasFilters ? (
-                <button className="button secondary" onClick={resetFilters}>
-                  Xóa bộ lọc
-                </button>
-              ) : tab === 'personal' ? (
-                <button className="button primary" onClick={onAdd}>
-                  <Plus size={15} /> Viết ghi chú đầu tiên
-                </button>
-              ) : null}
+              <div className="notebook-empty-copy">
+                <h3>
+                  {hasFilters ? (
+                    'Chưa tìm thấy ghi chú phù hợp'
+                  ) : tab === 'personal' ? (
+                    <>
+                      Bắt đầu bằng một điều <span className="notes-title-accent">muốn nhớ</span>
+                    </>
+                  ) : (
+                    'Chưa có ghi chú giao dịch'
+                  )}
+                </h3>
+                <p>
+                  {hasFilters
+                    ? 'Thử một từ khóa khác hoặc đổi bộ lọc nhé.'
+                    : tab === 'personal'
+                      ? 'Một dự định, một lời nhắc. Trang giấy này dành cho bạn.'
+                      : 'Thêm ghi chú khi tạo hoặc chỉnh sửa giao dịch trong tháng này.'}
+                </p>
+                {hasFilters ? (
+                  <button className="button secondary" onClick={resetFilters}>
+                    <RotateCcw size={14} aria-hidden="true" /> Xóa bộ lọc
+                  </button>
+                ) : tab === 'personal' ? (
+                  <button className="button primary" onClick={onAdd}>
+                    <Plus size={15} /> Viết ghi chú đầu tiên
+                  </button>
+                ) : null}
+              </div>
             </div>
           )}
         </div>

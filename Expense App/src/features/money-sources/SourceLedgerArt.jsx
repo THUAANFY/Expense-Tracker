@@ -1,7 +1,11 @@
+import useAppearance from '../../app/theme/useAppearance'
+import SourceLedgerMark from './SourceLedgerMark'
 import { useId } from 'react'
 
 export default function SourceLedgerArt() {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <SourceLedgerMark />
   return (
     <svg className="source-ledger-illustration" viewBox="0 0 116 88" fill="none" aria-hidden="true">
       <defs>

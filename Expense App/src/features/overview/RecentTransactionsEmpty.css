@@ -42,6 +42,9 @@
   line-height: 1.5;
   white-space: nowrap;
 }
+.recent-empty .action-button {
+  margin-top: 12px;
+}
 .recent-empty-pencil {
   transform-origin: 129px 84px;
   transition: transform 350ms ease;

@@ -1,0 +1,149 @@
+html[data-theme='dark'] .overview-workspace .overview-bags-card.fintech-bags-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 112px;
+  padding: 12px 16px 12px 12px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1.5px solid transparent;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at -10% -35%, #4b7cff26, transparent 65%) padding-box,
+    radial-gradient(ellipse at 115% 10%, #8c50f530, transparent 65%) padding-box,
+    linear-gradient(120deg, #1b2639, #161e30 55%, #22213f) padding-box,
+    linear-gradient(120deg, #7bccff, #5a7dff 20%, #50617b88 42%, #7453bb99 67%, #a772ff 95%)
+      border-box;
+  box-shadow:
+    inset 0 0 0 1px #c8bdff0a,
+    0 5px 20px #06091e2e,
+    0 0 14px #6846ec12;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+html[data-theme='dark'] .fintech-bags-card .overview-bags-wave {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  width: 58%;
+  height: 100%;
+  pointer-events: none;
+}
+html[data-theme='dark'] .fintech-bags-card > .overview-case-art {
+  width: 80px;
+  height: 80px;
+  overflow: visible;
+  pointer-events: none;
+}
+html[data-theme='dark'] .fintech-bags-card > .overview-bags-copy {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+html[data-theme='dark'] .overview-workspace .fintech-bags-card .overview-bags-copy > strong {
+  color: #f5f3ff;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+html[data-theme='dark'] .overview-workspace .fintech-bags-card .overview-bags-copy > span {
+  color: #b7c1de;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+html[data-theme='dark'] .fintech-bags-card > .overview-bags-arrow {
+  display: grid;
+  place-items: center;
+  flex: none;
+  gap: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #b18aff73;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #7850cc4d, #352b5759);
+  color: #e9dfff;
+  box-shadow:
+    inset 0 1px 4px #c29aff29,
+    0 2px 8px #0b0c2833;
+}
+html[data-theme='dark'] .fintech-bags-card .overview-bags-arrow > svg {
+  transition: transform 180ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme='dark'] .overview-workspace .overview-bags-card.fintech-bags-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 1px #cfb6ff1f,
+      0 7px 22px #05091e40,
+      0 0 18px #7653ed26;
+  }
+  html[data-theme='dark'] .fintech-bags-card:hover .overview-bags-arrow > svg {
+    transform: translate(1px, -1px);
+  }
+}
+@media (max-width: 1400px) {
+  html[data-theme='dark'] .overview-workspace .overview-bags-card.fintech-bags-card {
+    grid-template-columns: 66px minmax(0, 1fr) 32px;
+    gap: 9px;
+    min-height: 104px;
+    padding: 12px;
+  }
+  html[data-theme='dark'] .fintech-bags-card > .overview-case-art {
+    width: 66px;
+    height: 72px;
+  }
+  html[data-theme='dark'] .fintech-bags-card > .overview-bags-arrow {
+    width: 32px;
+    height: 32px;
+  }
+}
+@media (max-width: 900px) and (min-width: 601px) {
+  html[data-theme='dark'] .overview-workspace .overview-bags-card.fintech-bags-card {
+    grid-template-columns: 48px minmax(0, 1fr) 28px;
+    gap: 7px;
+    padding: 10px;
+  }
+  html[data-theme='dark'] .fintech-bags-card > .overview-case-art {
+    width: 48px;
+    height: 58px;
+  }
+  html[data-theme='dark'] .overview-workspace .fintech-bags-card .overview-bags-copy > strong {
+    font-size: 15px;
+  }
+  html[data-theme='dark'] .fintech-bags-card > .overview-bags-arrow {
+    width: 28px;
+    height: 28px;
+  }
+}
+@media (max-width: 600px) {
+  html[data-theme='dark'] .overview-workspace .overview-bags-card.fintech-bags-card {
+    grid-template-columns: 64px minmax(0, 1fr) 32px;
+    gap: 9px;
+    min-height: 104px;
+    border-radius: 18px;
+  }
+  html[data-theme='dark'] .fintech-bags-card > .overview-case-art {
+    width: 64px;
+    height: 72px;
+  }
+  html[data-theme='dark'] .overview-workspace .fintech-bags-card .overview-bags-copy > strong {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='dark'] .overview-workspace .overview-bags-card.fintech-bags-card,
+  html[data-theme='dark'] .fintech-bags-card .overview-bags-arrow > svg {
+    transition: none;
+  }
+  html[data-theme='dark'] .overview-workspace .overview-bags-card.fintech-bags-card:hover,
+  html[data-theme='dark'] .fintech-bags-card:hover .overview-bags-arrow > svg {
+    transform: none;
+  }
+}

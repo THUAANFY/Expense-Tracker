@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CalendarDays, Check, CircleAlert, RefreshCcw, Sparkles } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
+import ActionButton from '../../../shared/components/ActionButton'
 import CategoryArt from '../../../shared/illustrations/CategoryArt'
 import ClosedMonthNotice from '../../../shared/components/ClosedMonthNotice'
 import { compactMoney, money } from '../../../shared/storage/data'
@@ -182,9 +183,9 @@ export default function BudgetDialog({
           <button type="button" className="button secondary" onClick={onClose}>
             Để sau
           </button>
-          <button type="submit" className="button primary" disabled={readOnly || !valid}>
+          <ActionButton type="submit" disabled={readOnly || !valid}>
             <Check size={16} /> Lưu ngân sách
-          </button>
+          </ActionButton>
         </div>
       </form>
     </Dialog>

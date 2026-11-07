@@ -1,0 +1,488 @@
+/* Static glass and vector gradients avoid expensive effects while scrolling. */
+html[data-theme='dark'] .worth-title-accent {
+  background: linear-gradient(95deg, #c382f7, #a28aff 60%, #53c5ef);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-theme='dark'] .worth-page-heading > div:first-child {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 12px;
+}
+html[data-theme='dark'] .worth-heading-mark {
+  display: grid;
+  place-items: center;
+  grid-row: 1 / 3;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #ba9cf8;
+  border-radius: 14px;
+  background: linear-gradient(140deg, #7756b8, #292b52 65%, #435895);
+  box-shadow:
+    inset 0 1px 2px #f0ddff66,
+    0 0 12px #a55de933;
+  color: #eadcff;
+}
+html[data-theme='dark'] .worth-page-heading h1 {
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+html[data-theme='dark'] .worth-page-heading p {
+  grid-column: 2;
+}
+html[data-theme='dark'] .worth-page-heading .button.primary,
+html[data-theme='dark'] .worth-workspace .worth-empty .button {
+  border: 1px solid #bd9fff;
+  border-radius: 12px;
+  background: linear-gradient(110deg, #b85ff4, #7c3de4 48%, #359ef0);
+  box-shadow:
+    inset 0 1px 2px #f0d9ff80,
+    0 3px 12px #8650ce29;
+  color: #fff;
+  font-size: var(--font-control);
+  font-weight: 500;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary {
+  gap: 12px;
+  border-radius: 0;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary > button {
+  --worth-color: #62e4c8;
+  --worth-deep: #234b55;
+  --mood-ink: var(--worth-color);
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 8px 12px;
+  padding: 12px 16px 10px;
+  min-height: 120px;
+  border: 1px solid transparent;
+  border-radius: 17px;
+  background:
+    radial-gradient(
+        ellipse at 100% 100%,
+        color-mix(in srgb, var(--worth-color) 23%, transparent),
+        transparent 65%
+      )
+      padding-box,
+    linear-gradient(120deg, var(--worth-deep), #182038 65%) padding-box,
+    linear-gradient(125deg, var(--worth-color), #7776a575 60%, var(--worth-color)) border-box;
+  box-shadow:
+    inset 0 1px 3px #d6f3ff33,
+    0 0 10px color-mix(in srgb, var(--worth-color) 10%, transparent);
+  transform: none;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary > button[data-mood='neutral'] {
+  --worth-color: #c393fc;
+  --worth-deep: #39305e;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary > button[data-mood='regret'] {
+  --worth-color: #ef9bc9;
+  --worth-deep: #49324f;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary > button[aria-pressed='true'],
+html[data-theme='dark'] .worth-workspace .worth-summary > button[aria-pressed='true']:hover {
+  border-color: var(--worth-color);
+  background:
+    radial-gradient(
+        ellipse at 0 0,
+        color-mix(in srgb, var(--worth-color) 38%, transparent),
+        transparent 80%
+      )
+      padding-box,
+    linear-gradient(120deg, color-mix(in srgb, var(--worth-color) 16%, #203348), #202a43 80%)
+      padding-box;
+  box-shadow:
+    inset 0 0 0 1px var(--worth-color),
+    inset 0 1px 3px #f2f6ff66,
+    0 0 0 2px color-mix(in srgb, var(--worth-color) 35%, transparent),
+    0 0 16px color-mix(in srgb, var(--worth-color) 22%, transparent);
+}
+html[data-theme='dark'] .worth-workspace .worth-summary .worth-summary-check {
+  top: 9px;
+  right: 9px;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #ffffff99;
+  background: var(--worth-color) !important;
+  color: #17283b;
+  box-shadow: 0 2px 6px #101b3540;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary-check svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+}
+html[data-theme='dark']
+  .worth-workspace
+  .worth-summary
+  > button[aria-pressed='true']
+  .worth-summary-amount {
+  border-color: color-mix(in srgb, var(--worth-color) 55%, transparent);
+  color: #f0f5ff;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary-sticker {
+  width: 58px;
+  height: 58px;
+  border: 0;
+  border-radius: 18px;
+  box-shadow: none;
+  transform: none;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary .worth-summary-sticker {
+  background: transparent !important;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary-sticker .mood-art {
+  width: 56px;
+  height: 56px;
+  transform: none;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary-name {
+  font-size: var(--font-content);
+  font-weight: 600;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary-tally strong {
+  color: var(--worth-color);
+  font-size: 24px;
+  font-weight: 600;
+}
+html[data-theme='dark'] .worth-workspace .worth-summary-amount {
+  padding-top: 7px;
+  border-top: 1px solid #b7bfe340;
+  color: #d3dbee;
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+html[data-theme='dark'] .worth-workspace section.worth-library {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid transparent;
+  border-radius: 21px;
+  background:
+    radial-gradient(ellipse at 0 0, #8650d333, transparent 50%) padding-box,
+    radial-gradient(ellipse at 100% 100%, #703bc129, transparent 55%) padding-box,
+    linear-gradient(125deg, #202741, #121d32 60%, #28213f) padding-box,
+    linear-gradient(120deg, #c593fa, #717daf99 40%, #86b5ff 65%, #c28cf8) border-box;
+  box-shadow:
+    inset 0 1px 3px #d8c3ff3b,
+    0 0 12px #8c54ce21;
+}
+html[data-theme='dark'] .worth-workspace .worth-library-heading {
+  padding: 15px 18px 12px;
+  border: 0;
+  background: transparent;
+}
+html[data-theme='dark'] .worth-workspace .worth-library-title > span {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #bc91ed;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #c36bda, #553581 80%);
+  color: #f4e5ff;
+  box-shadow: inset 0 1px 2px #f7d6ff55;
+  transform: none;
+}
+html[data-theme='dark'] .worth-workspace .worth-library-title > span svg {
+  width: 22px;
+  height: 22px;
+  transform: none;
+}
+html[data-theme='dark'] .worth-workspace .worth-library-title h2 {
+  font-size: var(--font-section);
+  font-weight: 600;
+}
+html[data-theme='dark'] .worth-workspace .worth-library-title p {
+  font-size: var(--font-body);
+  font-weight: 400;
+}
+html[data-theme='dark'] .worth-workspace .worth-progress {
+  min-width: 190px;
+}
+html[data-theme='dark'] .worth-workspace .worth-progress-track {
+  height: 6px;
+  border: 0;
+  background: #b7a0dc38;
+}
+html[data-theme='dark'] .worth-workspace .worth-progress-track > span {
+  background: linear-gradient(90deg, #ba7fe7, #bcb6ff 65%, #7baef2);
+}
+html[data-theme='dark'] .worth-workspace .worth-toolbar {
+  gap: 12px;
+  margin: 0 18px;
+  padding: 8px 0 13px;
+  border-bottom: 1px solid #9995c24d;
+  background: transparent;
+}
+html[data-theme='dark'] .worth-workspace .worth-status-tabs {
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-theme='dark'] .worth-workspace .worth-status-tabs > button {
+  min-height: 34px;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid #8580b173;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #29334f, #182139);
+  color: #d1daee;
+  font-size: var(--font-caption);
+  font-weight: 500;
+  box-shadow: inset 0 1px 2px #e1d8ff14;
+}
+html[data-theme='dark'] .worth-workspace .worth-status-tabs > button[aria-pressed='true'] {
+  border-color: #b891f5;
+  background: linear-gradient(125deg, #9452cc, #5546a9 65%, #4364ac);
+  color: #fff;
+  box-shadow: inset 0 1px 2px #e7c7ff55;
+}
+html[data-theme='dark'] .worth-workspace .worth-status-tabs button > span {
+  border-radius: 7px;
+  background: #c7c2ff26;
+  box-shadow: none;
+  color: #e8e7ff;
+}
+html[data-theme='dark'] .worth-workspace .worth-search,
+html[data-theme='dark'] .worth-workspace .worth-category .history-select-trigger {
+  height: 36px;
+  border: 1px solid #9380ca8c;
+  border-radius: 13px;
+  background: #111a2f;
+  box-shadow: inset 0 1px 2px #15122b33;
+}
+html[data-theme='dark'] .worth-workspace .worth-search:focus-within {
+  border-color: #c0a2fc;
+  box-shadow: 0 0 0 2px #ad87ea1a;
+}
+html[data-theme='dark'] .worth-workspace .worth-empty {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  gap: 7px;
+  min-height: 258px;
+  padding: 13px 20px 22px;
+}
+html[data-theme='dark'] .worth-workspace .worth-empty::before,
+html[data-theme='dark'] .worth-workspace .worth-empty::after {
+  position: absolute;
+  z-index: -1;
+  bottom: -144px;
+  left: -75px;
+  width: 340px;
+  height: 190px;
+  border: 1px solid #9a6bc54d;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #8c45ce33, #373b8008);
+  transform: rotate(18deg);
+  pointer-events: none;
+  content: '';
+}
+html[data-theme='dark'] .worth-workspace .worth-empty::after {
+  right: -170px;
+  bottom: -170px;
+  left: auto;
+  width: 480px;
+  height: 280px;
+  transform: rotate(-28deg);
+}
+html[data-theme='dark'] .worth-workspace .worth-empty h3 {
+  margin: 0;
+  font-size: var(--font-section);
+  font-weight: 600;
+}
+html[data-theme='dark'] .worth-workspace .worth-empty p {
+  max-width: 430px;
+  font-size: var(--font-body);
+  font-weight: 400;
+}
+.worth-empty-scene {
+  position: relative;
+  width: 176px;
+  height: 118px;
+}
+.worth-empty-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.worth-empty-sticker {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 90px;
+  height: 90px;
+  border: 0;
+  background: transparent;
+  transform: translateX(-50%);
+}
+.worth-empty-sticker > .mood-art {
+  width: 90px;
+  height: 90px;
+  transform: none;
+}
+html[data-theme='dark'] .worth-workspace .worth-library-footer {
+  padding: 10px 18px;
+  border-top: 1px solid #a091bf59;
+  background: linear-gradient(100deg, #6842961c, #273c571a);
+}
+html[data-theme='dark'] .worth-workspace .worth-library-footer > span {
+  display: inline-flex;
+  color: #c9d4ea;
+}
+@container worth-library (max-width: 880px) {
+  html[data-theme='dark'] .worth-workspace .worth-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@container worth (max-width: 640px) {
+  html[data-theme='dark'] .worth-workspace .worth-summary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary > button {
+    grid-template-columns: 40px minmax(0, 1fr) minmax(60px, 0.8fr) 18px;
+    justify-items: stretch;
+    gap: 8px;
+    min-height: 58px;
+    padding: 8px 10px;
+    border-radius: 14px;
+    text-align: left;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-sticker {
+    grid-column: 1;
+    grid-row: 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-sticker .mood-art {
+    width: 40px;
+    height: 40px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-copy {
+    grid-column: 2;
+    grid-row: 1;
+    justify-items: start;
+    gap: 1px;
+    text-align: left;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-name {
+    font-size: var(--font-body);
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-tally {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-tally strong {
+    font-size: 16px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-amount {
+    display: block;
+    grid-column: 3;
+    grid-row: 1;
+    align-self: center;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    text-align: right;
+    font-size: var(--font-body);
+    font-weight: 600;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-amount > span {
+    display: block;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary .worth-summary-check {
+    position: static;
+    grid-column: 4;
+    grid-row: 1;
+    align-self: center;
+    width: 18px;
+    height: 18px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary-check svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+@container worth-library (max-width: 480px) {
+  html[data-theme='dark'] .worth-workspace .worth-library-heading {
+    gap: 12px;
+    padding: 12px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-progress {
+    min-width: 0;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-toolbar {
+    margin-inline: 12px;
+    padding-top: 0;
+    gap: 10px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-status-tabs {
+    gap: 5px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-status-tabs > button {
+    gap: 3px;
+    padding-inline: 5px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-status-tabs > button > svg {
+    display: none;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-tools {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html[data-theme='dark'] .worth-workspace .worth-empty {
+    min-height: 248px;
+    padding-inline: 12px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-empty h3 {
+    font-size: var(--font-content);
+  }
+  html[data-theme='dark'] .worth-workspace .worth-empty::before {
+    bottom: -174px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-empty::after {
+    bottom: -255px;
+  }
+  html[data-theme='dark'] .worth-workspace .worth-library-footer {
+    padding: 9px 12px;
+  }
+}
+@media (max-width: 760px) {
+  html[data-theme='dark'] .worth-page-heading h1 {
+    font-size: 23px;
+  }
+}
+@media (max-width: 480px) {
+  html[data-theme='dark'] .worth-page-heading > div:first-child {
+    grid-template-columns: 36px minmax(0, 1fr);
+    column-gap: 9px;
+  }
+  html[data-theme='dark'] .worth-heading-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+  html[data-theme='dark'] .worth-heading-mark svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+@media (hover: hover) {
+  html[data-theme='dark'] .worth-workspace .worth-summary > button:hover {
+    transform: none;
+    box-shadow:
+      inset 0 1px 3px #e2e5ff4d,
+      0 0 10px color-mix(in srgb, var(--worth-color) 20%, transparent);
+  }
+  html[data-theme='dark'] .worth-workspace .worth-summary > button:hover .worth-summary-sticker {
+    transform: none;
+  }
+}

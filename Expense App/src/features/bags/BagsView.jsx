@@ -3,14 +3,19 @@ import { isClosedMonth } from '../../shared/lib/closedMonths'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   BookOpen,
+  Bookmark,
   Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleCheck,
   FolderHeart,
+  FolderOpen,
+  LayoutGrid,
+  Layers3,
   Link2,
   PencilLine,
   Plus,
@@ -18,13 +23,22 @@ import {
   ShoppingBag,
   Smile,
   Unlink,
+  WalletCards,
   X,
 } from 'lucide-react'
 import BagArt from './BagArt'
+import ActionButton from '../../shared/components/ActionButton'
+import BagsEmptyArt from './BagsEmptyArt'
+import BagDetailEmptyArt from './BagDetailEmptyArt'
+import useAppearance from '../../app/theme/useAppearance'
 import CategoryArt from '../../shared/illustrations/CategoryArt'
 import { BAG_STYLES, bagSummary, getBagColor } from './bags'
+import { getDarkBagVisual } from './bagVisuals'
 import { CATEGORIES, compactMoney, formatDate, getCategory, money } from '../../shared/storage/data'
 import './BagsView.css'
+import './FintechBagsCollection.css'
+import './FintechBagCard.css'
+import './FintechBagDetail.css'
 
 const normalize = (value) =>
   value
@@ -37,7 +51,9 @@ const transition = { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
 function BudgetLine({ bag, summary }) {
   if (!bag.budget) return <span className="bag-no-budget">Chưa đặt ngân sách</span>
   return (
-    <span className={`bag-budget-line ${summary.remaining < 0 ? 'is-over' : ''}`}>
+    <span
+      className={`bag-budget-line ${summary.remaining < 0 ? 'is-over' : summary.percent >= 80 ? 'is-near' : ''}`}
+    >
       <span
         className="bag-budget-track"
         role="progressbar"
@@ -72,6 +88,7 @@ function BagDetail({
   onEditTransaction,
   onUnlink,
 }) {
+  const { theme } = useAppearance()
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const summary = bagSummary(bag, transactions)
@@ -95,6 +112,8 @@ function BagDetail({
   return (
     <div
       className="bag-detail"
+      data-large-values={Math.max(summary.spent, bag.budget) >= 1e8 || undefined}
+      data-bag-status={bag.status}
       style={{ '--bag-paper': color.paper, '--bag-ink': color.ink, '--bag-border': color.border }}
     >
       <div className="bag-detail-nav">
@@ -151,6 +170,11 @@ function BagDetail({
           <section className="bag-expenses-panel" aria-label="Giao dịch trong túi">
             <div className="bag-expenses-heading">
               <div>
+                {theme === 'dark' && (
+                  <span className="bag-detail-heading-mark" aria-hidden="true">
+                    <Layers3 size={20} strokeWidth={1.6} />
+                  </span>
+                )}
                 <h3>Những khoản trong túi</h3>
                 <span>{summary.count} khoản chi</span>
               </div>
@@ -158,9 +182,9 @@ function BagDetail({
                 <button className="bag-small-button" onClick={() => onPick(bag)}>
                   <Link2 size={14} /> Chọn giao dịch
                 </button>
-                <button className="bag-small-button is-primary" onClick={() => onAddExpense(bag)}>
+                <ActionButton onClick={() => onAddExpense(bag)}>
                   <Plus size={14} /> Thêm khoản chi
-                </button>
+                </ActionButton>
               </div>
             </div>
             {summary.count > 0 && (
@@ -230,11 +254,20 @@ function BagDetail({
             </div>
             {!filtered.length && (
               <div className="bag-detail-empty">
-                <ShoppingBag size={24} strokeWidth={1.4} />
+                {theme === 'dark' ? (
+                  <BagDetailEmptyArt filtered={Boolean(search)} />
+                ) : (
+                  <ShoppingBag size={24} strokeWidth={1.4} />
+                )}
                 <h3>
-                  {summary.count
-                    ? 'Chưa tìm thấy khoản chi phù hợp'
-                    : 'Chiếc túi đang chờ câu chuyện đầu tiên'}
+                  {summary.count ? (
+                    'Chưa tìm thấy khoản chi phù hợp'
+                  ) : (
+                    <>
+                      Chiếc túi đang chờ câu chuyện{' '}
+                      <span className="bag-detail-title-accent">đầu tiên</span>
+                    </>
+                  )}
                 </h3>
                 <p>
                   {summary.count
@@ -278,6 +311,11 @@ function BagDetail({
           <details className="bag-category-panel" aria-label="Danh mục trong túi" open={!isMobile}>
             <summary>
               <span>
+                {theme === 'dark' && (
+                  <span className="bag-detail-heading-mark is-categories" aria-hidden="true">
+                    <LayoutGrid size={19} strokeWidth={1.6} />
+                  </span>
+                )}
                 <h3>Phân bổ danh mục</h3>
                 <span>
                   {categories.length} danh mục · {summary.count} khoản chi
@@ -338,6 +376,7 @@ export default function BagsView({
   onOpenReviews,
 }) {
   const [status, setStatus] = useState('all')
+  const { theme } = useAppearance()
   const [search, setSearch] = useState('')
   const selected = bags.find((bag) => bag.id === selectedId)
   const filtered = bags
@@ -376,17 +415,34 @@ export default function BagsView({
           />
         ) : (
           <>
-            <section className="bags-collection" aria-label="Bộ sưu tập túi chi tiêu">
+            <section
+              className="bags-collection"
+              data-empty={!filtered.length || undefined}
+              aria-label="Bộ sưu tập túi chi tiêu"
+            >
               <div className="bags-control-deck">
-                <div className="bags-status-tabs" role="group" aria-label="Trạng thái túi">
+                <div
+                  data-filter-tabs
+                  className="bags-status-tabs"
+                  role="group"
+                  aria-label="Trạng thái túi"
+                >
                   {[
                     ['all', 'Tất cả'],
                     ['active', 'Đang mở'],
                     ['done', 'Hoàn tất'],
                   ].map(([id, label]) => (
                     <button key={id} aria-pressed={status === id} onClick={() => setStatus(id)}>
+                      {theme === 'dark' &&
+                        (id === 'all' ? (
+                          <LayoutGrid size={14} aria-hidden="true" />
+                        ) : id === 'active' ? (
+                          <FolderOpen size={14} aria-hidden="true" />
+                        ) : (
+                          <CircleCheck size={14} aria-hidden="true" />
+                        ))}
                       {label}
-                      <span aria-hidden="true">
+                      <span data-filter-count aria-hidden="true">
                         {id === 'all'
                           ? bags.length
                           : bags.filter((bag) => bag.status === id).length}
@@ -409,6 +465,7 @@ export default function BagsView({
                   )}
                 </div>
                 <div className="bags-total">
+                  {theme === 'dark' && <WalletCards size={22} aria-hidden="true" />}
                   <span>Đã chi trong túi</span>
                   <strong>{money(totalSpent)}</strong>
                 </div>
@@ -418,15 +475,21 @@ export default function BagsView({
                   {filtered.map((bag, index) => {
                     const summary = bagSummary(bag, transactions)
                     const color = getBagColor(bag.color)
+                    const visual = getDarkBagVisual(bag.style, bag.color)
                     return (
                       <button
                         key={bag.id}
                         className="bag-card"
                         data-bag-id={bag.id}
+                        data-bag-style={bag.style}
+                        data-bag-status={bag.status}
+                        data-large-values={Math.max(summary.spent, bag.budget) >= 1e9 || undefined}
                         style={{
                           '--bag-paper': color.paper,
                           '--bag-ink': color.ink,
                           '--bag-border': color.border,
+                          '--bag-card-accent': visual.accent,
+                          '--bag-card-foil': visual.face,
                         }}
                         aria-label={`Mở túi ${bag.name}`}
                         onClick={() => onSelect(bag.id)}
@@ -439,7 +502,7 @@ export default function BagsView({
                           <span className="bag-card-status">
                             {bag.status === 'done' ? (
                               <>
-                                <Check size={10} />
+                                {theme === 'dark' ? <CircleCheck size={12} /> : <Check size={10} />}
                                 Hoàn tất
                               </>
                             ) : (
@@ -479,7 +542,11 @@ export default function BagsView({
                           <span className="bag-card-bottom">
                             <BudgetLine bag={bag} summary={summary} />
                             <span className="bag-card-open">
-                              <ArrowUpRight size={15} />
+                              {theme === 'dark' ? (
+                                <ArrowRight size={15} />
+                              ) : (
+                                <ArrowUpRight size={15} />
+                              )}
                             </span>
                           </span>
                         </span>
@@ -489,11 +556,18 @@ export default function BagsView({
                 </div>
               ) : (
                 <div className="bags-empty">
-                  <BagArt color="lilac" variant="gift" />
+                  {theme === 'dark' ? <BagsEmptyArt /> : <BagArt color="lilac" variant="gift" />}
                   <h2>
-                    {bags.length
-                      ? 'Chưa tìm thấy chiếc túi phù hợp'
-                      : 'Dịp nào cũng có một chiếc túi riêng'}
+                    {bags.length ? (
+                      'Chưa tìm thấy chiếc túi phù hợp'
+                    ) : theme === 'dark' ? (
+                      <>
+                        Dịp nào cũng có một{' '}
+                        <span className="bags-title-accent">chiếc túi riêng</span>
+                      </>
+                    ) : (
+                      'Dịp nào cũng có một chiếc túi riêng'
+                    )}
                   </h2>
                   <p>
                     {bags.length
@@ -511,18 +585,20 @@ export default function BagsView({
                       <X size={13} /> Xóa bộ lọc túi
                     </button>
                   ) : (
-                    <button className="button primary" onClick={onCreate}>
+                    <ActionButton onClick={onCreate}>
                       <Plus size={15} /> Tạo chiếc túi đầu tiên
-                    </button>
+                    </ActionButton>
                   )}
                 </div>
               )}
             </section>
             <div className="bags-keepsakes">
-              <span>Góc đã lưu</span>
-              <button onClick={onOpenNotes}>
-                <BookOpen size={13} /> Ghi chú đã lưu
-              </button>
+              <span>{theme === 'dark' && <Bookmark size={16} aria-hidden="true" />}Góc đã lưu</span>
+              {onOpenNotes && (
+                <button onClick={onOpenNotes}>
+                  <BookOpen size={13} /> Ghi chú đã lưu
+                </button>
+              )}
               <button onClick={onOpenReviews}>
                 <Smile size={13} /> Cảm nhận đã lưu
               </button>

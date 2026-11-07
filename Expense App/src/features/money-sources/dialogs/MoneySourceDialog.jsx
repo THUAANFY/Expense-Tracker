@@ -2,9 +2,10 @@ import { useId, useRef, useEffect, useState } from 'react'
 import { Check, LockKeyhole, Trash2 } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
 import SourceArt from '../SourceArt'
+import SourceColorPicker from '../SourceColorPicker'
 import DatePicker from '../../../shared/components/DatePicker'
 import { dateKey, formatDate, isValidDate, money, uid } from '../../../shared/storage/data'
-import { SOURCE_COLORS, SOURCE_TYPES, sourceSummary } from '../moneySources'
+import { SOURCE_TYPES, sourceSummary, sourceColorStyle } from '../moneySources'
 import '../MoneySourcesView.css'
 
 export default function MoneySourceDialog({
@@ -21,7 +22,8 @@ export default function MoneySourceDialog({
     source || {
       name: SOURCE_TYPES.find((type) => type.id === initialType)?.label || 'Tiền mặt',
       type: initialType,
-      color: initialType === 'cash' ? 'mint' : initialType === 'bank' ? 'lilac' : 'peach',
+      color:
+        initialType === 'cash' ? 'neon-mint' : initialType === 'bank' ? 'neon-blue' : 'neon-violet',
       openingBalance: '',
       openingDate: asOf,
     },
@@ -98,8 +100,12 @@ export default function MoneySourceDialog({
         }}
       >
         <div className="source-form-body">
-          <div className="source-editor-preview">
-            <SourceArt type={form.type} color={form.color} />
+          <div
+            className="source-editor-preview"
+            data-source-color={form.color}
+            style={sourceColorStyle(form.color)}
+          >
+            <SourceArt type={form.type} />
             <div>
               <span>SỐ DƯ ĐẾN HÔM NAY</span>
               <strong className={preview.balance < 0 ? 'is-negative' : ''}>
@@ -108,6 +114,7 @@ export default function MoneySourceDialog({
               <p>{form.name || 'Nguồn tiền của bạn'}</p>
             </div>
           </div>
+          <SourceColorPicker value={form.color} onChange={(color) => update('color', color)} />
           <div className="source-form-grid">
             <label className="field">
               <span>Tên nguồn tiền</span>
@@ -144,7 +151,7 @@ export default function MoneySourceDialog({
                   aria-pressed={form.type === type.id}
                   onClick={() => update('type', type.id)}
                 >
-                  <SourceArt type={type.id} color={form.color} />
+                  <SourceArt type={type.id} />
                   <span>{type.label}</span>
                   {form.type === type.id && <Check size={12} />}
                 </button>
@@ -164,21 +171,6 @@ export default function MoneySourceDialog({
             đã gán từ ngày này đến hôm nay sẽ được cộng/trừ; khoản trước đó và giao dịch chưa gán
             nguồn không làm thay đổi số dư.
           </p>
-          <div className="source-color-picker" role="group" aria-label="Màu nguồn tiền">
-            <span>Màu thẻ</span>
-            {SOURCE_COLORS.map((color) => (
-              <button
-                type="button"
-                key={color.id}
-                style={{ background: color.fill }}
-                aria-label={`Màu nguồn ${color.label}`}
-                aria-pressed={form.color === color.id}
-                onClick={() => update('color', color.id)}
-              >
-                {form.color === color.id && <Check size={13} />}
-              </button>
-            ))}
-          </div>
           {source && (
             <p className="source-form-hint">
               Đổi số dư đầu ngày hoặc ngày bắt đầu sẽ tính lại số dư của {count} giao dịch đã gán.

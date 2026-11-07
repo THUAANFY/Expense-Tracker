@@ -1,7 +1,11 @@
+import useAppearance from '../theme/useAppearance'
+import DarkThemeArt from '../theme/DarkThemeArt'
 import { useId } from 'react'
 
 export default function FooterArt() {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <DarkThemeArt variant={'journal'} className={'footer-cloud-art'} />
   return (
     <svg className="footer-cloud-art" viewBox="0 0 84 64" fill="none" aria-hidden="true">
       <defs>

@@ -1,8 +1,12 @@
+import useAppearance from '../../app/theme/useAppearance'
+import BudgetFilterEmptyArt from './BudgetFilterEmptyArt'
 import { useId } from 'react'
-import { LayoutGrid } from 'lucide-react'
+import { ArrowRight, Gauge, LayoutGrid, ShieldCheck } from 'lucide-react'
 import './BudgetFilterEmpty.css'
 
 function BudgetEnvelopeArt({ over, id }) {
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <BudgetFilterEmptyArt over={over} id={`budget-empty-${id}`} />
   const ink = over ? '#97ad85' : '#b99a69'
   return (
     <svg
@@ -123,11 +127,22 @@ function BudgetEnvelopeArt({ over, id }) {
 
 export default function BudgetFilterEmpty({ filter, onShowAll }) {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
   const over = filter === 'over'
   return (
     <section className={`category-budget-empty is-${filter}`} aria-labelledby={`${id}-title`}>
       <BudgetEnvelopeArt over={over} id={id} />
       <div className="category-budget-empty-copy">
+        {theme === 'dark' && (
+          <span className="category-empty-status">
+            {over ? (
+              <ShieldCheck size={13} aria-hidden="true" />
+            ) : (
+              <Gauge size={13} aria-hidden="true" />
+            )}
+            {over ? 'Vẫn trong hạn mức' : 'Theo dõi hạn mức'}
+          </span>
+        )}
         <h3 id={`${id}-title`}>{over ? 'Chưa có mục vượt hạn mức' : 'Chưa có mục gần hạn mức'}</h3>
         <p>
           {over
@@ -136,6 +151,7 @@ export default function BudgetFilterEmpty({ filter, onShowAll }) {
         </p>
         <button className="button primary" type="button" onClick={onShowAll}>
           <LayoutGrid size={14} aria-hidden="true" /> Xem tất cả danh mục
+          {theme === 'dark' && <ArrowRight size={14} aria-hidden="true" />}
         </button>
       </div>
     </section>

@@ -120,12 +120,15 @@ export default function NotificationCenter({ data, storageError, onNavigate }) {
           </button>
         </div>
         <div className="notification-center-toolbar">
-          <div role="group" aria-label="Lọc thông báo">
+          <div data-filter-tabs role="group" aria-label="Lọc thông báo">
             <button aria-pressed={filter === 'all'} onClick={() => setFilter('all')}>
               Tất cả
             </button>
             <button aria-pressed={filter === 'unread'} onClick={() => setFilter('unread')}>
-              Chưa đọc <span aria-hidden="true">{notifications.unreadCount}</span>
+              Chưa đọc{' '}
+              <span data-filter-count aria-hidden="true">
+                {notifications.unreadCount}
+              </span>
             </button>
           </div>
           <button

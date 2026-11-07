@@ -1,8 +1,12 @@
+import useAppearance from '../theme/useAppearance'
+import DarkThemeArt from '../theme/DarkThemeArt'
 import { useId } from 'react'
 import './SidebarArt.css'
 
 export default function SidebarArt() {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <DarkThemeArt variant="workspace" className="sidebar-art" />
   return (
     <svg
       className="sidebar-art"

@@ -64,14 +64,7 @@
   text-decoration-color: #d9c7e7;
   text-underline-offset: 4px;
 }
-.history-empty-magnifier {
-  transform-origin: 148px 91px;
-  transition: transform 350ms ease;
-}
 @media (hover: hover) and (pointer: fine) {
-  .history-empty:hover .history-empty-magnifier {
-    transform: rotate(-5deg);
-  }
   .history-empty-add:hover {
     text-decoration-color: var(--text-accent);
   }
@@ -111,9 +104,153 @@
     min-height: 42px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .history-empty .history-empty-magnifier {
-    transform: none;
-    transition: none;
+/* The empty page belongs to the ledger's glass surface, without an inset dark slab. */
+html[data-theme='dark'] .history-workspace .fintech-history-empty {
+  position: relative;
+  display: grid;
+  grid-template-columns: 200px minmax(0, 360px);
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  min-height: 218px;
+  margin: 8px 0 12px;
+  padding: 18px 22px 22px;
+  border: 0;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 36% 62%, #8d5ef00c, transparent 58%);
+  box-shadow: none;
+}
+html[data-theme='dark'] .history-workspace .history-empty-visual {
+  position: relative;
+  min-width: 0;
+  width: 200px;
+  isolation: isolate;
+}
+html[data-theme='dark'] .history-workspace .history-empty-visual::before {
+  position: absolute;
+  inset: 12% 4% 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #9263f52b, #6a70e50c 55%, transparent 72%);
+  content: '';
+  pointer-events: none;
+}
+html[data-theme='dark'] .history-workspace .history-empty-visual::after {
+  position: absolute;
+  top: 18%;
+  bottom: 12%;
+  right: -16px;
+  width: 1px;
+  background: linear-gradient(transparent, #a08ce633, transparent);
+  content: '';
+}
+html[data-theme='dark'] .history-workspace .history-empty-visual > .history-empty-illustration {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty-copy {
+  max-width: 360px;
+}
+html[data-theme='dark'] .history-workspace .history-empty-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+  color: #bca7ee;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.7px;
+}
+html[data-theme='dark'] .history-workspace .fintech-history-empty h3 {
+  color: #f3efff;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.35px;
+}
+html[data-theme='dark'] .history-workspace .fintech-history-empty p {
+  max-width: 350px;
+  margin-top: 7px;
+  color: #bac7e1;
+  font-size: 13px;
+  line-height: 1.8;
+}
+html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty-actions {
+  gap: 10px;
+  margin-top: 16px;
+}
+html[data-theme='dark'] .history-workspace .fintech-history-empty .button {
+  min-height: 39px;
+  padding: 9px 14px;
+  border-color: #c1a4ff4d;
+  border-radius: 11px;
+  background: linear-gradient(115deg, #8b55e4, #675de9 58%, #477ad8);
+  color: #fff;
+  font-size: 13px;
+  box-shadow:
+    inset 0 1px 1px #f4eaff21,
+    0 4px 12px #6d43d426;
+}
+html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty-add {
+  min-height: 39px;
+  padding: 8px 12px;
+  border: 1px solid #a08bdb36;
+  border-radius: 11px;
+  background: #a38bef0b;
+  color: #d0bdf8;
+  font-size: 12px;
+  text-decoration: none;
+}
+html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty-add:hover {
+  background: #a38bef1b;
+  border-color: #b09bdf66;
+}
+@media (max-width: 760px) {
+  html[data-theme='dark'] .history-workspace .fintech-history-empty {
+    grid-template-columns: 156px minmax(0, 340px);
+    gap: 24px;
+    padding-inline: 12px;
+  }
+  html[data-theme='dark'] .history-workspace .history-empty-visual {
+    width: 156px;
+  }
+  html[data-theme='dark'] .history-workspace .history-empty-visual::after {
+    right: -12px;
+  }
+}
+@media (max-width: 560px) {
+  html[data-theme='dark'] .history-workspace .fintech-history-empty {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 9px;
+    min-height: 0;
+    margin-bottom: 6px;
+    padding: 6px 10px 22px;
+    text-align: center;
+  }
+  html[data-theme='dark'] .history-workspace .history-empty-visual {
+    width: 148px;
+  }
+  html[data-theme='dark'] .history-workspace .history-empty-visual::after {
+    display: none;
+  }
+  html[data-theme='dark'] .history-workspace .fintech-history-empty h3 {
+    font-size: 17px;
+  }
+  html[data-theme='dark'] .history-workspace .fintech-history-empty p {
+    margin-inline: auto;
+    font-size: 12px;
+  }
+  html[data-theme='dark'] .history-workspace .history-empty-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+  html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty-actions {
+    justify-content: center;
+    margin-top: 13px;
+  }
+  html[data-theme='dark'] .history-workspace .fintech-history-empty .button {
+    font-size: 12px;
   }
 }

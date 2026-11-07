@@ -4,11 +4,13 @@ import {
   ArrowLeftRight,
   ArrowRight,
   ArrowUpRight,
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
-  CircleHelp,
   FileText,
   Eye,
+  Ellipsis,
+  MousePointer2,
   PencilLine,
   Plus,
   Search,
@@ -19,20 +21,20 @@ import {
 import SourceArt from './SourceArt'
 import { isClosedMonth } from '../../shared/lib/closedMonths'
 import SourceBadge from './SourceBadge'
+import useAppearance from '../../app/theme/useAppearance'
+import FintechSourceIcon from '../../app/theme/FintechSourceIcon'
 import SourceCardsRail from './SourceCardsRail'
+import SourcesEmptyState from './SourcesEmptyState'
 import SourceSummaryArt from './SourceSummaryArt'
+import SourceDeskSummary from './SourceDeskSummary'
 import SourceLedgerArt from './SourceLedgerArt'
 import CategoryArt from '../../shared/illustrations/CategoryArt'
 import FilterSelect from '../../shared/components/FilterSelect'
 import { compactMoney, formatDate, getCategory, money } from '../../shared/storage/data'
-import {
-  SOURCE_TYPES,
-  getMoneySource,
-  getSourceColor,
-  sourceName,
-  sourceSummary,
-} from './moneySources'
+import { getMoneySource, sourceColorStyle, sourceName, sourceSummary } from './moneySources'
 import './MoneySourcesView.css'
+import './FintechSourceCard.css'
+import './FintechSourceLedger.css'
 
 const normalize = (value) =>
   value
@@ -61,13 +63,65 @@ function LedgerSource({ sources, id }) {
 }
 
 export function OverviewMoneySources({ sources, transactions, transfers, asOf, onOpen, onCreate }) {
-  const total = sources.reduce(
-    (sum, source) => sum + sourceSummary(source, transactions, transfers, asOf).balance,
-    0,
-  )
+  const { theme } = useAppearance()
+  const summaries = sources.map((source) => ({
+    source,
+    ...sourceSummary(source, transactions, transfers, asOf),
+  }))
+  const total = summaries.reduce((sum, entry) => sum + entry.balance, 0)
+  if (theme === 'dark') {
+    return (
+      <section
+        className={`overview-sources overview-sources--fintech ${sources.length ? '' : 'is-empty'} ${Math.abs(total) >= 1e10 ? 'has-large-total' : ''}`}
+        aria-label="Tổng quan nguồn tiền"
+      >
+        <button
+          type="button"
+          className="overview-sources-main"
+          onClick={sources.length ? onOpen : onCreate}
+          title={`${sources.length} nguồn · Tính đến ${formatDate(asOf)}`}
+        >
+          <FintechSourceIcon />
+          <span className="overview-sources-copy">
+            <span className="overview-sources-label">Nguồn tiền</span>
+            <span className="overview-sources-value">
+              <strong className={Math.abs(total) >= 1e10 ? 'is-long' : undefined}>
+                {sources.length ? money(total) : 'Thêm nguồn đầu tiên'}
+              </strong>
+              <ChevronRight size={15} aria-hidden="true" />
+            </span>
+          </span>
+        </button>
+        {sources.length > 0 && (
+          <ul className="overview-source-wallets" aria-label="Một số nguồn tiền đang theo dõi">
+            {summaries.slice(0, 3).map(({ source, balance }) => (
+              <li className="overview-source-wallet" key={source.id}>
+                <FintechSourceIcon type={source.type} />
+                <span>
+                  <small title={source.name}>{source.name}</small>
+                  <b>{money(balance)}</b>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="overview-sources-actions">
+          <button
+            type="button"
+            className="overview-sources-add"
+            onClick={onCreate}
+            aria-label="Thêm nguồn tiền"
+            title="Thêm nguồn tiền"
+          >
+            <Plus size={18} aria-hidden="true" />
+          </button>
+        </div>
+      </section>
+    )
+  }
   return (
     <button className="overview-sources" onClick={sources.length ? onOpen : onCreate}>
-      <SourceArt type="cash" color="mint" />
+      <SourceArt type="cash" />
       <span>
         <span className="overview-sources-label">
           Nguồn tiền <small>Đến {formatDate(asOf, { day: '2-digit', month: '2-digit' })}</small>
@@ -94,6 +148,7 @@ export default function MoneySourcesView({
   onAddTransaction,
   onEditTransaction,
 }) {
+  const { theme } = useAppearance()
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -158,63 +213,74 @@ export default function MoneySourcesView({
   }
   return (
     <div className="sources-workspace">
-      <section
-        className={`sources-summary ${unassigned > 0 ? 'has-unassigned' : ''}`}
-        aria-label="Tổng quan nguồn tiền"
-      >
-        <h2 className="sources-desk-title">
-          <Sparkles size={13} aria-hidden="true" /> Góc bàn của mây
-        </h2>
-        <div className="sources-total">
-          <SourceSummaryArt variant="balance" />
-          <span className="sources-summary-caption">Tổng tiền đang theo dõi</span>
-          <strong className={total < 0 ? 'is-negative' : ''}>{money(total)}</strong>
-          <p>
-            <span className="sources-summary-source-count">{sources.length} nguồn</span>
-            <span>Tính đến {formatDate(asOf)}</span>
-          </p>
-        </div>
-        <button
-          className="sources-transfer-action"
-          type="button"
-          aria-label="Ghi chuyển nguồn"
-          disabled={sources.length < 2}
-          onClick={() => onTransfer()}
+      {theme === 'dark' ? (
+        <SourceDeskSummary
+          total={total}
+          sourceCount={sources.length}
+          unassigned={unassigned}
+          asOf={asOf}
+          onTransfer={() => onTransfer()}
+          onShowUnassigned={showUnassigned}
+        />
+      ) : (
+        <section
+          className={`sources-summary ${unassigned > 0 ? 'has-unassigned' : ''}`}
+          aria-label="Tổng quan nguồn tiền"
         >
-          <SourceSummaryArt variant="transfer" />
-          <span className="sources-transfer-copy">
-            <span className="sources-summary-caption">Chuyển nguồn</span>
-            <span className="sources-transfer-description">
-              {sources.length < 2 ? 'Cần ít nhất 2 nguồn.' : 'Không đổi thu/chi.'}
-            </span>
-            <span className="sources-desk-link">
-              <span>Ghi chuyển</span> <ArrowUpRight size={13} aria-hidden="true" />
-            </span>
-          </span>
-        </button>
-        {unassigned > 0 && (
+          <h2 className="sources-desk-title">
+            <Sparkles size={13} aria-hidden="true" /> Góc bàn của mây
+          </h2>
+          <div className="sources-total">
+            <SourceSummaryArt variant="balance" />
+            <span className="sources-summary-caption">Tổng tiền đang theo dõi</span>
+            <strong className={total < 0 ? 'is-negative' : ''}>{money(total)}</strong>
+            <p>
+              <span className="sources-summary-source-count">{sources.length} nguồn</span>
+              <span>Tính đến {formatDate(asOf)}</span>
+            </p>
+          </div>
           <button
-            className="sources-unassigned"
+            className="sources-transfer-action"
             type="button"
-            onClick={showUnassigned}
-            aria-label={`${unassigned} giao dịch chưa gán nguồn · Gán dần`}
+            aria-label="Ghi chuyển nguồn"
+            disabled={sources.length < 2}
+            onClick={() => onTransfer()}
           >
-            <span className="sources-unassigned-art" aria-hidden="true">
-              <SourceSummaryArt variant="pending" />
-              <span className="sources-unassigned-count">{unassigned}</span>
-            </span>
-            <span className="sources-unassigned-copy">
-              <span className="sources-unassigned-heading">
-                <strong>Chưa gán nguồn</strong>
+            <SourceSummaryArt variant="transfer" />
+            <span className="sources-transfer-copy">
+              <span className="sources-summary-caption">Chuyển nguồn</span>
+              <span className="sources-transfer-description">
+                {sources.length < 2 ? 'Cần ít nhất 2 nguồn.' : 'Không đổi thu/chi.'}
               </span>
-              <span className="sources-unassigned-description">Chưa tính vào số dư.</span>
               <span className="sources-desk-link">
-                <span>Gán dần</span> <ArrowRight size={13} aria-hidden="true" />
+                <span>Ghi chuyển</span> <ArrowUpRight size={13} aria-hidden="true" />
               </span>
             </span>
           </button>
-        )}
-      </section>
+          {unassigned > 0 && (
+            <button
+              className="sources-unassigned"
+              type="button"
+              onClick={showUnassigned}
+              aria-label={`${unassigned} giao dịch chưa gán nguồn · Gán dần`}
+            >
+              <span className="sources-unassigned-art" aria-hidden="true">
+                <SourceSummaryArt variant="pending" />
+                <span className="sources-unassigned-count">{unassigned}</span>
+              </span>
+              <span className="sources-unassigned-copy">
+                <span className="sources-unassigned-heading">
+                  <strong>Chưa gán nguồn</strong>
+                </span>
+                <span className="sources-unassigned-description">Chưa tính vào số dư.</span>
+                <span className="sources-desk-link">
+                  <span>Gán dần</span> <ArrowRight size={13} aria-hidden="true" />
+                </span>
+              </span>
+            </button>
+          )}
+        </section>
+      )}
       {sources.length ? (
         <SourceCardsRail sourceIds={sources.map((source) => source.id)}>
           {summaries.map(
@@ -228,20 +294,15 @@ export default function MoneySourcesView({
               beforeOpening,
               upcoming,
             }) => {
-              const c = getSourceColor(source.color)
               const netTransfer = transferredIn - transferredOut
               return (
                 <article
-                  className={`source-card ${balance < 0 ? 'is-overdrawn' : ''}`}
+                  className={`source-card ${theme === 'dark' ? 'fintech-source-card' : ''} ${balance < 0 ? 'is-overdrawn' : ''} ${Math.abs(balance) >= 1e10 ? 'has-long-balance' : ''}`}
                   key={source.id}
                   data-source-id={source.id}
                   data-source-type={source.type}
-                  style={{
-                    '--source-paper': c.paper,
-                    '--source-border': c.border,
-                    '--source-fill': c.fill,
-                    '--source-ink': c.ink,
-                  }}
+                  data-source-color={source.color}
+                  style={sourceColorStyle(source.color)}
                 >
                   <div className="source-card-topline">
                     <SourceBadge type={source.type} />
@@ -259,7 +320,7 @@ export default function MoneySourcesView({
                       <span>Số dư hiện tại</span>
                     </div>
                     <div className="source-card-artwork">
-                      <SourceArt type={source.type} color={source.color} />
+                      <SourceArt type={source.type} />
                     </div>
                   </div>
                   <div className="source-card-balance">
@@ -293,6 +354,13 @@ export default function MoneySourcesView({
                         </span>
                         <strong
                           title={transferredIn || transferredOut ? money(netTransfer) : undefined}
+                          className={
+                            netTransfer > 0
+                              ? 'is-incoming'
+                              : netTransfer < 0
+                                ? 'is-outgoing'
+                                : undefined
+                          }
                         >
                           {transferredIn || transferredOut
                             ? `${netTransfer > 0 ? '+' : netTransfer < 0 ? '−' : ''}${compactMoney(Math.abs(netTransfer))}`
@@ -316,8 +384,13 @@ export default function MoneySourcesView({
                     </div>
                   </div>
                   <p className="source-card-opening">
-                    Đầu {formatDate(source.openingDate)}:{' '}
-                    <strong>{compactMoney(source.openingBalance)}</strong>
+                    {theme === 'dark' && <CalendarDays size={14} aria-hidden="true" />}
+                    <span>
+                      Đầu {formatDate(source.openingDate)}:{' '}
+                      <strong title={money(source.openingBalance)}>
+                        {compactMoney(source.openingBalance)}
+                      </strong>
+                    </span>
                   </p>
                   {balance < 0 && (
                     <p className="source-card-warning">
@@ -337,38 +410,57 @@ export default function MoneySourcesView({
           )}
         </SourceCardsRail>
       ) : (
-        <section className="sources-empty" aria-label="Bắt đầu theo dõi nguồn tiền">
-          <h2>Một chỗ cho từng nguồn tiền</h2>
-          <p>Khai báo số dư đầu ngày, rồi gán khoản thu/chi để biết tiền đang ở đâu.</p>
-          <div>
-            {SOURCE_TYPES.map((type, index) => (
-              <button
-                key={type.id}
-                onClick={() => onCreate(type.id)}
-                aria-label={`Thêm nguồn ${type.label}`}
-              >
-                <SourceArt type={type.id} color={['mint', 'lilac', 'peach'][index]} />
-                <strong>{type.label}</strong>
-                <span>
-                  <Plus size={13} /> Thêm nguồn
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
+        <SourcesEmptyState onCreate={onCreate} />
       )}
-      <section className="source-ledger" ref={ledger} tabIndex={-1} aria-label="Nhật ký nguồn tiền">
+      <section
+        className={`source-ledger ${theme === 'dark' ? 'fintech-source-ledger' : ''}`}
+        ref={ledger}
+        tabIndex={-1}
+        aria-label="Nhật ký nguồn tiền"
+      >
         <div className="source-ledger-heading">
           <div className="source-ledger-title">
-            <SourceLedgerArt />
+            {theme === 'dark' ? (
+              <span className="source-ledger-heading-mark" aria-hidden="true">
+                <SourceLedgerArt />
+              </span>
+            ) : (
+              <SourceLedgerArt />
+            )}
             <div>
               <span className="source-ledger-eyebrow">SỔ THU CHI CỦA BẠN</span>
               <h2>Nhật ký nguồn tiền</h2>
-              <p>Tất cả thời gian · Chạm để chỉnh sửa.</p>
+              {theme === 'dark' ? (
+                <p className="source-ledger-heading-meta">
+                  <span>
+                    <CalendarDays size={12} aria-hidden="true" />
+                    Tất cả thời gian
+                  </span>
+                  <span className="source-ledger-heading-hint">
+                    <MousePointer2 size={12} aria-hidden="true" />
+                    Chạm để xem chi tiết
+                  </span>
+                </p>
+              ) : (
+                <p>Tất cả thời gian · Chạm để chỉnh sửa.</p>
+              )}
             </div>
           </div>
-          <span className="source-ledger-count">
-            <strong>{entries.length}</strong> bản ghi
+          <span className="source-ledger-count" title={`${entries.length} bản ghi`}>
+            {theme === 'dark' ? (
+              <>
+                <span className="source-ledger-count-mark" aria-hidden="true">
+                  <FileText size={18} />
+                </span>
+                <span className="source-ledger-count-copy">
+                  <strong>{entries.length}</strong> <span>bản ghi</span>
+                </span>
+              </>
+            ) : (
+              <>
+                <strong>{entries.length}</strong> bản ghi
+              </>
+            )}
           </span>
         </div>
         <div className="source-ledger-tools">
@@ -404,7 +496,7 @@ export default function MoneySourcesView({
               setPage(1)
             }}
             options={[
-              { value: 'all', label: 'Mọi nguồn', icon: WalletCards },
+              { value: 'all', label: 'Mọi nguồn', sourceType: 'all' },
               { value: 'unassigned', label: 'Chưa gán nguồn', sourceType: 'unassigned' },
               ...sources.map((source) => ({
                 value: `source:${source.id}`,
@@ -414,7 +506,12 @@ export default function MoneySourcesView({
             ]}
           />
         </div>
-        <div className="source-ledger-filters" role="group" aria-label="Loại bản ghi nguồn tiền">
+        <div
+          data-filter-tabs
+          className="source-ledger-filters"
+          role="group"
+          aria-label="Loại bản ghi nguồn tiền"
+        >
           {LEDGER_KINDS.map(({ id, label, shortLabel, icon: Icon }) => (
             <button
               key={id}
@@ -434,7 +531,7 @@ export default function MoneySourcesView({
               <span className="source-ledger-kind-short" aria-hidden="true">
                 {shortLabel}
               </span>
-              <small aria-hidden="true">
+              <small data-filter-count aria-hidden="true">
                 {id === 'all'
                   ? matchingEntries.length
                   : matchingEntries.filter((item) => entryKind(item) === id).length}
@@ -458,6 +555,7 @@ export default function MoneySourcesView({
             >
               <div className="source-ledger-date">
                 <span className="source-ledger-date-stamp" aria-hidden="true">
+                  {theme === 'dark' && <CalendarDays size={12} />}
                   {group.date.slice(8)}
                 </span>
                 <h3>
@@ -561,7 +659,9 @@ export default function MoneySourcesView({
                         </small>
                       </span>
                       <span className="source-ledger-pencil" aria-hidden="true">
-                        {isClosedMonth(item.date, asOf.slice(0, 7)) ? (
+                        {theme === 'dark' ? (
+                          <Ellipsis size={17} />
+                        ) : isClosedMonth(item.date, asOf.slice(0, 7)) ? (
                           <Eye size={14} />
                         ) : (
                           <PencilLine size={14} />

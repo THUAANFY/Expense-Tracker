@@ -1,4 +1,8 @@
+import useAppearance from '../../app/theme/useAppearance'
+import DarkThemeArt from '../../app/theme/DarkThemeArt'
 export default function HistoryArt({ variant = 'journal', className = '' }) {
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <DarkThemeArt variant={variant} className={className} />
   if (variant === 'income' || variant === 'expense') {
     const income = variant === 'income'
     return (

@@ -10,8 +10,12 @@ import {
   Wallet,
 } from 'lucide-react'
 import Dialog from '../../shared/components/Dialog'
+import ActionButton from '../../shared/components/ActionButton'
 import SettingsArt from './SettingsArt'
 import CategoryRatiosSettings from './CategoryRatiosSettings'
+import AppearanceSettings from './AppearanceSettings'
+import useAppearance from '../../app/theme/useAppearance'
+import AppearanceArt from './AppearanceArt'
 import { isClosedMonth } from '../../shared/lib/closedMonths'
 import { dateKey, downloadFile, isValidData, money } from '../../shared/storage/data'
 import {
@@ -36,6 +40,7 @@ export default function SettingsView({
   notify,
 }) {
   const nameId = useId()
+  const { theme } = useAppearance()
   const budgetId = useId()
   const readOnly = isClosedMonth(month, asOf.slice(0, 7))
   const [nameDraft, setNameDraft] = useState(null)
@@ -97,6 +102,7 @@ export default function SettingsView({
   }
   return (
     <div className="settings-workspace">
+      <AppearanceSettings />
       <div className="settings-sheet">
         <form
           className="settings-profile-form settings-section"
@@ -263,13 +269,12 @@ export default function SettingsView({
               </button>
               <div>
                 {hasChanges && <span className="settings-unsaved">Chưa lưu</span>}
-                <button
+                <ActionButton
                   type="submit"
-                  className="button primary"
                   disabled={storageBlocked || Boolean(fundingError) || !validBudget || !hasChanges}
                 >
                   <Check size={15} /> Lưu thay đổi
-                </button>
+                </ActionButton>
               </div>
             </div>
           </div>
@@ -327,7 +332,11 @@ export default function SettingsView({
           <div className="settings-section-content">
             <div className="settings-data-tools">
               <div className="settings-record-summary">
-                <SettingsArt variant="archive" className="settings-data-mark" />
+                {theme === 'dark' ? (
+                  <AppearanceArt dark className="settings-data-mark" />
+                ) : (
+                  <SettingsArt variant="archive" className="settings-data-mark" />
+                )}
                 <div>
                   <strong>
                     {data.transactions.length.toLocaleString('vi-VN')} giao dịch <span>·</span>{' '}

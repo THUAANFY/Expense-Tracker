@@ -1,0 +1,288 @@
+/* Static gradients keep the notebook light while scrolling. */
+html[data-theme='dark'] .notes-title-accent {
+  background: linear-gradient(100deg, #cc8cf7, #ad86ff 65%, #8aaaff);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-theme='dark'] .notes-page-heading h1 {
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+html[data-theme='dark'] .notes-page-heading .page-actions .button,
+html[data-theme='dark'] .notes-workspace .notebook-empty .button.primary {
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid #bf9fff;
+  border-radius: 12px;
+  background: linear-gradient(115deg, #b763ef, #7b3fe8 48%, #4c9bf8);
+  box-shadow:
+    inset 0 1px 2px #efceff80,
+    0 3px 12px #8d4add24;
+  color: #fff;
+  font-size: var(--font-control);
+  font-weight: 500;
+}
+html[data-theme='dark'] .notes-workspace section.notebook-library {
+  padding: 16px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 100% 0, #8c46cb30, transparent 50%) padding-box,
+    linear-gradient(135deg, #202741, #111c30 55%, #24213e) padding-box,
+    linear-gradient(120deg, #c48bff, #6667ad99 30%, #78baff 62%, #bd83fa) border-box;
+  box-shadow:
+    inset 0 1px 3px #dbc3ff35,
+    0 0 14px #8753cf1f;
+}
+html[data-theme='dark'] .notes-workspace .notebook-toolbar {
+  gap: 12px;
+}
+html[data-theme='dark'] .notes-workspace .notebook-tabs {
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-theme='dark'] .notes-workspace .notebook-tabs > button {
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid #7881ab66;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #27304b, #172039);
+  color: #ced8ee;
+  font-size: var(--font-control);
+  font-weight: 500;
+  box-shadow: inset 0 1px 1px #d4dcff12;
+}
+html[data-theme='dark'] .notes-workspace .notebook-tabs > button[aria-selected='true'] {
+  border-color: #b58af4;
+  background: linear-gradient(120deg, #743cb7, #433b8c 70%, #3e5a98);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 2px #ddc3ff55,
+    0 0 9px #a363d933;
+}
+html[data-theme='dark'] .notes-workspace .notebook-tab-count {
+  min-width: 19px;
+  height: 19px;
+  border-radius: 7px;
+  background: #8d9acb2e;
+  color: #eef0ff;
+  box-shadow: none;
+}
+html[data-theme='dark']
+  .notes-workspace
+  .notebook-tabs
+  > button[aria-selected='true']
+  .notebook-tab-count {
+  background: #afb6ff4d;
+}
+html[data-theme='dark'] .notes-workspace .notebook-search {
+  max-width: 360px;
+  height: 36px;
+  padding-inline: 12px;
+  border: 1px solid #8b84c585;
+  border-radius: 22px;
+  background: #10182c;
+  box-shadow: inset 0 1px 2px #070c2240;
+}
+html[data-theme='dark'] .notes-workspace .notebook-search:focus-within {
+  border-color: #b99bff;
+  box-shadow: 0 0 0 2px #a07de51f;
+}
+html[data-theme='dark'] .notes-workspace .notebook-filter-row {
+  margin: 12px 0;
+  padding-bottom: 13px;
+  border: 0;
+}
+html[data-theme='dark'] .notes-workspace .notebook-filter-row::after {
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #c194e7, #7d9ddd80 50%, #ae7ed8);
+  content: '';
+}
+html[data-theme='dark'] .notes-workspace .notebook-filters {
+  gap: 7px;
+}
+html[data-theme='dark'] .notes-workspace .notebook-filter {
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 1px solid #8582ad66;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #29324a, #182139);
+  color: #d1dbee;
+  font-size: var(--font-caption);
+  font-weight: 500;
+  box-shadow: inset 0 1px 1px #e2deff14;
+}
+html[data-theme='dark'] .notes-workspace .notebook-filter.is-active {
+  border-color: #b18cfa;
+  background: linear-gradient(120deg, #9b49d9, #6550cf 65%, #416bcb);
+  color: #fff;
+  box-shadow: inset 0 1px 2px #e0b4ff55;
+}
+html[data-theme='dark'] .notes-workspace .notebook-filter-dot {
+  border: 0;
+  background: linear-gradient(135deg, #ffe6a1, #efb84c);
+  color: #5f4310;
+}
+html[data-theme='dark'] .notes-workspace .purple .notebook-filter-dot {
+  background: linear-gradient(135deg, #dba4ff, #9a54eb);
+  color: #33215a;
+}
+html[data-theme='dark'] .notes-workspace .green .notebook-filter-dot {
+  background: linear-gradient(135deg, #a0ffe4, #46cda9);
+  color: #144d3c;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty {
+  position: relative;
+  isolation: isolate;
+  justify-content: center;
+  min-height: 290px;
+  padding: 18px 20px 24px;
+  overflow: hidden;
+  border: 1px solid #a078dc99;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 0 100%, #7136bf38, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, #4c4fba2e, transparent 55%),
+    linear-gradient(130deg, #1d2340, #111b2e 55%, #252040);
+  box-shadow: inset 0 1px 2px #dac4ff1a;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty::before,
+html[data-theme='dark'] .notes-workspace .notebook-empty::after {
+  position: absolute;
+  z-index: -1;
+  bottom: -135px;
+  left: -65px;
+  width: 290px;
+  height: 180px;
+  border: 1px solid #9969db55;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #8f47d43b, #35347618);
+  transform: rotate(16deg);
+  pointer-events: none;
+  content: '';
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty::after {
+  right: -170px;
+  bottom: -140px;
+  left: auto;
+  width: 380px;
+  height: 240px;
+  transform: rotate(-34deg);
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty > .notebook-art {
+  width: 176px;
+  margin: -6px 0 4px;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty h3 {
+  margin: 0;
+  font-size: var(--font-section);
+  font-weight: 600;
+  line-height: 1.6;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty p {
+  max-width: 430px;
+  margin: 6px 0 0;
+  font-size: var(--font-body);
+  font-weight: 400;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty .button {
+  margin-top: 15px;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered {
+  display: grid;
+  grid-template-columns: 136px minmax(0, 390px);
+  gap: 20px;
+  min-height: 178px;
+  padding: 20px;
+  border-color: #797caa66;
+  background:
+    radial-gradient(ellipse at 10% 50%, #7560c326, transparent 65%),
+    linear-gradient(120deg, #1c2740, #162035 65%, #24233d);
+  text-align: left;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered::before,
+html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered::after {
+  display: none;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered > .notebook-art {
+  width: 136px;
+  margin: 0;
+}
+html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered .button.secondary {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid #a495d180;
+  border-radius: 10px;
+  background: linear-gradient(125deg, #68509840, #30426859);
+  color: #e4d9ff;
+  font-size: var(--font-control);
+  font-weight: 500;
+  box-shadow: inset 0 1px 1px #ead9ff14;
+}
+@media (hover: hover) {
+  html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered .button.secondary:hover {
+    border-color: #c7aff3;
+    background: #7760a840;
+  }
+}
+html[data-theme='dark'] .notes-workspace .notebook-tabs > button:focus-visible,
+html[data-theme='dark'] .notes-workspace .notebook-filter:focus-visible {
+  outline: 2px solid #c4acff;
+  outline-offset: 3px;
+}
+@container notebook (max-width: 850px) {
+  html[data-theme='dark'] .notes-workspace .notebook-search {
+    max-width: none;
+  }
+}
+@container notebook (max-width: 480px) {
+  html[data-theme='dark'] .notes-workspace section.notebook-library {
+    padding: 12px;
+    border-radius: 18px;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-tabs {
+    gap: 6px;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-tabs > button {
+    gap: 4px;
+    padding-inline: 4px;
+    font-size: var(--font-caption);
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-filter {
+    padding-inline: 5px;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-empty {
+    min-height: 278px;
+    padding: 16px 12px 20px;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-empty > .notebook-art {
+    width: 156px;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-empty::before {
+    bottom: -155px;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-empty::after {
+    right: -110px;
+    bottom: -160px;
+    width: 260px;
+    height: 180px;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-empty h3 {
+    font-size: var(--font-content);
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    min-height: 236px;
+    padding: 14px 12px 20px;
+    text-align: center;
+  }
+  html[data-theme='dark'] .notes-workspace .notebook-empty.is-filtered > .notebook-art {
+    width: 112px;
+  }
+}

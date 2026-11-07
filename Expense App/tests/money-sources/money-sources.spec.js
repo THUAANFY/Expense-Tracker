@@ -80,6 +80,104 @@ async function saveSource(dialog) {
   await expect(dialog).not.toBeVisible()
 }
 
+test('neon card colors persist independently while badge and illustration colors stay fixed', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.addInitScript(() =>
+    localStorage.setItem('may-appearance-v1', JSON.stringify({ version: 1, mode: 'dark' })),
+  )
+  const data = book()
+  data.moneySources[1].type = 'cash'
+  data.transactions = [transaction('neon-expense', 10000, { sourceId: 'cash' })]
+  await seed(page, data)
+  await navigate(page)
+
+  const identityPaint = (locator) =>
+    locator.evaluate((el) => {
+      const badge = el.querySelector('.source-badge')
+      return {
+        badgeColor: getComputedStyle(badge).color,
+        badgeBackground: getComputedStyle(badge).backgroundImage,
+        badgeAccent: getComputedStyle(badge).getPropertyValue('--badge-accent'),
+        gradientColors: [
+          ...el.querySelectorAll('.source-badge stop, .source-card-artwork stop'),
+        ].map((stop) => stop.getAttribute('stop-color')),
+      }
+    })
+  const identities = {
+    cash: await identityPaint(card(page, 'cash')),
+    bank: await identityPaint(card(page, 'bank')),
+  }
+
+  await card(page, 'cash')
+    .getByRole('button', { name: 'Sửa nguồn Tiền mặt của tôi', exact: true })
+    .click()
+  let dialog = page.getByRole('dialog', { name: 'Chăm chút nguồn tiền', exact: true })
+  const previewColors = () =>
+    dialog
+      .locator('.source-editor-preview stop')
+      .evaluateAll((stops) => stops.map((stop) => stop.getAttribute('stop-color')))
+  const originalPreviewColors = await previewColors()
+  await dialog.getByRole('button', { name: 'Màu nguồn Hồng sáng', exact: true }).click()
+  expect(await previewColors()).toEqual(originalPreviewColors)
+  await expect(dialog.locator('.source-editor-preview')).toHaveAttribute(
+    'data-source-color',
+    'neon-pink',
+  )
+  await dialog.getByRole('button', { name: 'Để sau', exact: true }).click()
+  expect((await stored(page)).moneySources).toEqual(data.moneySources)
+
+  for (const [id, name, label, value] of [
+    ['cash', 'Tiền mặt của tôi', 'Hồng sáng', 'neon-pink'],
+    ['bank', 'Ngân hàng của tôi', 'Xanh điện', 'neon-blue'],
+  ]) {
+    await card(page, id)
+      .getByRole('button', { name: 'Sửa nguồn ' + name, exact: true })
+      .click()
+    dialog = page.getByRole('dialog', { name: 'Chăm chút nguồn tiền', exact: true })
+    await dialog.getByRole('button', { name: 'Màu nguồn ' + label, exact: true }).click()
+    await saveSource(dialog)
+    await expect(card(page, id)).toHaveAttribute('data-source-color', value)
+    expect(await identityPaint(card(page, id))).toEqual(identities[id])
+  }
+  expect(
+    await card(page, 'cash').evaluate((el) =>
+      getComputedStyle(el).getPropertyValue('--wallet-accent').trim(),
+    ),
+  ).toBe('#ff80bd')
+  expect(
+    await card(page, 'bank').evaluate((el) =>
+      getComputedStyle(el).getPropertyValue('--wallet-accent').trim(),
+    ),
+  ).toBe('#66a5ff')
+
+  const created = await createSource(page, 'Ví đi chơi', 300000)
+  await created.getByRole('button', { name: 'Màu nguồn Xanh ngọc', exact: true }).click()
+  await saveSource(created)
+  const saved = await stored(page)
+  expect(isValidData(saved)).toBeTruthy()
+  expect(saved.moneySources.find((s) => s.name === 'Ví đi chơi').color).toBe('neon-cyan')
+  expect(saved.moneySources.filter((s) => ['cash', 'bank'].includes(s.id))).toEqual(
+    data.moneySources.map((s) => ({ ...s, color: s.id === 'cash' ? 'neon-pink' : 'neon-blue' })),
+  )
+  expect(saved.transactions).toEqual(data.transactions)
+  await expect(page.locator('.sources-total > strong')).toHaveText(money(7290000))
+  await page.reload()
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  expect(await stored(page)).toEqual(saved)
+  await navigate(page, 'Tổng quan')
+  await expect(page.locator('[data-transaction-id="neon-expense"] .source-badge')).toHaveCSS(
+    '--badge-accent',
+    identities.cash.badgeAccent.trim(),
+  )
+  await navigate(page, 'Lịch sử giao dịch')
+  await expect(page.locator('[data-transaction-id="neon-expense"] .source-badge')).toHaveCSS(
+    '--badge-accent',
+    identities.cash.badgeAccent.trim(),
+  )
+})
+
 test('a single source row navigates to later wallets and records spending against the visible source', async ({
   page,
 }) => {

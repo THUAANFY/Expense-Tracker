@@ -11,6 +11,20 @@ body {
   margin: 0;
   background: #f7f8fc;
 }
+html[data-theme='dark'] .startup-screen {
+  background: radial-gradient(ellipse at 50% 44%, #1b1640, #0d111d 65%);
+  color: #f5f3ff;
+}
+html[data-theme='dark'] .startup-wordmark {
+  color: #f5f3ff;
+}
+html[data-theme='dark'] .startup-wordmark > span,
+html[data-theme='dark'] .startup-slogan {
+  color: #b6a0ff;
+}
+html[data-theme='dark'] .startup-art::before {
+  background: radial-gradient(circle, #8b5cf62b, transparent 70%);
+}
 
 body.is-starting {
   overflow: hidden;
@@ -288,4 +302,8 @@ body.is-starting:not(.startup-revealing) #root {
     opacity: 1;
     transform: none;
   }
+}
+
+html[data-theme='dark'] .startup-logo {
+  content: url('/logo-may-dark.svg');
 }

@@ -7,6 +7,33 @@
     <link rel="stylesheet" href="/src/app/startup/startup.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#a48bc8" />
+    <style>
+      html[data-theme='dark'],
+      html[data-theme='dark'] body {
+        background: #0d111d;
+        color: #f5f3ff;
+        color-scheme: dark;
+      }
+    </style>
+    <script>
+      try {
+        const saved = JSON.parse(localStorage.getItem('may-appearance-v1'))
+        const mode =
+          saved?.version === 1 && ['light', 'dark', 'system'].includes(saved.mode)
+            ? saved.mode
+            : 'light'
+        const theme =
+          mode === 'dark' ||
+          (mode === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+            ? 'dark'
+            : 'light'
+        document.documentElement.dataset.theme = theme
+        document.documentElement.dataset.themeMode = mode
+        document.documentElement.style.colorScheme = theme
+      } catch {
+        document.documentElement.dataset.theme = 'light'
+      }
+    </script>
     <meta
       name="description"
       content="Mây — quản lý chi tiêu nhẹ nhàng. Ghi lại giao dịch, lưu ghi chú và theo dõi ngân sách theo cách của bạn."

@@ -1,0 +1,179 @@
+html[data-theme='dark'] .overview-workspace .chart-panel.fintech-chart-panel {
+  --chart-height: 190px;
+  container: spending-panel / inline-size;
+  padding: 16px 16px 12px;
+  border: 1px solid transparent;
+  background:
+    radial-gradient(ellipse at 8% 0, #8b7fc41c, transparent 52%) padding-box,
+    radial-gradient(ellipse at 95% 100%, #6f9ecb18, transparent 58%) padding-box,
+    linear-gradient(145deg, #1b2333, #182131 48%, #161e2c) padding-box,
+    linear-gradient(125deg, #cc9aff, #727ef5 38%, #5789cf 65%, #b27bfa) border-box;
+  box-shadow:
+    0 0 0 1px #a18bff14,
+    0 0 18px #8b5cf61c,
+    inset 0 0 20px #7b73db0d;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .panel-heading {
+  align-items: flex-start;
+  gap: 16px;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel h2 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .panel-heading p {
+  margin-top: 3px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+html[data-theme='dark'] .chart-mode-switch {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid #8fa6df16;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #252d3c99, #172030b3);
+  box-shadow: inset 0 1px 2px #03071333;
+}
+html[data-theme='dark'] .chart-mode-switch button {
+  min-width: 80px;
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+html[data-theme='dark'] .chart-mode-switch button.is-active {
+  color: #fff;
+  border-color: #c3b2ff38;
+  background: linear-gradient(135deg, #8770ef, #6f57df 55%, #6261ea);
+  box-shadow:
+    inset 0 1px 0 #ffffff26,
+    0 3px 12px #8055ed33;
+}
+html[data-theme='dark'] .chart-mode-switch button:focus-visible {
+  outline-offset: 2px;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .spending-chart {
+  gap: 12px;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .chart-y-labels {
+  position: relative;
+  height: var(--chart-height);
+  padding: 0;
+  min-width: max(44px, var(--chart-axis-width, 44px));
+  flex: 0 0 max(44px, var(--chart-axis-width, 44px));
+  font-size: 12px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+html[data-theme='dark'] .fintech-chart-panel .chart-y-labels span {
+  position: absolute;
+  right: 0;
+  transform: translateY(-50%);
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .chart-drawing > svg {
+  display: block;
+  height: var(--chart-height);
+}
+html[data-theme='dark'] .fintech-chart-panel .chart-drawing > svg > line {
+  stroke: #7b8ba733;
+}
+html[data-theme='dark'] .fintech-chart-panel .chart-drawing:focus-visible {
+  outline: 1px solid #b6a0ff;
+  outline-offset: 6px;
+  border-radius: 5px;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .chart-x-labels {
+  margin-top: 7px;
+  height: 18px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+html[data-theme='dark'] .fintech-chart-panel .chart-active-dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  border: 2px solid #c6a8ff;
+  border-radius: 50%;
+  background: #fcf9ff;
+  box-shadow:
+    0 0 0 3px #ac7cfa26,
+    0 0 12px #b68aff80;
+  pointer-events: none;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .chart-tooltip {
+  width: max-content;
+  max-width: min(180px, 100%);
+  transform: translateY(-100%);
+  padding: 5px 8px;
+  gap: 0;
+  border: 1px solid #a5b1d425;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #252d3eef, #1a2130f5);
+  box-shadow:
+    0 6px 20px #03071355,
+    inset 0 1px 0 #ffffff05;
+  white-space: normal;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .chart-tooltip strong {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+html[data-theme='dark'] .overview-workspace .fintech-chart-panel .chart-tooltip span {
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme='dark'] .chart-mode-switch button:not(.is-active):hover {
+    background: #a88aff12;
+    color: var(--text-primary);
+  }
+}
+@container spending-panel (max-width: 480px) {
+  html[data-theme='dark'] .overview-workspace .fintech-chart-panel .panel-heading {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  html[data-theme='dark'] .fintech-chart-panel .panel-heading > div:first-child {
+    flex-basis: 100%;
+  }
+  html[data-theme='dark'] .chart-mode-switch {
+    margin-left: auto;
+  }
+  html[data-theme='dark'] .chart-mode-switch button {
+    min-height: 32px;
+    min-width: 80px;
+    font-size: 13px;
+  }
+  html[data-theme='dark'] .overview-workspace .fintech-chart-panel .spending-chart {
+    --chart-height: 180px;
+    margin-top: 30px;
+    gap: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='dark'] .chart-mode-switch button {
+    transition: none;
+  }
+}

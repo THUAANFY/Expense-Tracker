@@ -3,6 +3,7 @@ import { ArrowDownLeft, ArrowUpRight, Check, Plus, ShoppingBag, Trash2 } from 'l
 import Dialog from '../../../shared/components/Dialog'
 import CategoryArt from '../../../shared/illustrations/CategoryArt'
 import DatePicker from '../../../shared/components/DatePicker'
+import ActionButton from '../../../shared/components/ActionButton'
 import PaymentSelect from '../PaymentSelect'
 import FilterSelect from '../../../shared/components/FilterSelect'
 import MoneySourceSelect from '../../money-sources/MoneySourceSelect'
@@ -358,9 +359,9 @@ export default function TransactionDialog({
             {readOnly ? 'Đóng chi tiết' : 'Để sau'}
           </button>
           {!readOnly && (
-            <button className="button primary" type="submit">
+            <ActionButton type="submit">
               <Check size={16} /> {transaction ? 'Lưu thay đổi' : 'Lưu giao dịch'}
-            </button>
+            </ActionButton>
           )}
         </div>
       </form>

@@ -8,6 +8,7 @@ export const SOURCE_TYPES = [
 export const SOURCE_COLORS = [
   {
     id: 'lilac',
+    neon: '#b78aff',
     label: 'Tím mây',
     paper: '#f6eefc',
     fill: '#dfcff1',
@@ -16,6 +17,7 @@ export const SOURCE_COLORS = [
   },
   {
     id: 'mint',
+    neon: '#57efc0',
     label: 'Xanh lá',
     paper: '#f0f7ec',
     fill: '#d7e8c8',
@@ -24,6 +26,7 @@ export const SOURCE_COLORS = [
   },
   {
     id: 'peach',
+    neon: '#ff8aab',
     label: 'Đào hồng',
     paper: '#fff2e9',
     fill: '#f5d4bf',
@@ -32,15 +35,98 @@ export const SOURCE_COLORS = [
   },
   {
     id: 'butter',
+    neon: '#e2e979',
     label: 'Vàng kem',
     paper: '#fffae9',
     fill: '#f6e4b1',
     border: '#ecdfb9',
     ink: '#b29b63',
   },
+  {
+    id: 'neon-violet',
+    label: 'Tím điện',
+    neon: '#b78aff',
+    paper: '#f4edff',
+    fill: '#dfc9fc',
+    border: '#d0b3ef',
+    ink: '#71509d',
+  },
+  {
+    id: 'neon-blue',
+    label: 'Xanh điện',
+    neon: '#66a5ff',
+    paper: '#edf4ff',
+    fill: '#c9dffd',
+    border: '#a9c9ee',
+    ink: '#426997',
+  },
+  {
+    id: 'neon-cyan',
+    label: 'Xanh ngọc',
+    neon: '#48dfff',
+    paper: '#eafaFD',
+    fill: '#bceaf3',
+    border: '#a2d5e1',
+    ink: '#366f80',
+  },
+  {
+    id: 'neon-mint',
+    label: 'Bạc hà',
+    neon: '#57efc0',
+    paper: '#ebfbf4',
+    fill: '#bfead9',
+    border: '#9ecfbb',
+    ink: '#386f5b',
+  },
+  {
+    id: 'neon-lime',
+    label: 'Xanh chanh',
+    neon: '#b5f06a',
+    paper: '#f3fae9',
+    fill: '#d6eabd',
+    border: '#bad399',
+    ink: '#546f37',
+  },
+  {
+    id: 'neon-pink',
+    label: 'Hồng sáng',
+    neon: '#ff80bd',
+    paper: '#fff0f7',
+    fill: '#f6c8de',
+    border: '#e6a9c6',
+    ink: '#94516f',
+  },
+  {
+    id: 'neon-coral',
+    label: 'San hô',
+    neon: '#ff8a94',
+    paper: '#fff0f1',
+    fill: '#f7c7cd',
+    border: '#e9aeb7',
+    ink: '#93525c',
+  },
+  {
+    id: 'neon-orange',
+    label: 'Cam sáng',
+    neon: '#ffad68',
+    paper: '#fff4e9',
+    fill: '#f7d8b9',
+    border: '#e6bf98',
+    ink: '#8c623a',
+  },
 ]
 export const getSourceColor = (id) =>
   SOURCE_COLORS.find((item) => item.id === id) || SOURCE_COLORS[0]
+export const sourceColorStyle = (id) => {
+  const color = getSourceColor(id)
+  return {
+    '--source-paper': color.paper,
+    '--source-border': color.border,
+    '--source-fill': color.fill,
+    '--source-ink': color.ink,
+    '--source-neon': color.neon,
+  }
+}
 export const getSourceType = (id) => SOURCE_TYPES.find((item) => item.id === id) || SOURCE_TYPES[0]
 export const getMoneySource = (sources = [], id) => sources.find((source) => source.id === id)
 export const sourceName = (sources, id) => getMoneySource(sources, id)?.name || 'Chưa gán nguồn'

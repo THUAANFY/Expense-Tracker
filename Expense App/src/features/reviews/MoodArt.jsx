@@ -1,4 +1,6 @@
+import useAppearance from '../../app/theme/useAppearance'
 import { useId } from 'react'
+import DarkMoodArt from './DarkMoodArt'
 
 const colors = {
   happy: { top: '#f5fbea', bottom: '#deedcb', ink: '#829c70', blush: '#e4bcae' },
@@ -8,6 +10,8 @@ const colors = {
 
 export default function MoodArt({ mood = 'happy', className = '' }) {
   const id = useId().replaceAll(':', '')
+  const { theme } = useAppearance()
+  if (theme === 'dark') return <DarkMoodArt mood={mood} className={className} />
   const color = colors[mood] || colors.happy
   return (
     <svg className={`mood-art ${className}`} viewBox="0 0 80 80" fill="none" aria-hidden="true">
@@ -76,27 +80,35 @@ export default function MoodArt({ mood = 'happy', className = '' }) {
         <ellipse cx="56" cy="49" rx="4.2" ry="2.5" fill={color.blush} />
         {mood === 'happy' ? (
           <>
-            <path d="M28 43q3-4 6 0m12 0q3-4 6 0" stroke="#73895f" strokeWidth="1.8" />
+            <path
+              d="M28 43q3-4 6 0m12 0q3-4 6 0"
+              stroke={theme === 'dark' ? '#c0f2dc' : '#73895f'}
+              strokeWidth="1.8"
+            />
             <path
               d="M34 49q6 3 12 0c-1 10-11 10-12 0Z"
               fill="#efbfbd"
-              stroke="#73895f"
+              stroke={theme === 'dark' ? '#c0f2dc' : '#73895f'}
               strokeWidth="1.3"
             />
             <path
               d="m67 18 1.2 3.3 3.3 1.2-3.3 1.2L67 27l-1.2-3.3-3.3-1.2 3.3-1.2Z"
-              fill="#ffe6ac"
-              stroke="#bd9d67"
+              fill={theme === 'dark' ? '#c2c4e9' : '#ffe6ac'}
+              stroke={theme === 'dark' ? '#919abd' : '#bd9d67'}
               strokeWidth="1"
             />
           </>
         ) : mood === 'neutral' ? (
           <>
-            <g fill="#8d779e">
+            <g fill={theme === 'dark' ? '#eddaff' : '#8d779e'}>
               <circle cx="31" cy="43" r="1.5" />
               <circle cx="49" cy="43" r="1.5" />
             </g>
-            <path d="M37 53h6" stroke="#8d779e" strokeWidth="1.8" />
+            <path
+              d="M37 53h6"
+              stroke={theme === 'dark' ? '#eddaff' : '#8d779e'}
+              strokeWidth="1.8"
+            />
             <path
               d="m68 24 1 2.8 2.8 1-2.8 1L68 32l-1-2.8-2.8-1 2.8-1Z"
               fill="#e8d4f2"
@@ -106,11 +118,15 @@ export default function MoodArt({ mood = 'happy', className = '' }) {
           </>
         ) : (
           <>
-            <g fill="#a57968">
+            <g fill={theme === 'dark' ? '#ffd5e8' : '#a57968'}>
               <circle cx="31" cy="44" r="1.5" />
               <circle cx="49" cy="44" r="1.5" />
             </g>
-            <path d="m28 37 6 1m12 0 6-1m-16 17q4-4 8 0" stroke="#a57968" strokeWidth="1.5" />
+            <path
+              d="m28 37 6 1m12 0 6-1m-16 17q4-4 8 0"
+              stroke={theme === 'dark' ? '#ffd5e8' : '#a57968'}
+              strokeWidth="1.5"
+            />
             <path
               d="M64 23c-6 7-6 11-2 12 6 2 7-4 2-12Z"
               fill="#e3daf2"
