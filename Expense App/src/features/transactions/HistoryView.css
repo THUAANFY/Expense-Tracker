@@ -47,7 +47,7 @@
   gap: 5px;
   color: #705183;
   font-size: 9px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.4px;
 }
 .history-month-eyebrow svg {
@@ -59,14 +59,14 @@
   margin-top: 11px;
   color: #574163;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .history-month-copy > strong {
   display: block;
   margin-top: 2px;
   color: #5b3875;
   font-size: clamp(22px, 1.6vw, 27px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.5;
   letter-spacing: -0.7px;
   font-variant-numeric: tabular-nums;
@@ -79,7 +79,7 @@
   display: block;
   margin-top: 5px;
   color: #634d72;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 .history-journal-art {
   position: absolute;
@@ -131,7 +131,7 @@
   margin-top: 4px;
   color: #2f6547;
   font-size: clamp(17px, 1.3vw, 22px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.4;
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
@@ -141,7 +141,7 @@
   color: #914e39;
 }
 .history-month-metric .history-metric-count {
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 .history-workspace .history-panel {
   min-width: 0;
@@ -175,7 +175,7 @@
   border-radius: 9px;
   color: #634c75;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   transition:
     background-color 160ms ease,
     color 160ms ease;
@@ -326,7 +326,7 @@
 .history-day-marker > strong {
   color: #634078;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1;
   letter-spacing: -0.7px;
 }
@@ -352,7 +352,7 @@
   gap: 6px;
   color: #644e70;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .history-day-heading h3::before {
   width: 6px;
@@ -365,7 +365,7 @@
 .history-day-heading time {
   color: #000000;
   /* color: #62506e; */
-  font-size: 12px;
+  font-size: var(--font-caption);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -409,19 +409,19 @@
   transform: rotate(4deg);
 }
 .history-ledger .transaction-copy > strong {
-  font-size: 14px;
+  font-size: var(--font-content);
 }
 .history-ledger .transaction-amount {
   display: inline-flex;
   align-items: center;
-  font-size: 14px;
+  font-size: var(--font-value);
 }
 .history-ledger [data-type='expense'] .transaction-amount {
   color: #70435a;
 }
 .history-ledger .category-badge {
   border-radius: 8px;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 .history-ledger .row-edit {
   border-radius: 10px;
@@ -434,7 +434,7 @@
   padding: 16px 0;
   border-top: 1px solid #e7dbed;
   color: #000000;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 .history-workspace .pagination > div {
   gap: 8px;
@@ -592,7 +592,7 @@
   }
   .history-month-metric strong {
     margin-top: 6px;
-    font-size: 16px;
+    font-size: var(--font-section);
   }
   .history-month-metric > div {
     gap: 6px;
@@ -691,7 +691,7 @@
     padding: 13px 12px;
   }
   .history-month-metric strong {
-    font-size: 14px;
+    font-size: var(--font-content);
   }
   .history-month-metric > div > span:first-child {
     padding-right: 0;

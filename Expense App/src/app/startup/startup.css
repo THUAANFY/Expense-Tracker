@@ -1,11 +1,5 @@
-@import '@fontsource/be-vietnam-pro/latin-400.css';
-@import '@fontsource/be-vietnam-pro/latin-500.css';
-@import '@fontsource/be-vietnam-pro/latin-600.css';
-@import '@fontsource/be-vietnam-pro/latin-700.css';
-@import '@fontsource/be-vietnam-pro/vietnamese-400.css';
-@import '@fontsource/be-vietnam-pro/vietnamese-500.css';
-@import '@fontsource/be-vietnam-pro/vietnamese-600.css';
-@import '@fontsource/be-vietnam-pro/vietnamese-700.css';
+@import '../../shared/styles/typography.css';
+@import '@fontsource-variable/plus-jakarta-sans/index.css';
 
 body {
   margin: 0;
@@ -47,7 +41,7 @@ body.is-starting:not(.startup-revealing) #root {
   overflow: hidden;
   background: radial-gradient(ellipse at 50% 44%, #f1eaf8 0, #f7f8fc 60%);
   color: #231c2b;
-  font-family: 'Be Vietnam Pro', sans-serif;
+  font-family: var(--font-family-ui);
   text-align: center;
   transition:
     opacity 320ms ease,
@@ -96,7 +90,7 @@ body.is-starting:not(.startup-revealing) #root {
 .startup-wordmark {
   color: #37243f;
   font-size: clamp(34px, 5vw, 40px);
-  font-weight: 700;
+  font-weight: var(--font-weight-brand);
   letter-spacing: -1.8px;
   line-height: 1.15;
   opacity: 0;
@@ -113,7 +107,7 @@ body.is-starting:not(.startup-revealing) #root {
   gap: 0 5px;
   margin: 14px 0 0;
   color: #514458;
-  font-size: 14px;
+  font-size: var(--font-content);
   line-height: 1.8;
 }
 
@@ -122,7 +116,7 @@ body.is-starting:not(.startup-revealing) #root {
 }
 .startup-slogan > span:last-child {
   color: #63417d;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .startup-wait {
@@ -225,9 +219,7 @@ body.is-starting:not(.startup-revealing) #root {
   padding: 24px;
   background: #f7f8fc;
   color: #231c2b;
-  font:
-    14px/1.7 'Be Vietnam Pro',
-    sans-serif;
+  font: 14px/1.7 var(--font-family-ui);
   text-align: center;
 }
 
@@ -243,7 +235,7 @@ body.is-starting:not(.startup-revealing) #root {
 .startup-failure h1 {
   margin: 0 0 12px;
   font-size: 21px;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 .startup-failure p {
   margin: 0 0 20px;
@@ -266,7 +258,7 @@ body.is-starting:not(.startup-revealing) #root {
 
 @media (max-width: 480px) {
   .startup-slogan {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
 }
 
@@ -280,7 +272,7 @@ body.is-starting:not(.startup-revealing) #root {
   }
   .startup-slogan {
     margin-top: 10px;
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   .startup-wait {
     margin-top: 16px;

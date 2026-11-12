@@ -71,7 +71,7 @@ html[data-theme='dark'] .notes-workspace .notebook-card .notebook-card-date {
   box-shadow: none;
   color: #bfcce0;
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 html[data-theme='dark'] .notes-workspace .notebook-card-mark {
   display: grid;
@@ -123,8 +123,8 @@ html[data-theme='dark'] .notes-workspace .notebook-card .note-body {
 }
 html[data-theme='dark'] .notes-workspace .notebook-card .notebook-title-row h3 {
   color: #f0f3ff;
-  font-size: var(--font-content);
-  font-weight: 600;
+  font-size: var(--font-card-title);
+  font-weight: var(--font-weight-heading);
 }
 html[data-theme='dark'] .notes-workspace .notebook-grid .notebook-card .note-body > p {
   min-height: 0;
@@ -132,7 +132,7 @@ html[data-theme='dark'] .notes-workspace .notebook-grid .notebook-card .note-bod
   background: none;
   color: #c3cfe3;
   font-size: var(--font-body);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   line-height: 1.65;
 }
 html[data-theme='dark'] .notes-workspace .notebook-grid {

@@ -36,7 +36,6 @@ export default function BudgetDialog({
   return (
     <Dialog
       title={`Ngân sách ${category.name.toLowerCase()}`}
-      subtitle="Chọn một mức chi vừa vặn cho tháng này."
       onClose={onClose}
       className="budget-dialog"
     >
@@ -126,8 +125,8 @@ export default function BudgetDialog({
                     setValue(suggestion)
                   }}
                 >
-                  {compactMoney(suggestion)}
-                  {amount === suggestion && <Check size={12} />}
+                  <span>{compactMoney(suggestion)}</span>
+                  <Check size={13} aria-hidden="true" />
                 </button>
               ))}
             </div>

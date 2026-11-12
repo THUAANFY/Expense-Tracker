@@ -31,7 +31,7 @@
   gap: 10px;
   font-size: 35px;
   line-height: 1.1;
-  font-weight: 700;
+  font-weight: var(--font-weight-brand);
   letter-spacing: -2px;
   padding-bottom: 22px;
 }
@@ -52,7 +52,7 @@
   left: 46px;
   font-size: var(--font-caption);
   letter-spacing: 1px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
   white-space: nowrap;
 }
@@ -78,7 +78,7 @@
     color 0.2s,
     background 0.2s;
   line-height: 1.45;
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   min-width: 0;
 }
 .nav-item > svg,
@@ -88,7 +88,7 @@
 }
 .nav-item.active {
   color: var(--text-accent);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .nav-item:hover {
   background: #f7f4fb;
@@ -136,8 +136,8 @@
   height: 100%;
 }
 .sidebar-prompt h3 {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--font-card-title);
+  font-weight: var(--font-weight-medium);
   margin-top: 8px;
 }
 .sidebar-prompt p {
@@ -200,7 +200,7 @@
   color: var(--text-secondary);
 }
 .breadcrumb strong {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -232,9 +232,7 @@
   color: var(--text-secondary);
 }
 .global-search kbd {
-  font:
-    var(--font-caption) 'Be Vietnam Pro',
-    sans-serif;
+  font: var(--font-caption) var(--font-family-ui);
   border: 1px solid #e9e6ee;
   border-radius: 4px;
   width: 17px;
@@ -282,7 +280,7 @@
   font-size: var(--font-body);
   border: 3px solid #f5f1f8;
   border-radius: 50%;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 main {
   padding: var(--page-top) var(--page-gutter) 0;
@@ -318,7 +316,7 @@ main {
 }
 h1 {
   font-size: clamp(26px, 2.25vw, 36px);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.5;
   letter-spacing: -1.1px;
 }
@@ -346,7 +344,7 @@ h1 {
   min-height: 44px;
   font-size: var(--font-small);
   border-radius: 7px;
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   transition:
     background 0.2s,
     transform 0.2s,
@@ -409,7 +407,7 @@ h1 {
   font-size: var(--font-small);
   color: var(--text-secondary);
   height: 26px;
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
 }
 .stat-label > span {
   display: flex;
@@ -446,7 +444,7 @@ h1 {
   font-size: clamp(23px, 2.05vw, 35px);
   line-height: 1.2;
   letter-spacing: -1.2px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   position: relative;
   z-index: 1;
   font-variant-numeric: tabular-nums;
@@ -493,7 +491,7 @@ h1 {
   padding: 3px 6px;
   border-radius: 4px;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   white-space: nowrap;
 }
 .pill.green {
@@ -581,7 +579,7 @@ h1 {
 .chart-summary > strong {
   font-size: 23px;
   letter-spacing: -0.7px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .chart-summary > span {
   font-size: var(--font-caption);
@@ -694,7 +692,7 @@ h1 {
   padding: 18px 16px 14px;
 }
 .category-panel .panel-heading h2 {
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .tiny-label {
   font-size: var(--font-caption);
@@ -729,7 +727,7 @@ h1 {
 .donut-center > strong {
   font-size: 23px;
   letter-spacing: -1px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .donut-center > span:last-child {
   font-size: var(--font-caption);
@@ -747,7 +745,7 @@ h1 {
   bottom: 25px;
   right: -5px;
   font-size: var(--font-section);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 .donut-legend {
   display: flex;
@@ -786,7 +784,7 @@ h1 {
 }
 .donut-legend > button > strong {
   font-size: var(--font-small);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   color: var(--text-secondary);
 }
 .donut-legend > button > strong > span {
@@ -799,7 +797,7 @@ h1 {
   margin-top: 20px;
 }
 .budget-panel .panel-heading h2 {
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .budget-panel .panel-heading > .icon-button {
   width: 22px;
@@ -814,7 +812,7 @@ h1 {
 .budget-numbers > strong {
   font-size: 20px;
   letter-spacing: -0.7px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .budget-numbers > span {
   font-size: var(--font-caption);
@@ -856,7 +854,7 @@ h1 {
 }
 .budget-panel > p > strong {
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .budget-panel .online-dot {
   width: 4px;
@@ -870,7 +868,7 @@ h1 {
   padding: 0 2px;
 }
 .side-note-heading h2 {
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .side-note-heading .icon-button {
   height: 23px;
@@ -960,7 +958,7 @@ h1 {
   font-size: var(--font-section);
   margin-top: 10px;
   color: #584322;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
@@ -1020,7 +1018,7 @@ h1 {
   gap: 10px;
 }
 .section-heading h2 {
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .quick-categories {
   display: grid;
@@ -1055,7 +1053,7 @@ h1 {
 }
 .quick-categories > button > strong {
   font-size: var(--font-small);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   color: var(--text-secondary);
 }
 .category-art {
@@ -1109,7 +1107,7 @@ button:hover > span > .category-art {
   color: var(--text-secondary);
 }
 .history-summary strong {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
 }
 .history-panel {
@@ -1236,7 +1234,7 @@ button:hover > span > .category-art {
 }
 .eyebrow {
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 1.4px;
   color: var(--text-secondary);
   display: block;
@@ -1297,7 +1295,7 @@ button:hover > span > .category-art {
 }
 .category-detail h2 {
   margin-top: 14px;
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .category-detail > p {
   font-size: var(--font-caption);
@@ -1314,7 +1312,7 @@ button:hover > span > .category-art {
 }
 .category-amount strong {
   font-size: 20px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: -0.5px;
   white-space: nowrap;
 }
@@ -1415,7 +1413,7 @@ button:hover > span > .category-art {
 }
 .new-note-card > strong {
   font-size: var(--font-body);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   color: var(--text-secondary);
 }
 .new-note-card > p {
@@ -1453,7 +1451,7 @@ button:hover > span > .category-art {
 }
 .transaction-notes-grid strong {
   font-size: var(--font-small);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -1585,8 +1583,8 @@ button:hover > span > .category-art {
   margin-bottom: 25px;
 }
 .dialog-heading h2 {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: var(--font-dialog-title);
+  font-weight: var(--font-weight-heading);
   letter-spacing: -0.8px;
   margin-top: 9px;
   line-height: 1.5;
@@ -1734,7 +1732,7 @@ button:hover > span > .category-art {
 }
 .help-steps strong {
   font-size: var(--font-body);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
 }
 .help-steps p {
@@ -1820,7 +1818,7 @@ button:hover > span > .category-art {
     min-height: 44px;
   }
   .sidebar-prompt h3 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .sidebar-prompt p {
     font-size: var(--font-small);
@@ -1870,7 +1868,7 @@ button:hover > span > .category-art {
   }
   .panel-heading h2,
   .category-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .panel-heading p {
     font-size: var(--font-body);
@@ -1933,7 +1931,7 @@ button:hover > span > .category-art {
     margin-top: 25px;
   }
   .budget-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .budget-numbers {
     margin-top: 21px;
@@ -1949,7 +1947,7 @@ button:hover > span > .category-art {
     margin-top: 24px;
   }
   .side-note-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .note-card {
     padding: 18px 20px 16px;
@@ -1958,7 +1956,7 @@ button:hover > span > .category-art {
     font-size: var(--font-caption);
   }
   .note-body > h3 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .note-body > p {
     font-size: var(--font-body);
@@ -1967,7 +1965,7 @@ button:hover > span > .category-art {
     font-size: var(--font-small);
   }
   .section-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .text-button {
     font-size: var(--font-body);
@@ -2047,7 +2045,7 @@ button:hover > span > .category-art {
     padding: 10px;
   }
   .sidebar-prompt h3 {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   .topbar {
     padding: 0 var(--page-gutter);
@@ -2124,7 +2122,7 @@ button:hover > span > .category-art {
     height: 163px;
   }
   .category-panel .panel-heading h2 {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   .tiny-label {
     font-size: var(--font-caption);
@@ -2143,7 +2141,7 @@ button:hover > span > .category-art {
     padding: 16px;
   }
   .notes-grid .note-body > h3 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .transaction-notes-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2324,7 +2322,7 @@ button:hover > span > .category-art {
     padding: 10px;
   }
   .sidebar-prompt h3 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .sidebar-prompt p {
     font-size: var(--font-small);
@@ -2468,7 +2466,7 @@ button:hover > span > .category-art {
     margin-bottom: var(--section-gap);
   }
   .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .panel-heading p {
     font-size: var(--font-small);
@@ -2505,7 +2503,7 @@ button:hover > span > .category-art {
     margin-top: 22px;
   }
   .section-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .quick-categories {
     gap: var(--layout-gap);
@@ -2542,7 +2540,7 @@ button:hover > span > .category-art {
     gap: 7px;
   }
   .category-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .tiny-label {
     font-size: var(--font-caption);
@@ -2581,7 +2579,7 @@ button:hover > span > .category-art {
     padding: 16px 14px;
   }
   .budget-panel .panel-heading h2 {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   .budget-numbers {
     flex-wrap: wrap;
@@ -2603,7 +2601,7 @@ button:hover > span > .category-art {
     margin: -2px 0 -13px;
   }
   .side-note-heading h2 {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   .dashboard-side .note-card {
     grid-column: 2;
@@ -2614,7 +2612,7 @@ button:hover > span > .category-art {
     letter-spacing: 0.8px;
   }
   .note-body > h3 {
-    font-size: 13px;
+    font-size: var(--font-body);
     line-height: 1.9;
     margin-top: 12px;
   }
@@ -2746,7 +2744,7 @@ button:hover > span > .category-art {
     width: 57px;
   }
   .category-detail h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
     margin-top: 18px;
   }
   .category-detail > p {
@@ -2788,7 +2786,7 @@ button:hover > span > .category-art {
     font-size: var(--font-caption);
   }
   .notes-grid .note-body > h3 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
     line-height: 1.8;
     margin-top: 16px;
   }
@@ -2871,7 +2869,7 @@ button:hover > span > .category-art {
     margin-bottom: 22px;
   }
   .dialog-heading h2 {
-    font-size: 20px;
+    font-size: var(--font-dialog-title);
   }
   .dialog-heading p {
     font-size: var(--font-small);
@@ -2970,7 +2968,7 @@ button:hover > span > .category-art {
     flex-wrap: nowrap;
   }
   .category-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .tiny-label {
     font-size: var(--font-caption);
@@ -2997,7 +2995,7 @@ button:hover > span > .category-art {
     padding: 16px;
   }
   .budget-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .budget-numbers {
     margin-top: 18px;
@@ -3019,7 +3017,7 @@ button:hover > span > .category-art {
     margin: 0 1px -9px;
   }
   .side-note-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .dashboard-side .note-card {
     grid-column: auto;
@@ -3029,7 +3027,7 @@ button:hover > span > .category-art {
     font-size: var(--font-caption);
   }
   .note-body > h3 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
     margin-top: 15px;
   }
   .note-body > p {
@@ -3063,7 +3061,7 @@ button:hover > span > .category-art {
     font-size: var(--font-caption);
   }
   .section-heading h2 {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   .section-heading .text-button {
     font-size: var(--font-caption);
@@ -3080,7 +3078,7 @@ button:hover > span > .category-art {
     padding: 16px 14px;
   }
   .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .chart-summary > strong {
     font-size: 24px;
@@ -3168,7 +3166,7 @@ button:hover > span > .category-art {
     margin-right: -3px;
   }
   .category-detail h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
     margin-top: 16px;
   }
   .category-detail > p {
@@ -3253,7 +3251,7 @@ button:hover > span > .category-art {
     padding: 20px 16px;
   }
   .dialog-heading h2 {
-    font-size: 20px;
+    font-size: var(--font-dialog-title);
   }
   .dialog-heading p {
     font-size: var(--font-small);
@@ -3308,7 +3306,7 @@ button:hover > span > .category-art {
     min-height: 18px;
   }
   .panel-heading h2 {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   .recent-panel .text-button {
     font-size: var(--font-caption);
@@ -3353,7 +3351,7 @@ button:hover > span > .category-art {
     gap: 11px;
   }
   .dialog-heading h2 {
-    font-size: var(--font-section);
+    font-size: var(--font-dialog-title);
   }
   .categories-intro h2 {
     font-size: var(--font-section);

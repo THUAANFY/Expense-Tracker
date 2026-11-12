@@ -1,6 +1,7 @@
 import { useId, useRef, useEffect, useState } from 'react'
 import { Check, LockKeyhole, Trash2 } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
+import DialogChoice from '../../../shared/components/DialogChoice'
 import SourceArt from '../SourceArt'
 import SourceColorPicker from '../SourceColorPicker'
 import DatePicker from '../../../shared/components/DatePicker'
@@ -63,7 +64,6 @@ export default function MoneySourceDialog({
   return (
     <Dialog
       title={source ? 'Chăm chút nguồn tiền' : 'Thêm một nguồn tiền'}
-      subtitle="Một chỗ rõ ràng cho tiền của bạn."
       className="source-dialog"
       onClose={onClose}
     >
@@ -106,12 +106,12 @@ export default function MoneySourceDialog({
             style={sourceColorStyle(form.color)}
           >
             <SourceArt type={form.type} />
-            <div>
-              <span>SỐ DƯ ĐẾN HÔM NAY</span>
+            <div className="source-editor-preview-copy">
+              <p title={form.name || 'Nguồn tiền của bạn'}>{form.name || 'Nguồn tiền của bạn'}</p>
+              <span>Số dư hôm nay</span>
               <strong className={preview.balance < 0 ? 'is-negative' : ''}>
                 {money(preview.balance)}
               </strong>
-              <p>{form.name || 'Nguồn tiền của bạn'}</p>
             </div>
           </div>
           <SourceColorPicker value={form.color} onChange={(color) => update('color', color)} />
@@ -145,16 +145,14 @@ export default function MoneySourceDialog({
             <legend>Loại nguồn</legend>
             <div>
               {SOURCE_TYPES.map((type) => (
-                <button
+                <DialogChoice
                   key={type.id}
-                  type="button"
-                  aria-pressed={form.type === type.id}
+                  selected={form.type === type.id}
                   onClick={() => update('type', type.id)}
                 >
                   <SourceArt type={type.id} />
                   <span>{type.label}</span>
-                  {form.type === type.id && <Check size={12} />}
-                </button>
+                </DialogChoice>
               ))}
             </div>
           </fieldset>
@@ -189,8 +187,8 @@ export default function MoneySourceDialog({
               aria-label="Xác nhận xóa nguồn"
             >
               <p>
-                Xóa nguồn “{source.name}” khỏi danh sách theo dõi? Nguồn này chưa có giao dịch
-                thu/chi hoặc bản ghi chuyển nguồn.
+                Xóa nguồn “<strong>{source.name}</strong>” khỏi danh sách theo dõi? Nguồn này chưa
+                có giao dịch thu/chi hoặc bản ghi chuyển nguồn.
               </p>
               <button type="button" className="danger-text" onClick={() => onDelete(source.id)}>
                 Xác nhận xóa nguồn

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Check, ShoppingBag, Trash2 } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
+import DialogChoice from '../../../shared/components/DialogChoice'
 import ActionButton from '../../../shared/components/ActionButton'
 import BagArt from '../BagArt'
 import { BAG_COLORS, BAG_STYLES } from '../bags'
@@ -31,7 +32,6 @@ export default function BagDialog({ bag, deleteBlocked = false, onSave, onDelete
   return (
     <Dialog
       title={bag ? 'Chăm chút chiếc túi' : 'Một chiếc túi cho dịp riêng'}
-      subtitle="Gom những khoản chi cùng một câu chuyện."
       className="bag-dialog"
       onClose={onClose}
     >
@@ -94,17 +94,15 @@ export default function BagDialog({ bag, deleteBlocked = false, onSave, onDelete
             <legend>Chọn kiểu túi</legend>
             <div role="group" aria-label="Kiểu túi">
               {BAG_STYLES.map((style) => (
-                <button
-                  type="button"
+                <DialogChoice
                   key={style.id}
                   aria-label={style.label}
-                  aria-pressed={form.style === style.id}
+                  selected={form.style === style.id}
                   onClick={() => update('style', style.id)}
                 >
                   <BagArt variant={style.id} color={form.color} />
                   <span>{style.label}</span>
-                  {form.style === style.id && <Check size={11} />}
-                </button>
+                </DialogChoice>
               ))}
             </div>
           </fieldset>
@@ -161,7 +159,10 @@ export default function BagDialog({ bag, deleteBlocked = false, onSave, onDelete
           )}
           {confirmDelete && !deleteBlocked && (
             <div className="bag-delete-confirm" ref={confirmation}>
-              <p>Xóa túi “{bag.name}”? Các giao dịch và cảm nhận vẫn được giữ trong lịch sử.</p>
+              <p>
+                Xóa túi “<strong>{bag.name}</strong>”? Các giao dịch và cảm nhận vẫn được giữ trong
+                lịch sử.
+              </p>
               <button type="button" className="danger-text" onClick={() => onDelete(bag.id)}>
                 Xác nhận xóa túi
               </button>

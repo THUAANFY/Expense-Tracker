@@ -96,8 +96,8 @@
 .transaction-dialog .dialog-heading h2 {
   margin-top: 6px;
   color: var(--text-primary);
-  font-size: 20px;
-  font-weight: 600;
+  font-size: var(--font-dialog-title);
+  font-weight: var(--font-weight-heading);
   letter-spacing: -0.6px;
   line-height: 1.5;
 }
@@ -158,7 +158,7 @@
   border-radius: 7px;
   color: var(--text-secondary);
   font-size: var(--transaction-input-size);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   line-height: 1.5;
   transition:
     background-color 160ms ease,
@@ -213,14 +213,14 @@
   min-height: 18px;
   color: var(--text-secondary);
   font-size: var(--transaction-label-size);
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
   line-height: 1.5;
 }
 
 .transaction-dialog .field-label .optional {
   color: var(--text-placeholder);
   font-size: 11px;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   white-space: nowrap;
 }
 
@@ -238,7 +238,7 @@
   background: #fff;
   color: var(--text-primary);
   font-size: var(--transaction-input-size);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   line-height: 20px;
   transition:
     border-color 160ms ease,
@@ -268,7 +268,7 @@
   background: transparent;
   color: var(--text-primary);
   font-size: var(--transaction-input-size);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   line-height: 20px;
 }
 
@@ -291,7 +291,7 @@
   border-left: 1px solid #eae1f1;
   color: var(--text-accent);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.5px;
 }
 
@@ -351,7 +351,7 @@
   background: #fcfafd;
   color: var(--text-secondary);
   font-size: var(--transaction-label-size);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   line-height: 1.5;
   transition:
     background-color 160ms ease,
@@ -422,10 +422,6 @@
   .transaction-dialog .dialog-heading {
     padding-top: 17px;
     padding-bottom: 14px;
-  }
-
-  .transaction-dialog .dialog-heading h2 {
-    font-size: 18px;
   }
 
   .transaction-primary-fields {

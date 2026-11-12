@@ -1,0 +1,94 @@
+/* Modal bodies, textareas and nested select/calendar popovers share one palette. */
+html[data-theme='dark'] body :is(.dialog[open], .field-popover[role], .month-popover[role]) {
+  --popup-scroll-track: #1b2337;
+  --popup-scroll-thumb: #8377a6;
+  --popup-scroll-thumb-fill: linear-gradient(180deg, #927db8, #6a7fa8);
+  --popup-scroll-thumb-hover: linear-gradient(180deg, #b49ad9, #879dc7);
+  --popup-scroll-thumb-active: linear-gradient(180deg, #c7aeed, #9db4df);
+}
+html[data-theme='dark'] body :is(.dialog[open], .field-popover[role], .month-popover[role]),
+html[data-theme='dark'] body :is(.dialog[open], .field-popover[role], .month-popover[role]) * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--popup-scroll-thumb) var(--popup-scroll-track);
+}
+/* Chromium/WebKit use the rounded gradient thumb; Firefox uses the colors above. */
+@supports selector(::-webkit-scrollbar) {
+  html[data-theme='dark'] body :is(.dialog[open], .field-popover[role], .month-popover[role]),
+  html[data-theme='dark'] body :is(.dialog[open], .field-popover[role], .month-popover[role]) * {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])::-webkit-scrollbar,
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])
+  *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])::-webkit-scrollbar-track,
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])
+  *::-webkit-scrollbar-track {
+  margin-block: 4px;
+  border-radius: 999px;
+  background: var(--popup-scroll-track);
+}
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])::-webkit-scrollbar-thumb,
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])
+  *::-webkit-scrollbar-thumb {
+  min-width: 28px;
+  min-height: 28px;
+  border: 2px solid var(--popup-scroll-track);
+  border-radius: 999px;
+  background: var(--popup-scroll-thumb-fill);
+  background-clip: padding-box;
+}
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])::-webkit-scrollbar-thumb:hover,
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])
+  *::-webkit-scrollbar-thumb:hover {
+  background-image: var(--popup-scroll-thumb-hover);
+}
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])::-webkit-scrollbar-thumb:active,
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])
+  *::-webkit-scrollbar-thumb:active {
+  background-image: var(--popup-scroll-thumb-active);
+}
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])::-webkit-scrollbar-corner,
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])
+  *::-webkit-scrollbar-corner {
+  background: var(--popup-scroll-track);
+}
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])::-webkit-scrollbar-button,
+html[data-theme='dark']
+  body
+  :is(.dialog[open], .field-popover[role], .month-popover[role])
+  *::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}

@@ -528,10 +528,13 @@ export default function App() {
   const [modal, setModalState] = useState(null)
   const [selectedBagId, setSelectedBagId] = useState(null)
   const [mobileMenu, setMobileMenu] = useState(false)
+  const [topbarSearchOpen, setTopbarSearchOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 760px)').matches)
   const [toast, setToast] = useState(null)
   const [highlightedTransaction, setHighlightedTransaction] = useState(null)
   const searchRef = useRef(null)
+  const topbarSearchToggleRef = useRef(null)
+  const topbarSearchId = useId()
   const historySearchRef = useRef(null)
   const toastSequence = useRef(0)
   const {
@@ -618,15 +621,20 @@ export default function App() {
     }
   }, [mobileMenu, isMobile])
   useEffect(() => {
+    if (topbarSearchOpen) searchRef.current?.focus({ preventScroll: true })
+  }, [topbarSearchOpen])
+  useEffect(() => {
     const handler = (event) => {
       if (
         (event.key === '/' &&
           !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) ||
         ((event.metaKey || event.ctrlKey) && event.key === 'k')
       ) {
-        if (document.querySelector('dialog[open]')) return
+        if (document.querySelector('dialog[open], .sidebar.is-open')) return
         event.preventDefault()
-        ;(historySearchRef.current || searchRef.current)?.focus()
+        if (historySearchRef.current) historySearchRef.current.focus()
+        else if (window.matchMedia('(max-width: 1050px)').matches) setTopbarSearchOpen(true)
+        else searchRef.current?.focus()
       }
     }
     document.addEventListener('keydown', handler)
@@ -634,6 +642,13 @@ export default function App() {
       document.removeEventListener('keydown', handler)
     }
   }, [])
+
+  function closeTopbarSearch() {
+    setTopbarSearchOpen(false)
+    window.requestAnimationFrame(() =>
+      topbarSearchToggleRef.current?.focus({ preventScroll: true }),
+    )
+  }
 
   function notify(message, transactionId = null) {
     setToast({ id: ++toastSequence.current, message, transactionId })
@@ -662,6 +677,7 @@ export default function App() {
     setToast(null)
   }
   function navigate(id) {
+    setTopbarSearchOpen(false)
     if (id === 'notes' && theme === 'dark') return
     if (theme === 'dark' && modal?.type === 'note') setModal(null)
     if (id === view) scrollPageToTop()
@@ -725,6 +741,16 @@ export default function App() {
       'Đã cập nhật ghim ghi chú',
     )
   }
+  const todaySpending = data.transactions.reduce(
+    (summary, item) => {
+      if (item.type === 'expense' && item.date === asOf) {
+        summary.amount += item.amount
+        summary.count += 1
+      }
+      return summary
+    },
+    { amount: 0, count: 0 },
+  )
   const monthTransactions = data.transactions.filter((item) => item.date.startsWith(month))
   const expenses = monthTransactions.filter((item) => item.type === 'expense')
   const expense = expenses.reduce((total, item) => total + item.amount, 0)
@@ -839,34 +865,27 @@ export default function App() {
           </nav>
           <div className="sidebar-bottom">
             <div className="sidebar-prompt">
-              {theme === 'dark' && (
-                <button
-                  className="sidebar-help-button"
-                  aria-label="Hướng dẫn sử dụng mây"
-                  title="Hướng dẫn sử dụng"
-                  onClick={() => setModal({ type: 'help' })}
-                >
-                  <CircleHelp size={14} />
-                </button>
-              )}
               <div className="prompt-art">
                 <SidebarArt />
               </div>
-              <h3>{theme === 'dark' ? 'Chi tiêu thông minh.' : 'Tích nhỏ, thành điều lớn.'}</h3>
+              <h3>Tích nhỏ, thành điều lớn.</h3>
               <p>
                 Một thói quen nhỏ hôm nay.
                 <br />
                 Một tương lai nhẹ nhàng hơn.
               </p>
-              {theme === 'dark' ? (
-                <ActionButton onClick={addTransaction} disabled={storageBlocked}>
-                  <Plus size={15} /> Thêm giao dịch
-                </ActionButton>
-              ) : (
-                <button onClick={() => setModal({ type: 'help' })}>
-                  Cùng mây bắt đầu <ArrowUpRight size={14} />
-                </button>
-              )}
+              <dl className="sidebar-daily-summary" aria-label="Chi tiêu hôm nay">
+                <div>
+                  <dt>
+                    <CalendarDays size={13} aria-hidden="true" /> Chi hôm nay
+                  </dt>
+                  <dd title={money(todaySpending.amount)}>{money(todaySpending.amount)}</dd>
+                </div>
+                <div>
+                  <dt>Khoản chi</dt>
+                  <dd>{todaySpending.count}</dd>
+                </div>
+              </dl>
             </div>
             <button
               className={`nav-item settings-nav ${view === 'settings' ? 'active' : ''}`}
@@ -890,7 +909,7 @@ export default function App() {
           </div>
         </aside>
         <div className="app-body">
-          <header className="topbar">
+          <header className={`topbar ${topbarSearchOpen ? 'is-searching' : ''}`}>
             <div className="breadcrumb">
               <button
                 className="mobile-menu icon-button"
@@ -898,49 +917,84 @@ export default function App() {
                 aria-expanded={mobileMenu}
                 onClick={() => setMobileMenu(true)}
               >
-                <Menu size={21} />
+                <Menu size={19} aria-hidden="true" />
               </button>
-              <span>Không gian cá nhân</span>
-              <ChevronRight size={13} />
-              <strong>{viewLabel}</strong>
+              <span className="topbar-context">
+                mây<span>.</span>
+              </span>
+              <ChevronRight size={12} aria-hidden="true" />
+              <strong title={viewLabel}>{viewLabel}</strong>
             </div>
             <div className="topbar-actions">
-              <label className="global-search">
-                <Search size={16} />
+              <button
+                type="button"
+                ref={topbarSearchToggleRef}
+                className="topbar-search-toggle icon-button"
+                aria-label="Mở tìm kiếm giao dịch"
+                aria-expanded={topbarSearchOpen}
+                aria-controls={topbarSearchId}
+                onClick={() => setTopbarSearchOpen(true)}
+              >
+                <Search size={18} aria-hidden="true" />
+              </button>
+              <div
+                className="global-search"
+                id={topbarSearchId}
+                role="search"
+                aria-label="Tìm kiếm giao dịch"
+              >
+                <Search size={16} aria-hidden="true" />
                 <input
                   ref={searchRef}
                   aria-label="Tìm giao dịch"
                   placeholder="Tìm một giao dịch…"
                   value={search}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape' && topbarSearchOpen) {
+                      event.preventDefault()
+                      event.stopPropagation()
+                      closeTopbarSearch()
+                    }
+                  }}
                   onChange={(event) => {
                     setSearch(event.target.value)
                     setView('transactions')
                     setPage(1)
                   }}
                 />
-                <kbd>/</kbd>
-              </label>
+                <kbd aria-hidden="true">/</kbd>
+                <button
+                  type="button"
+                  className="topbar-search-close icon-button"
+                  aria-label="Đóng tìm kiếm"
+                  onClick={closeTopbarSearch}
+                >
+                  <X size={15} aria-hidden="true" />
+                </button>
+              </div>
               <NotificationCenter
                 data={data}
                 storageError={storageError}
                 onNavigate={openNotification}
               />
-              <span className="topbar-divider" />
               <button
+                type="button"
                 className="profile-button"
                 aria-label="Mở cài đặt cá nhân"
+                title={data.profile.name === 'bạn' ? 'Cài đặt cá nhân' : data.profile.name}
                 onClick={() => navigate('settings')}
               >
-                <span className="avatar">
+                <span className="avatar" aria-hidden="true">
                   {data.profile.name === 'bạn' ? 'M' : data.profile.name.charAt(0).toUpperCase()}
                 </span>
-                <ChevronDown size={13} />
+                <ChevronDown size={13} aria-hidden="true" />
               </button>
             </div>
           </header>
           <main id="main-content" tabIndex="-1">
             <div
               data-page-heading
+              data-heading-month={!['notes', 'bags', 'sources'].includes(view) || undefined}
               className={
                 view === 'sources'
                   ? 'page-heading sources-page-heading'
@@ -964,7 +1018,9 @@ export default function App() {
               <div className="page-heading-copy">
                 <div className="greeting">
                   <Sun size={15} aria-hidden="true" />
-                  <span>Chào {data.profile.name}, một ngày thật nhẹ nhàng</span>
+                  <span className="greeting-long">
+                    Chào {data.profile.name}, một ngày thật nhẹ nhàng
+                  </span>
                   <span className="greeting-dot" aria-hidden="true">
                     ✧
                   </span>
@@ -1698,11 +1754,7 @@ export default function App() {
         />
       )}
       {modal?.type === 'help' && (
-        <Dialog
-          title="Chào bạn, mây đây."
-          subtitle="Quản lý chi tiêu có thể là một điều thật nhẹ nhàng."
-          onClose={() => setModal(null)}
-        >
+        <Dialog title="Chào bạn, mây đây." onClose={() => setModal(null)}>
           <div className="help-steps">
             {[
               [

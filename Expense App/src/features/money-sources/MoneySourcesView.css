@@ -73,7 +73,7 @@
 .overview-sources strong {
   color: var(--text-primary);
   font-size: 18px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   overflow-wrap: anywhere;
 }
 .overview-sources .overview-sources-link {
@@ -124,7 +124,7 @@
   margin: 0;
   color: var(--text-accent);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.6;
 }
 .sources-desk-title > svg {
@@ -157,14 +157,14 @@
 .sources-unassigned-heading > strong {
   color: var(--text-secondary);
   font-size: var(--font-body);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
 }
 .sources-total > strong {
   max-width: 100%;
   color: var(--text-accent);
   font-size: clamp(20px, 2.4cqw, 32px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.8px;
   line-height: 1.25;
@@ -240,7 +240,7 @@
   margin-top: 2px;
   color: var(--text-accent);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   text-decoration: underline;
   text-decoration-color: #d2bedf;
@@ -271,7 +271,7 @@
   box-shadow: 0 2px 0 #d9bd8724;
   color: var(--text-warning);
   font-size: var(--font-caption);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   transform: rotate(-6deg);
@@ -433,7 +433,7 @@
   .sources-unassigned-heading > strong {
     color: var(--text-accent);
     font-size: var(--font-body);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
   .sources-unassigned-heading > strong {
@@ -580,7 +580,7 @@
 }
 .source-cards-range strong {
   color: var(--text-accent);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .source-cards-arrows > button {
   display: grid;
@@ -683,8 +683,8 @@
   margin: 0;
   overflow: hidden;
   color: var(--text-primary);
-  font-size: var(--font-content);
-  font-weight: 600;
+  font-size: var(--font-card-title);
+  font-weight: var(--font-weight-heading);
   line-height: 1.6;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -758,7 +758,7 @@
   min-width: 0;
   color: var(--text-primary);
   font-size: clamp(20px, 6.6cqw, 28px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -801,7 +801,7 @@
 .source-card-flow strong {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   overflow-wrap: anywhere;
 }
 .source-card-flow .source-card-income strong {
@@ -827,7 +827,7 @@
 .source-card-transfer > strong {
   color: var(--text-secondary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .source-card-actions {
   display: flex;
@@ -858,7 +858,7 @@
   line-height: 1.7;
 }
 .source-card-opening strong {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .source-card-excluded,
 .source-card-warning {
@@ -932,7 +932,7 @@
   margin: 0;
   color: var(--text-primary);
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 .source-ledger-heading p {
   margin: 3px 0 0;
@@ -956,7 +956,7 @@
 .source-ledger-count strong {
   color: var(--text-accent);
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .source-ledger-filters {
   display: flex;
@@ -1015,7 +1015,7 @@
   background: var(--ledger-kind-fill);
   box-shadow: 0 2px 0 #bba6ca22;
   color: var(--ledger-kind-ink);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .source-ledger-kind.is-active > small {
   background: #ffffffa6;
@@ -1074,7 +1074,7 @@
   padding: 8px 12px;
   border-top: 1px solid #e9dff0;
   color: #000000;
-  font-size: 13px;
+  font-size: var(--font-body);
 }
 .source-ledger-columns > :first-child {
   grid-column: 1 / 3;
@@ -1107,7 +1107,7 @@
   box-shadow: 0 2px 0 #e8dcef88;
   color: var(--text-accent);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .source-ledger-date h3 {
   display: flex;
@@ -1117,13 +1117,13 @@
   margin: 0;
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.6;
 }
 .source-ledger-date time {
   color: var(--text-muted);
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   white-space: nowrap;
 }
 .source-ledger-date-rule {
@@ -1211,7 +1211,7 @@
   overflow: hidden;
   color: var(--text-primary);
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.6;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1285,7 +1285,7 @@
 .source-ledger-amount {
   color: var(--ledger-row-ink);
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -1393,9 +1393,9 @@
 .source-dialog .dialog-heading h2 {
   margin-top: 6px;
   color: var(--text-primary);
-  font-size: 20px;
+  font-size: var(--font-dialog-title);
   line-height: 1.5;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 .source-dialog .dialog-heading p {
   margin-top: 5px;
@@ -1429,38 +1429,54 @@
   scrollbar-color: #c2abd6 #f7f3fb;
 }
 .source-editor-preview {
-  display: flex;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
   align-items: center;
-  gap: 13px;
-  padding: 8px 12px;
-  border: 1px dashed #decde9;
-  border-radius: 13px;
-  background: #fffcf6;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--source-border);
+  border-radius: 12px;
+  background: linear-gradient(115deg, var(--source-paper), #fffdfc);
+  box-shadow: inset 0 1px 0 #ffffff80;
 }
 .source-editor-preview > .source-art {
-  width: 93px;
+  width: 64px;
 }
-.source-editor-preview > div {
-  display: grid;
-  gap: 5px;
+.source-editor-preview-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
   min-width: 0;
 }
-.source-editor-preview > div > span {
-  color: var(--text-accent);
+.source-editor-preview-copy > span {
+  flex: 1 0 auto;
+  color: var(--text-secondary);
   font-size: var(--font-caption);
+  font-weight: var(--font-weight-caption);
+  line-height: var(--line-height-caption);
 }
 .source-editor-preview strong {
+  max-width: 100%;
   color: var(--text-primary);
-  font-size: 23px;
-  font-weight: 600;
-  line-height: 1.4;
+  font-size: var(--font-dialog-title);
+  font-weight: var(--font-weight-value);
+  line-height: var(--line-height-heading);
+  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
+.source-editor-preview strong.is-negative {
+  color: var(--text-danger);
+}
 .source-editor-preview p {
+  flex: 0 1 100%;
+  min-width: 0;
   margin: 0;
   overflow: hidden;
-  color: var(--text-secondary);
-  font-size: var(--font-body);
+  color: var(--text-primary);
+  font-size: var(--font-card-title);
+  font-weight: var(--font-weight-label);
+  line-height: var(--line-height-section);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1555,7 +1571,7 @@
 }
 .source-form-hint strong {
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .source-delete-note {
   display: flex;
@@ -1579,7 +1595,7 @@
 }
 .source-delete-note strong {
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .source-delete-confirm {
   padding: 11px;
@@ -1681,7 +1697,7 @@
 .transaction-source-preview strong {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .transaction-source-preview small {
   flex-basis: 100%;
@@ -1711,7 +1727,7 @@
     width: 80px;
   }
   .source-card-balance strong {
-    font-size: 16px;
+    font-size: var(--font-section);
   }
   .source-card-pocket {
     padding: 12px 8px 8px;
@@ -1911,7 +1927,7 @@
     padding: 15px 16px 13px;
   }
   .source-dialog .dialog-heading h2 {
-    font-size: 18px;
+    font-size: var(--font-dialog-title);
   }
   .source-form-body {
     padding: 14px 16px;
@@ -1940,14 +1956,12 @@
     gap: 13px;
   }
   .source-editor-preview {
-    gap: 7px;
-    padding: 8px;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 10px;
+    padding: 9px 10px;
   }
   .source-editor-preview > .source-art {
-    width: 72px;
-  }
-  .source-editor-preview strong {
-    font-size: 20px;
+    width: 56px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

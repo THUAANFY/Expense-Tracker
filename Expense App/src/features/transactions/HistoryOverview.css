@@ -95,7 +95,7 @@ html[data-theme='dark'] .history-workspace .fintech-history-overview .history-mo
   gap: 10px;
   color: #a6a1ff;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   letter-spacing: 0.2px;
 }
@@ -119,15 +119,15 @@ html[data-theme='dark'] .history-workspace .fintech-history-overview .history-mo
 html[data-theme='dark'] .history-workspace .fintech-history-overview .history-month-copy h2 {
   margin-top: 12px;
   color: #d5d0f5;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-medium);
   line-height: 1.45;
 }
 html[data-theme='dark'] .history-workspace .fintech-history-overview .history-month-copy > strong {
   margin-top: 3px;
   color: #f5f3ff;
   font-size: clamp(25px, 2.35cqw, 36px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.3;
   letter-spacing: -0.7px;
 }
@@ -144,7 +144,7 @@ html[data-theme='dark'] .history-workspace .fintech-history-overview .history-mo
   gap: 7px;
   margin-top: 10px;
   color: #bdc7e9;
-  font-size: 12px;
+  font-size: var(--font-caption);
   line-height: 1.5;
   white-space: normal;
 }
@@ -181,8 +181,8 @@ html[data-theme='dark'] .history-workspace .fintech-history-overview .history-me
   gap: 10px;
   padding-right: 0;
   color: var(--history-soft);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-label);
   line-height: 1.4;
   white-space: normal;
 }
@@ -217,7 +217,7 @@ html[data-theme='dark'] .history-workspace .fintech-history-overview .history-mo
   margin-top: 12px;
   color: var(--history-accent);
   font-size: clamp(23px, 2cqw, 31px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.3;
   letter-spacing: -0.6px;
 }
@@ -231,8 +231,8 @@ html[data-theme='dark']
   gap: 8px;
   margin-top: 14px;
   color: var(--history-soft);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
 }
 html[data-theme='dark'] .history-workspace .fintech-history-overview .history-count-icon {
@@ -335,7 +335,7 @@ html[data-theme='dark']
   }
   html[data-theme='dark'] .history-workspace .fintech-history-overview .history-month-copy h2 {
     margin-top: 10px;
-    font-size: 12px;
+    font-size: var(--font-caption);
   }
   html[data-theme='dark']
     .history-workspace

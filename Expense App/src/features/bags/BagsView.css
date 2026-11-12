@@ -86,7 +86,7 @@
   border-radius: 7px;
   color: var(--text-secondary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   white-space: nowrap;
 }
 .bags-status-tabs > button[aria-pressed='true'] {
@@ -169,7 +169,7 @@
 .bags-total > strong {
   color: var(--text-primary);
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
 }
@@ -223,7 +223,7 @@
   background: var(--bag-paper);
   color: var(--text-accent);
   font-size: var(--font-caption);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
 }
 .bag-card-status {
@@ -267,7 +267,7 @@
   -webkit-line-clamp: 2;
   color: var(--text-primary);
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
@@ -354,7 +354,7 @@
   overflow: hidden;
   color: var(--text-primary);
   font-size: 17px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.5;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -563,7 +563,7 @@
   margin: 8px 0 5px;
   color: var(--text-primary);
   font-size: 23px;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
@@ -596,7 +596,7 @@
 .bag-detail-numbers strong {
   color: var(--text-primary);
   font-size: 20px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
 }
@@ -632,7 +632,7 @@
   margin: 0;
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 .bag-expenses-heading > div:first-child > span {
   color: var(--text-muted);
@@ -687,7 +687,7 @@
 .bag-expense-copy > button > strong {
   overflow: hidden;
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -723,7 +723,7 @@
   background: #f7f1fb;
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -848,7 +848,7 @@
 .bag-category-row strong {
   color: var(--text-primary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   white-space: nowrap;
 }
 .bag-category-track {
@@ -882,7 +882,7 @@
 .bag-category-footnote strong {
   color: var(--text-primary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .overview-bags-card {
   display: flex;
@@ -909,7 +909,7 @@
 .overview-bags-card strong {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .overview-bags-card > span > span {
   color: var(--text-secondary);

@@ -43,7 +43,7 @@ html[data-theme='dark'] .history-workspace .filter-tabs > button {
   padding: 6px 12px;
   border-radius: 10px;
   color: #bec9e0;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 html[data-theme='dark'] .history-workspace .filter-tabs > button.active {
   border-color: #b39cff70;
@@ -77,7 +77,7 @@ html[data-theme='dark'] .history-workspace .history-select-trigger {
   border-radius: 12px;
   background: linear-gradient(130deg, #101a2ce6, #131629eb);
   color: #e0e5f3;
-  font-size: 12px;
+  font-size: var(--font-caption);
   box-shadow: inset 0 1px 2px #040b182e;
 }
 html[data-theme='dark'] .history-workspace .history-select-trigger:hover,
@@ -94,7 +94,7 @@ html[data-theme='dark'] .history-workspace .history-filters .export-button {
   border-radius: 12px;
   background: linear-gradient(110deg, #459df2, #6e6bff 52%, #b240e2);
   color: #fff;
-  font-size: 12px;
+  font-size: var(--font-caption);
   box-shadow:
     inset 0 1px 2px #fff4,
     0 2px 14px #8060ff38;
@@ -129,7 +129,7 @@ html[data-theme='dark'] .history-workspace .history-search > input {
   border-radius: 0;
   background: transparent;
   color: #e6e9f8;
-  font-size: 13px;
+  font-size: var(--font-body);
   box-shadow: none;
 }
 html[data-theme='dark'] .history-workspace .history-search > input::placeholder {
@@ -168,8 +168,8 @@ html[data-theme='dark'] .history-workspace .history-results-heading {
 }
 html[data-theme='dark'] .history-workspace .history-results-heading h2 {
   color: #f1efff;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--font-section);
+  font-weight: var(--font-weight-heading);
 }
 html[data-theme='dark'] .history-workspace .history-results-heading > div > svg {
   padding: 6px;
@@ -231,8 +231,8 @@ html[data-theme='dark'] .history-workspace .history-day-marker > span {
 }
 html[data-theme='dark'] .history-workspace .history-day-heading h3 {
   color: #e4e7f5;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-heading);
 }
 html[data-theme='dark'] .history-workspace .history-day-heading h3::before {
   width: 7px;
@@ -244,7 +244,7 @@ html[data-theme='dark'] .history-workspace .history-day-heading h3::before {
 }
 html[data-theme='dark'] .history-workspace .history-day-heading time {
   color: #b5c1da;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 html[data-theme='dark']
   .history-workspace
@@ -328,13 +328,13 @@ html[data-theme='dark'] .history-workspace .history-row-open .transaction-copy {
 }
 html[data-theme='dark'] .history-workspace .history-row-open .transaction-copy > strong {
   color: #eff0fc;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--font-content);
+  font-weight: var(--font-weight-semibold);
 }
 html[data-theme='dark'] .history-workspace .history-row-open .transaction-meta {
   gap: 7px;
   color: #afbdd8;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 html[data-theme='dark'] .history-workspace .history-row-open .transaction-wallet {
   max-width: 160px;
@@ -364,8 +364,8 @@ html[data-theme='dark'] .history-workspace .history-category-badge {
     color-mix(in srgb, var(--history-row-accent) 10%, #161d30)
   );
   color: color-mix(in srgb, var(--history-row-accent) 66%, #f1f3ff);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   white-space: nowrap;
 }
@@ -383,8 +383,8 @@ html[data-theme='dark'] .history-workspace .history-row-open .transaction-amount
   justify-self: stretch;
   justify-content: flex-end;
   color: var(--history-row-flow);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: var(--font-value);
+  font-weight: var(--font-weight-semibold);
 }
 html[data-theme='dark'] .history-workspace :is(.history-row-edit, .history-row-more) {
   display: grid;
@@ -423,7 +423,7 @@ html[data-theme='dark'] .history-row-menu > button {
   border-radius: 8px;
   background: transparent;
   color: #e1e5f5;
-  font-size: 12px;
+  font-size: var(--font-caption);
   text-align: left;
 }
 html[data-theme='dark'] .history-row-menu > button:hover,
@@ -435,7 +435,7 @@ html[data-theme='dark'] .history-row-menu > button:focus-visible {
 html[data-theme='dark'] .history-row-menu > p {
   margin: 6px 10px;
   color: #ffbdcf;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 html[data-theme='dark'] .history-workspace .history-ledger-section .pagination {
   gap: 10px;
@@ -443,7 +443,7 @@ html[data-theme='dark'] .history-workspace .history-ledger-section .pagination {
   padding: 11px 0;
   border-top-color: #889ac920;
   color: #c8d0e5;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 html[data-theme='dark'] .history-workspace .pagination > div {
   gap: 9px;
@@ -501,7 +501,7 @@ html[data-theme='dark'] .history-workspace .pagination .icon-button:disabled {
     height: 40px;
   }
   html[data-theme='dark'] .history-workspace .history-row-open .transaction-copy > strong {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   html[data-theme='dark'] .history-workspace .history-row-open .transaction-meta {
     font-size: 11px;
@@ -520,7 +520,7 @@ html[data-theme='dark'] .history-workspace .pagination .icon-button:disabled {
     grid-column: 2;
     justify-content: flex-end;
     gap: 5px;
-    font-size: 13px;
+    font-size: var(--font-value);
   }
   html[data-theme='dark'] .history-workspace .history-row-open .transaction-note > span,
   html[data-theme='dark'] .history-workspace .history-row-open .transaction-meta-dot {
@@ -593,13 +593,13 @@ html[data-theme='dark'] .history-workspace .pagination .icon-button:disabled {
     display: none;
   }
   html[data-theme='dark'] .history-workspace .history-search > input {
-    font-size: 12px;
+    font-size: var(--font-caption);
   }
   html[data-theme='dark'] .history-workspace .history-ledger-section {
     padding: 13px 12px 0;
   }
   html[data-theme='dark'] .history-workspace .history-results-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   html[data-theme='dark'] .history-workspace .history-ledger-section .pagination {
     font-size: 10px;

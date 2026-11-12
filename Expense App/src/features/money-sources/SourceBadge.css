@@ -19,7 +19,7 @@
   box-shadow: 0 2px 0 color-mix(in srgb, var(--badge-border) 45%, transparent);
   color: var(--badge-ink);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   white-space: nowrap;
 }

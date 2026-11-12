@@ -30,8 +30,8 @@ html[data-theme='dark'] .quick-section-symbol {
   flex-shrink: 0;
 }
 html[data-theme='dark'] .overview-workspace .fintech-quick-panel .section-heading h2 {
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: var(--font-section);
+  line-height: var(--line-height-section);
 }
 html[data-theme='dark'] .fintech-quick-panel h2 > span {
   background: linear-gradient(95deg, #c988f5, #9f8bff 48%, #609cff);
@@ -41,7 +41,7 @@ html[data-theme='dark'] .fintech-quick-panel h2 > span {
 }
 html[data-theme='dark'] .quick-section-intro p {
   margin-top: 3px;
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.5;
   color: var(--text-secondary);
 }
@@ -59,8 +59,8 @@ html[data-theme='dark'] .quick-all-categories {
   background: linear-gradient(145deg, #2c385080, #1a253c80);
   box-shadow: inset 0 1px 0 #ffffff08;
   color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-medium);
   white-space: nowrap;
 }
 html[data-theme='dark'] .overview-workspace .fintech-quick-panel .quick-categories {
@@ -134,7 +134,7 @@ html[data-theme='dark'] .quick-category-footer {
 html[data-theme='dark'] .overview-workspace .fintech-quick-panel .quick-category-footer > strong {
   min-width: 0;
   font-size: clamp(13px, 1.3cqw, 18px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.4;
   color: var(--text-primary);
   text-align: left;
@@ -231,7 +231,7 @@ html[data-theme='dark']
     height: 44px;
   }
   html[data-theme='dark'] .overview-workspace .fintech-quick-panel .quick-category-footer > strong {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
   html[data-theme='dark'] .quick-category-arrow {
     width: 22px;
@@ -251,10 +251,10 @@ html[data-theme='dark']
     display: none;
   }
   html[data-theme='dark'] .overview-workspace .fintech-quick-panel .section-heading h2 {
-    font-size: 16px;
+    font-size: var(--font-section);
   }
   html[data-theme='dark'] .quick-section-intro p {
-    font-size: 12px;
+    font-size: var(--font-caption);
   }
   html[data-theme='dark'] .quick-all-categories {
     width: 32px;

@@ -22,7 +22,7 @@
   margin: 0;
   color: var(--text-primary);
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.6;
   letter-spacing: -0.2px;
 }
@@ -159,13 +159,13 @@ html[data-theme='dark'] .history-workspace .history-empty-eyebrow {
   margin-bottom: 7px;
   color: #bca7ee;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.7px;
 }
 html[data-theme='dark'] .history-workspace .fintech-history-empty h3 {
   color: #f3efff;
   font-size: 19px;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.45;
   letter-spacing: -0.35px;
 }
@@ -173,7 +173,7 @@ html[data-theme='dark'] .history-workspace .fintech-history-empty p {
   max-width: 350px;
   margin-top: 7px;
   color: #bac7e1;
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.8;
 }
 html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty-actions {
@@ -187,7 +187,7 @@ html[data-theme='dark'] .history-workspace .fintech-history-empty .button {
   border-radius: 11px;
   background: linear-gradient(115deg, #8b55e4, #675de9 58%, #477ad8);
   color: #fff;
-  font-size: 13px;
+  font-size: var(--font-body);
   box-shadow:
     inset 0 1px 1px #f4eaff21,
     0 4px 12px #6d43d426;
@@ -199,7 +199,7 @@ html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty
   border-radius: 11px;
   background: #a38bef0b;
   color: #d0bdf8;
-  font-size: 12px;
+  font-size: var(--font-caption);
   text-decoration: none;
 }
 html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty-add:hover {
@@ -240,7 +240,7 @@ html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty
   }
   html[data-theme='dark'] .history-workspace .fintech-history-empty p {
     margin-inline: auto;
-    font-size: 12px;
+    font-size: var(--font-caption);
   }
   html[data-theme='dark'] .history-workspace .history-empty-eyebrow {
     font-size: 9px;
@@ -251,6 +251,6 @@ html[data-theme='dark'] .history-workspace .fintech-history-empty .history-empty
     margin-top: 13px;
   }
   html[data-theme='dark'] .history-workspace .fintech-history-empty .button {
-    font-size: 12px;
+    font-size: var(--font-caption);
   }
 }

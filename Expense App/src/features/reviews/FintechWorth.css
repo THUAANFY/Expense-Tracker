@@ -26,7 +26,7 @@ html[data-theme='dark'] .worth-heading-mark {
 }
 html[data-theme='dark'] .worth-page-heading h1 {
   font-size: 27px;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   letter-spacing: -0.5px;
 }
 html[data-theme='dark'] .worth-page-heading p {
@@ -42,7 +42,7 @@ html[data-theme='dark'] .worth-workspace .worth-empty .button {
     0 3px 12px #8650ce29;
   color: #fff;
   font-size: var(--font-control);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
 }
 html[data-theme='dark'] .worth-workspace .worth-summary {
   gap: 12px;
@@ -139,19 +139,19 @@ html[data-theme='dark'] .worth-workspace .worth-summary-sticker .mood-art {
 }
 html[data-theme='dark'] .worth-workspace .worth-summary-name {
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 html[data-theme='dark'] .worth-workspace .worth-summary-tally strong {
   color: var(--worth-color);
   font-size: 24px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 html[data-theme='dark'] .worth-workspace .worth-summary-amount {
   padding-top: 7px;
   border-top: 1px solid #b7bfe340;
   color: #d3dbee;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 html[data-theme='dark'] .worth-workspace section.worth-library {
   position: relative;
@@ -189,11 +189,11 @@ html[data-theme='dark'] .worth-workspace .worth-library-title > span svg {
 }
 html[data-theme='dark'] .worth-workspace .worth-library-title h2 {
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 html[data-theme='dark'] .worth-workspace .worth-library-title p {
   font-size: var(--font-body);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 html[data-theme='dark'] .worth-workspace .worth-progress {
   min-width: 190px;
@@ -230,7 +230,7 @@ html[data-theme='dark'] .worth-workspace .worth-status-tabs > button {
   background: linear-gradient(135deg, #29334f, #182139);
   color: #d1daee;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   box-shadow: inset 0 1px 2px #e1d8ff14;
 }
 html[data-theme='dark'] .worth-workspace .worth-status-tabs > button[aria-pressed='true'] {
@@ -291,12 +291,12 @@ html[data-theme='dark'] .worth-workspace .worth-empty::after {
 html[data-theme='dark'] .worth-workspace .worth-empty h3 {
   margin: 0;
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 html[data-theme='dark'] .worth-workspace .worth-empty p {
   max-width: 430px;
   font-size: var(--font-body);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 .worth-empty-scene {
   position: relative;
@@ -381,7 +381,7 @@ html[data-theme='dark'] .worth-workspace .worth-library-footer > span {
     gap: 4px;
   }
   html[data-theme='dark'] .worth-workspace .worth-summary-tally strong {
-    font-size: 16px;
+    font-size: var(--font-section);
   }
   html[data-theme='dark'] .worth-workspace .worth-summary-amount {
     display: block;
@@ -394,7 +394,7 @@ html[data-theme='dark'] .worth-workspace .worth-library-footer > span {
     border: 0;
     text-align: right;
     font-size: var(--font-body);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
   }
   html[data-theme='dark'] .worth-workspace .worth-summary-amount > span {
     display: block;
@@ -443,7 +443,7 @@ html[data-theme='dark'] .worth-workspace .worth-library-footer > span {
     padding-inline: 12px;
   }
   html[data-theme='dark'] .worth-workspace .worth-empty h3 {
-    font-size: var(--font-content);
+    font-size: var(--font-card-title);
   }
   html[data-theme='dark'] .worth-workspace .worth-empty::before {
     bottom: -174px;

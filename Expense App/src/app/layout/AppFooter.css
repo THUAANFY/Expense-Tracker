@@ -46,7 +46,7 @@
 .app-footer-wordmark {
   color: var(--text-primary);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: var(--font-weight-brand);
   letter-spacing: -1.1px;
   line-height: 1;
 }

@@ -15,7 +15,7 @@ html[data-theme='dark'] .month-picker .month-picker-trigger {
   border-radius: 8px;
   background: transparent;
   color: #e5e9fb;
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
 }
 html[data-theme='dark'] .month-picker .month-arrow {
   width: 26px;
@@ -51,7 +51,7 @@ html[data-theme='dark'] .transaction-field-trigger.date-picker-trigger {
   box-shadow: inset 0 1px 2px #c2d2ff0d;
   color: #e3eaff;
   font-size: var(--font-control);
-  font-weight: 400;
+  font-weight: var(--font-weight-field);
 }
 html[data-theme='dark'] .date-picker-trigger > svg {
   color: #bdabed;
@@ -84,7 +84,7 @@ html[data-theme='dark'] .month-popover[role='dialog'] {
     0 12px 32px #050b2059,
     inset 0 1px 2px #d5c4ff21;
   font-size: var(--font-control);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   scrollbar-color: #69799f #182238;
 }
 html[data-theme='dark'] .date-picker-popover .field-popover-caption,
@@ -97,7 +97,7 @@ html[data-theme='dark'] .date-picker-popover .field-popover-caption > span,
 html[data-theme='dark'] .month-popover .month-popover-caption > span {
   color: var(--calendar-secondary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
   letter-spacing: 0.2px;
 }
 html[data-theme='dark'] .date-picker-popover .date-picker-navigation,
@@ -116,7 +116,7 @@ html[data-theme='dark'] .month-popover .month-year-toggle {
   background: transparent;
   color: var(--calendar-text);
   font-size: var(--font-picker-title);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 html[data-theme='dark'] .date-picker-popover .date-picker-heading > svg,
 html[data-theme='dark'] .month-popover .month-year-toggle > svg {
@@ -135,7 +135,7 @@ html[data-theme='dark'] .month-popover .month-popover-close {
 html[data-theme='dark'] .date-picker-popover .date-picker-weekdays {
   color: var(--calendar-secondary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 html[data-theme='dark'] .date-picker-popover .date-picker-day,
 html[data-theme='dark'] .date-picker-popover .month-option,
@@ -145,7 +145,7 @@ html[data-theme='dark'] .month-popover .month-option {
   background: transparent;
   color: #dce5f8;
   font-size: var(--font-control-option);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   box-shadow: none;
 }
 html[data-theme='dark'] .date-picker-popover .date-picker-day {
@@ -162,7 +162,7 @@ html[data-theme='dark'] .date-picker-popover .date-picker-day.is-today:not(.is-s
   border-color: #7edbc470;
   background: #5dd5b40a;
   color: #a1f0d7;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 html[data-theme='dark'] .date-picker-popover .date-picker-day.is-today:not(.is-selected)::after,
 html[data-theme='dark'] .month-popover .month-option.is-current:not(.is-selected)::after {
@@ -187,7 +187,7 @@ html[data-theme='dark'] .month-popover .month-option.is-selected:hover {
   box-shadow:
     inset 0 1px 1px #f2dfff59,
     0 2px 6px #7650be33;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 html[data-theme='dark'] .date-picker-popover button:disabled,
 html[data-theme='dark'] .month-popover button:disabled {
@@ -226,7 +226,7 @@ html[data-theme='dark'] .date-picker-popover .field-popover-footer strong,
 html[data-theme='dark'] .month-popover .month-popover-footer strong {
   color: var(--calendar-text);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
 }
 html[data-theme='dark'] .date-picker-popover .field-popover-footer > button,
 html[data-theme='dark'] .month-popover .month-popover-footer > button {
@@ -237,7 +237,7 @@ html[data-theme='dark'] .month-popover .month-popover-footer > button {
   background: #9e75ce1a;
   color: #d6c0ff;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
 }
 html[data-theme='dark'] .date-picker-popover .date-picker-content {
   scrollbar-color: #69799f transparent;

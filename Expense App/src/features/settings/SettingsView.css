@@ -1,10 +1,10 @@
 .settings-workspace,
 .settings-restore-dialog,
 .settings-page-heading {
-  --settings-font-body: 14px;
-  --settings-font-caption: 13px;
-  --settings-font-meta: 12px;
-  --settings-font-section: 15px;
+  --settings-font-body: var(--font-content);
+  --settings-font-caption: var(--font-body);
+  --settings-font-meta: var(--font-caption);
+  --settings-font-section: var(--font-section);
 }
 .page-heading.settings-page-heading {
   flex-direction: row;
@@ -37,7 +37,7 @@
   min-height: 36px;
   padding: 8px 11px;
   border-radius: 9px;
-  font-size: 13px;
+  font-size: var(--font-body);
 }
 .settings-workspace {
   display: grid;
@@ -90,12 +90,12 @@
 .settings-section-heading h2 {
   color: var(--text-primary);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.5;
 }
 .settings-section-heading p {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--font-caption);
   line-height: 1.7;
 }
 .settings-section-icon {
@@ -125,8 +125,8 @@
 }
 .settings-field > label {
   color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--font-content);
+  font-weight: var(--font-weight-label);
   line-height: 1.6;
 }
 .settings-field > input,
@@ -139,7 +139,7 @@
   border-radius: 9px;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: var(--font-content);
   line-height: 20px;
 }
 .settings-field > input::placeholder {
@@ -173,7 +173,7 @@
   outline: 0;
   background: transparent;
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: var(--font-content);
   line-height: 20px;
   font-variant-numeric: tabular-nums;
 }
@@ -184,17 +184,17 @@
   padding-left: 8px;
   border-left: 1px solid var(--surface-border);
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--font-body);
 }
 .settings-budget-preview {
   margin: 0;
   color: var(--text-accent);
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
 .settings-budget-preview strong {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .settings-budget-preview > span {
   color: var(--text-muted);
@@ -204,13 +204,13 @@
 .settings-budget-error {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
 .settings-budget-funds strong {
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .settings-budget-funds button {
   display: inline-flex;
@@ -233,7 +233,7 @@
   border-radius: 8px;
   background: color-mix(in srgb, var(--text-danger) 6%, var(--surface-card));
   color: var(--text-danger);
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.7;
 }
 .settings-budget-input.is-invalid {
@@ -252,7 +252,7 @@
   border-radius: 6px;
   background: var(--surface-tint);
   color: var(--text-accent);
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.5;
   white-space: nowrap;
   transition:
@@ -285,19 +285,19 @@
   min-height: 32px;
   padding: 0;
   color: var(--text-accent);
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.6;
 }
 .settings-save-row .button {
   min-height: 39px;
   padding: 9px 11px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-content);
   line-height: 1.5;
 }
 .settings-unsaved {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--font-caption);
   white-space: nowrap;
 }
 .settings-unsaved::before {
@@ -312,7 +312,7 @@
 }
 .settings-section-content > .form-error {
   margin: 10px 0 0;
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.7;
 }
 .settings-ratios-section .settings-ratios-grid {
@@ -361,8 +361,8 @@
 }
 .settings-record-summary strong {
   color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--font-content);
+  font-weight: var(--font-weight-medium);
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
@@ -373,7 +373,7 @@
 .settings-record-summary p {
   margin-top: 2px;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.7;
 }
 .settings-backup-actions {
@@ -393,7 +393,7 @@
   border-radius: 8px;
   background: var(--surface-tint);
   color: var(--text-accent);
-  font-size: 14px;
+  font-size: var(--font-content);
   line-height: 1.5;
   white-space: nowrap;
   transition:
@@ -413,7 +413,7 @@
   gap: 6px;
   margin-top: 12px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--font-caption);
   line-height: 1.8;
 }
 .settings-data-hint > svg {
@@ -445,14 +445,14 @@
 }
 .settings-import-preview strong {
   color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--font-content);
+  font-weight: var(--font-weight-semibold);
   overflow-wrap: anywhere;
 }
 .settings-import-preview p {
   margin-top: 4px;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-body);
 }
 .settings-import-preview dl {
   display: grid;
@@ -465,19 +465,19 @@
 }
 .settings-import-preview dt {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 .settings-import-preview dd {
   margin-top: 4px;
   color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-medium);
   overflow-wrap: anywhere;
 }
 .settings-restore-copy {
   margin-top: 14px;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.8;
 }
 .settings-recovery {
@@ -495,12 +495,12 @@
 .settings-recovery h2 {
   color: var(--text-primary);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 .settings-recovery p {
   margin: 5px 0 10px;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--font-content);
   line-height: 1.7;
 }
 .settings-recovery > div > div {
@@ -511,7 +511,7 @@
 .settings-recovery .button {
   min-height: 36px;
   padding: 7px 10px;
-  font-size: 14px;
+  font-size: var(--font-content);
 }
 html[data-theme='dark'] .settings-section {
   box-shadow: 0 5px 22px #1e17200d;

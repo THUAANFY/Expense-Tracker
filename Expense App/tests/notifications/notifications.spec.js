@@ -74,7 +74,10 @@ async function openNotifications(page) {
   return panel
 }
 async function addExpense(page, amount, { shouldSave = true } = {}) {
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.locator('.transaction-dialog')
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill(String(amount))
   await dialog.getByRole('textbox', { name: 'Tên giao dịch' }).fill(`Khoản chi ${amount}`)

@@ -35,12 +35,7 @@ export default function BagTransactionsDialog({ bag, transactions, onSave, onClo
     .filter((item) => selected.has(item.id))
     .reduce((sum, item) => sum + item.amount, 0)
   return (
-    <Dialog
-      title="Gom khoản chi vào túi"
-      subtitle={`Chọn cho “${bag.name}”. Chỉ hiện khoản chi chưa thuộc túi khác.`}
-      className="bag-picker-dialog"
-      onClose={onClose}
-    >
+    <Dialog title="Gom khoản chi vào túi" className="bag-picker-dialog" onClose={onClose}>
       <form
         className="bag-picker-form"
         onSubmit={(event) => {

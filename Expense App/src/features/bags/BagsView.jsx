@@ -19,6 +19,7 @@ import {
   Link2,
   PencilLine,
   Plus,
+  RotateCcw,
   Search,
   ShoppingBag,
   Smile,
@@ -39,6 +40,7 @@ import './BagsView.css'
 import './FintechBagsCollection.css'
 import './FintechBagCard.css'
 import './FintechBagDetail.css'
+import './BagDetailToolbar.css'
 
 const normalize = (value) =>
   value
@@ -117,20 +119,33 @@ function BagDetail({
       style={{ '--bag-paper': color.paper, '--bag-ink': color.ink, '--bag-border': color.border }}
     >
       <div className="bag-detail-nav">
-        <button className="bag-back" onClick={onBack}>
-          <ArrowLeft size={14} /> Tất cả túi
+        <button type="button" className="bag-back" onClick={onBack}>
+          <ArrowLeft size={14} aria-hidden="true" /> Tất cả túi
         </button>
-        <div>
+        <div className="bag-detail-tools" role="group" aria-label="Thao tác với túi">
           <button
-            className="bag-small-button"
+            type="button"
+            className="bag-small-button bag-detail-status"
             aria-label={bag.status === 'done' ? 'Mở lại túi' : 'Đánh dấu hoàn tất'}
             onClick={() => onStatus(bag)}
           >
-            <CircleCheck size={14} />
+            {bag.status === 'done' ? (
+              <RotateCcw size={14} aria-hidden="true" />
+            ) : (
+              <CircleCheck size={14} aria-hidden="true" />
+            )}
             {bag.status === 'done' ? 'Mở lại' : 'Hoàn tất'}
           </button>
-          <button className="bag-small-button" onClick={() => onEdit(bag)}>
-            <PencilLine size={13} /> Sửa túi
+          <button
+            type="button"
+            className="bag-small-button bag-detail-edit"
+            aria-label="Sửa túi"
+            onClick={() => onEdit(bag)}
+          >
+            <PencilLine size={14} aria-hidden="true" />
+            <span className="bag-detail-tool-tooltip" aria-hidden="true">
+              Sửa túi
+            </span>
           </button>
         </div>
       </div>
@@ -518,7 +533,10 @@ export default function BagsView({
                             <strong className="bag-card-name" title={bag.name}>
                               {bag.name}
                             </strong>
-                            <span className="bag-card-description">
+                            <span
+                              className="bag-card-description"
+                              title={bag.description || undefined}
+                            >
                               {bag.description || 'Một dịp riêng, những khoản chi chung.'}
                             </span>
                           </span>
@@ -529,7 +547,10 @@ export default function BagsView({
                         <span className="bag-card-footer">
                           <span className="bag-card-numbers">
                             <span>
-                              <small>Đã chi · {summary.count} khoản</small>
+                              <small title={`${summary.count} khoản chi`}>
+                                Đã chi{' '}
+                                <span className="bag-card-count">· {summary.count} khoản</span>
+                              </small>
                               <strong title={money(summary.spent)}>{money(summary.spent)}</strong>
                             </span>
                             <span>

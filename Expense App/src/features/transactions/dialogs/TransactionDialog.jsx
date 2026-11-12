@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { ArrowDownLeft, ArrowUpRight, Check, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
+import DialogChoice from '../../../shared/components/DialogChoice'
 import CategoryArt from '../../../shared/illustrations/CategoryArt'
 import DatePicker from '../../../shared/components/DatePicker'
 import ActionButton from '../../../shared/components/ActionButton'
@@ -16,6 +17,7 @@ import {
 import { CATEGORIES, dateKey, isValidDate, money, uid } from '../../../shared/storage/data'
 import { CLOSED_MONTH_MESSAGE, isClosedMonth } from '../../../shared/lib/closedMonths'
 import ClosedMonthNotice from '../../../shared/components/ClosedMonthNotice'
+import '../TransactionTypeToggle.css'
 
 export default function TransactionDialog({
   transaction,
@@ -112,7 +114,6 @@ export default function TransactionDialog({
             ? 'Một giao dịch, một câu chuyện'
             : 'Ghi lại một giao dịch'
       }
-      subtitle="Để những khoản nhỏ luôn trong tầm tay."
       onClose={onClose}
       wide
       className="transaction-dialog"
@@ -124,6 +125,7 @@ export default function TransactionDialog({
             <div className="type-toggle" role="group" aria-label="Loại giao dịch">
               <button
                 type="button"
+                data-transaction-type="expense"
                 className={form.type === 'expense' ? 'active expense' : ''}
                 aria-pressed={form.type === 'expense'}
                 onClick={() => update('type', 'expense')}
@@ -132,6 +134,7 @@ export default function TransactionDialog({
               </button>
               <button
                 type="button"
+                data-transaction-type="income"
                 className={form.type === 'income' ? 'active income' : ''}
                 aria-pressed={form.type === 'income'}
                 onClick={() => update('type', 'income')}
@@ -247,19 +250,14 @@ export default function TransactionDialog({
                 <legend>Danh mục</legend>
                 <div className="category-picker">
                   {CATEGORIES.map((category) => (
-                    <button
+                    <DialogChoice
                       key={category.id}
-                      type="button"
-                      aria-pressed={form.category === category.id}
-                      className={form.category === category.id ? 'selected' : ''}
+                      selected={form.category === category.id}
                       onClick={() => update('category', category.id)}
                     >
                       <CategoryArt category={category.id} size={43} />
                       <span>{category.name}</span>
-                      {form.category === category.id && (
-                        <Check size={12} className="category-check" />
-                      )}
-                    </button>
+                    </DialogChoice>
                   ))}
                 </div>
               </fieldset>
@@ -329,7 +327,9 @@ export default function TransactionDialog({
             )}
             {confirmDelete && !readOnly && (
               <div className="delete-confirm" ref={confirmationRef}>
-                <span>Xóa giao dịch {money(Number(form.amount))} này?</span>
+                <span>
+                  Xóa giao dịch <strong>{money(Number(form.amount))}</strong> này?
+                </span>
                 <button
                   type="button"
                   className="danger-text"

@@ -3,19 +3,22 @@ import {
   ArrowDownToLine,
   ArrowUpRight,
   Check,
+  ChartNoAxesColumnIncreasing,
+  Database,
   Download,
   FileJson,
   HardDrive,
+  Info,
+  SlidersHorizontal,
+  Upload,
   UserRound,
   Wallet,
 } from 'lucide-react'
 import Dialog from '../../shared/components/Dialog'
 import ActionButton from '../../shared/components/ActionButton'
-import SettingsArt from './SettingsArt'
+import SettingsBackupArt from './SettingsBackupArt'
 import CategoryRatiosSettings from './CategoryRatiosSettings'
 import AppearanceSettings from './AppearanceSettings'
-import useAppearance from '../../app/theme/useAppearance'
-import AppearanceArt from './AppearanceArt'
 import { isClosedMonth } from '../../shared/lib/closedMonths'
 import { dateKey, downloadFile, isValidData, money } from '../../shared/storage/data'
 import {
@@ -25,6 +28,7 @@ import {
   monthlyBudgetFundingError,
 } from '../budgets/monthlyBudgets'
 import './SettingsView.css'
+import './SettingsFintech.css'
 
 export default function SettingsView({
   data,
@@ -40,7 +44,6 @@ export default function SettingsView({
   notify,
 }) {
   const nameId = useId()
-  const { theme } = useAppearance()
   const budgetId = useId()
   const readOnly = isClosedMonth(month, asOf.slice(0, 7))
   const [nameDraft, setNameDraft] = useState(null)
@@ -154,13 +157,15 @@ export default function SettingsView({
             </span>
             <div>
               <h2>Cá nhân hóa</h2>
-              <p>Tên gọi & ngân sách</p>
             </div>
           </div>
           <div className="settings-section-content">
             <div className="settings-form-fields">
               <div className="settings-field">
-                <label htmlFor={nameId}>Mây có thể gọi bạn là</label>
+                <label htmlFor={nameId}>
+                  <UserRound size={15} aria-hidden="true" />
+                  Mây có thể gọi bạn là
+                </label>
                 <input
                   id={nameId}
                   required
@@ -179,9 +184,11 @@ export default function SettingsView({
                 />
               </div>
               <div className="settings-field">
-                <label htmlFor={budgetId}>Ngân sách chi tiêu mỗi tháng (VND)</label>
-                <div className={`settings-budget-input ${fundingError ? 'is-invalid' : ''}`}>
+                <label htmlFor={budgetId}>
                   <Wallet size={15} aria-hidden="true" />
+                  Ngân sách chi tiêu mỗi tháng (VND)
+                </label>
+                <div className={`settings-budget-input ${fundingError ? 'is-invalid' : ''}`}>
                   <input
                     id={budgetId}
                     required
@@ -200,6 +207,7 @@ export default function SettingsView({
                   <span aria-hidden="true">₫</span>
                 </div>
                 <p id={budgetId + '-hint'} className="settings-budget-preview">
+                  <ChartNoAxesColumnIncreasing size={14} aria-hidden="true" />
                   {validBudget ? (
                     <>
                       <strong>{money(numericBudget)}</strong>
@@ -211,7 +219,8 @@ export default function SettingsView({
                 </p>
                 {!readOnly && (
                   <p className="settings-budget-funds" id={`${budgetId}-funds`}>
-                    Số dư các nguồn hôm nay: <strong>{money(funds.balance)}</strong>
+                    <Database size={14} aria-hidden="true" />
+                    Số dư nguồn tiền: <strong>{money(funds.balance)}</strong>
                     <button type="button" onClick={onSources}>
                       {funds.sourceCount ? 'Xem nguồn tiền' : 'Thêm nguồn tiền'}{' '}
                       <ArrowUpRight size={12} aria-hidden="true" />
@@ -219,11 +228,12 @@ export default function SettingsView({
                   </p>
                 )}
                 <p className="settings-budget-scope">
+                  <Info size={14} aria-hidden="true" />
                   {readOnly
-                    ? 'Ngân sách tháng đã qua chỉ được xem, không thể thay đổi.'
+                    ? 'Tháng đã qua chỉ được xem.'
                     : Object.hasOwn(data.monthlyBudgets || {}, month)
-                      ? `Chỉ lưu cho ${monthCaption}. Các hạn mức tự động sẽ chia lại theo mức này.`
-                      : 'Đang dùng mức mặc định. Lưu cho tháng này và tự chia hạn mức danh mục.'}
+                      ? 'Áp dụng riêng cho tháng này.'
+                      : 'Lưu ngân sách riêng cho tháng này.'}
                 </p>
                 {fundingError && (
                   <p
@@ -231,7 +241,11 @@ export default function SettingsView({
                     id={`${budgetId}-error`}
                     role={budgetDrafts[month] ? 'alert' : 'note'}
                   >
-                    {fundingError}
+                    {fundingError
+                      .split(/(\d[\d.]*\s₫)/u)
+                      .map((part, index) =>
+                        index % 2 ? <strong key={index}>{part}</strong> : part,
+                      )}
                   </p>
                 )}
                 <div
@@ -265,7 +279,8 @@ export default function SettingsView({
                 title="Danh mục tự chia theo ngân sách tháng; mức đặt riêng được giữ nguyên"
                 onClick={onCategories}
               >
-                Hạn mức danh mục <ArrowUpRight size={12} aria-hidden="true" />
+                <SlidersHorizontal size={14} aria-hidden="true" /> Hạn mức danh mục{' '}
+                <ArrowUpRight size={12} aria-hidden="true" />
               </button>
               <div>
                 {hasChanges && <span className="settings-unsaved">Chưa lưu</span>}
@@ -326,17 +341,12 @@ export default function SettingsView({
             </span>
             <div>
               <h2>Dữ liệu</h2>
-              <p>Giữ sổ trên thiết bị</p>
             </div>
           </div>
           <div className="settings-section-content">
             <div className="settings-data-tools">
               <div className="settings-record-summary">
-                {theme === 'dark' ? (
-                  <AppearanceArt dark className="settings-data-mark" />
-                ) : (
-                  <SettingsArt variant="archive" className="settings-data-mark" />
-                )}
+                <SettingsBackupArt className="settings-data-mark" />
                 <div>
                   <strong>
                     {data.transactions.length.toLocaleString('vi-VN')} giao dịch <span>·</span>{' '}
@@ -365,7 +375,7 @@ export default function SettingsView({
                   aria-label="Nhập bản sao lưu"
                   onClick={() => fileInput.current.click()}
                 >
-                  <ArrowDownToLine size={16} aria-hidden="true" /> Nhập dữ liệu
+                  <Upload size={16} aria-hidden="true" /> Nhập dữ liệu
                 </button>
                 <input
                   ref={fileInput}
@@ -383,9 +393,7 @@ export default function SettingsView({
             )}
             <p className="settings-data-hint">
               <FileJson size={12} aria-hidden="true" />
-              <span>
-                JSON · Giao dịch, nguồn tiền, túi, ghi chú & thiết lập · Nhập tối đa 5 MB.
-              </span>
+              <span>Sao lưu toàn bộ sổ · JSON, tối đa 5 MB.</span>
             </p>
           </div>
         </section>
@@ -393,7 +401,6 @@ export default function SettingsView({
       {pendingImport && (
         <Dialog
           title="Khôi phục bản sao lưu?"
-          subtitle="Xem lại bản sao lưu trước khi áp dụng cho sổ của bạn."
           onClose={() => setPendingImport(null)}
           className="settings-restore-dialog"
         >

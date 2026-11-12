@@ -1,0 +1,232 @@
+/* All dialog fields use the date picker's surface and interaction states. */
+html[data-theme] body .dialog {
+  --dialog-field-fill: #fff;
+  --dialog-field-edge: #e7deee;
+  --dialog-field-shadow: 0 0 0 transparent;
+  --dialog-field-hover: #cdb8df;
+  --dialog-field-focus: #b292cc;
+  --dialog-field-ring: #a48bc814;
+  --dialog-field-ink: var(--text-primary);
+  --dialog-field-icon: var(--text-accent);
+  --dialog-field-height: var(--transaction-input-height, 42px);
+}
+html[data-theme='dark'] body .dialog {
+  --dialog-field-fill: linear-gradient(135deg, #2b2b45, #1b263b 70%, #29263f);
+  --dialog-field-edge: #7d86ab70;
+  --dialog-field-shadow: inset 0 1px 2px #c2d2ff0d;
+  --dialog-field-hover: #ab99db;
+  --dialog-field-focus: #bc9cfa;
+  --dialog-field-ring: #b18ae421;
+  --dialog-field-ink: #e3eaff;
+  --dialog-field-icon: #bdabed;
+}
+html[data-theme]
+  body
+  .dialog
+  :is(
+    .field
+      > input:not(
+        [type='hidden'],
+        [type='checkbox'],
+        [type='radio'],
+        [type='file'],
+        [type='color'],
+        [type='range']
+      ),
+    .field > select,
+    textarea,
+    .transaction-control,
+    .budget-editor-control,
+    .transaction-field-trigger,
+    .history-select-trigger,
+    .bag-search
+  ) {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--dialog-field-edge);
+  border-radius: 8px;
+  background: var(--dialog-field-fill);
+  color: var(--dialog-field-ink);
+  box-shadow: var(--dialog-field-shadow);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-control);
+  font-weight: var(--font-weight-field);
+  line-height: var(--line-height-control);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+html[data-theme]
+  body
+  .dialog
+  :is(
+    .field
+      > input:not(
+        [type='hidden'],
+        [type='checkbox'],
+        [type='radio'],
+        [type='file'],
+        [type='color'],
+        [type='range']
+      ),
+    .field > select,
+    .transaction-control,
+    .budget-editor-control,
+    .transaction-field-trigger,
+    .history-select-trigger,
+    .bag-search
+  ) {
+  height: var(--dialog-field-height);
+  min-height: var(--dialog-field-height);
+}
+html[data-theme]
+  body
+  .dialog
+  :is(
+    .field
+      > input:not(
+        [type='hidden'],
+        [type='checkbox'],
+        [type='radio'],
+        [type='file'],
+        [type='color'],
+        [type='range']
+      ),
+    .field > select,
+    textarea,
+    .transaction-field-trigger,
+    .history-select-trigger,
+    .bag-search
+  ) {
+  padding: 9px var(--control-padding-inline);
+}
+html[data-theme]
+  body
+  .dialog
+  :is(.transaction-field-trigger, .history-select-trigger, .bag-search)
+  > svg {
+  color: var(--dialog-field-icon);
+}
+html[data-theme]
+  body
+  .dialog
+  :is(.transaction-control, .budget-editor-control, .bag-search)
+  > input {
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  border: 0 !important;
+  background: transparent;
+  color: var(--dialog-field-ink);
+  box-shadow: none;
+  font-family: inherit;
+  font-size: var(--font-control);
+  font-weight: var(--font-weight-field);
+  line-height: var(--line-height-control);
+}
+html[data-theme]
+  body
+  .dialog
+  :is(.transaction-control, .budget-editor-control, .bag-search)
+  > input:focus {
+  outline: none;
+  box-shadow: none;
+}
+html[data-theme] body .dialog :is(input, textarea)::placeholder {
+  color: var(--text-placeholder);
+  font-size: var(--font-control);
+  font-weight: var(--font-weight-field);
+  opacity: 1;
+}
+/* Keep the note editor's paper preview when a paper color is selected. */
+html[data-theme='light'] body .dialog.note-dialog .field > textarea {
+  --dialog-field-fill:
+    repeating-linear-gradient(transparent 0 27px, var(--note-paper-rule) 27px 28px),
+    var(--note-paper-color);
+  line-height: 28px;
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme]
+    body
+    .dialog
+    :is(
+      .field
+        > input:not(
+          [type='hidden'],
+          [type='checkbox'],
+          [type='radio'],
+          [type='file'],
+          [type='color'],
+          [type='range']
+        ),
+      .field > select,
+      textarea,
+      .transaction-control,
+      .budget-editor-control,
+      .transaction-field-trigger,
+      .history-select-trigger,
+      .bag-search
+    ):hover:not(:disabled):not([aria-disabled='true']) {
+    border-color: var(--dialog-field-hover);
+  }
+}
+html[data-theme]
+  body
+  .dialog
+  :is(
+    .field
+      > input:not(
+        [type='hidden'],
+        [type='checkbox'],
+        [type='radio'],
+        [type='file'],
+        [type='color'],
+        [type='range']
+      ):focus,
+    .field > select:focus,
+    textarea:focus,
+    .transaction-control:focus-within,
+    .budget-editor-control:focus-within,
+    .bag-search:focus-within,
+    .transaction-field-trigger:focus-visible,
+    .transaction-field-trigger.is-open,
+    .history-select-trigger:focus-visible,
+    .history-select-trigger.is-open
+  ) {
+  outline: none;
+  border-color: var(--dialog-field-focus) !important;
+  box-shadow:
+    var(--dialog-field-shadow),
+    0 0 0 3px var(--dialog-field-ring);
+}
+html[data-theme]
+  body
+  .dialog
+  :is(
+    .field > input[aria-invalid='true'],
+    .field > select[aria-invalid='true'],
+    textarea[aria-invalid='true'],
+    .transaction-control.is-invalid,
+    .budget-editor-control.is-invalid,
+    .transaction-field-trigger[aria-invalid='true'],
+    .history-select-trigger[aria-invalid='true']
+  ) {
+  border-color: var(--text-danger) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme]
+    body
+    .dialog
+    :is(
+      input,
+      textarea,
+      select,
+      .transaction-control,
+      .budget-editor-control,
+      .transaction-field-trigger,
+      .history-select-trigger,
+      .bag-search
+    ) {
+    transition: none;
+  }
+}

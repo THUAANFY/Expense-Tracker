@@ -18,7 +18,6 @@ export default function NoteDialog({ note, onSave, onClose, onDelete }) {
   return (
     <Dialog
       title={note ? 'Chỉnh lại một chút' : 'Một ý nghĩ nhỏ'}
-      subtitle="Lưu lại kế hoạch, lời nhắc hoặc điều bạn muốn nhớ."
       onClose={onClose}
       className={`note-dialog paper-${form.color}`}
     >
@@ -109,7 +108,9 @@ export default function NoteDialog({ note, onSave, onClose, onDelete }) {
           </div>
           {confirmDelete && (
             <div className="delete-confirm" ref={confirmationRef}>
-              <span>Xóa ghi chú này?</span>
+              <span>
+                Xóa ghi chú “<strong>{note.title || 'Không có tiêu đề'}</strong>”?
+              </span>
               <button type="button" className="danger-text" onClick={() => onDelete(note.id)}>
                 Xác nhận xóa
               </button>

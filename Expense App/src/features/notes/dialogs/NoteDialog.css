@@ -48,8 +48,8 @@
 .note-dialog .dialog-heading h2 {
   margin-top: 6px;
   color: var(--text-primary);
-  font-size: 20px;
-  font-weight: 600;
+  font-size: var(--font-dialog-title);
+  font-weight: var(--font-weight-heading);
   letter-spacing: -0.5px;
 }
 
@@ -113,13 +113,13 @@
   gap: 10px;
   color: var(--text-secondary);
   font-size: var(--font-control-label);
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
 }
 
 .note-editor-label > span {
   color: var(--text-muted);
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   font-variant-numeric: tabular-nums;
 }
 
@@ -174,7 +174,7 @@
   padding: 0;
   color: var(--text-secondary);
   font-size: var(--font-control-label);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .note-paper-swatches {
@@ -329,7 +329,7 @@
     padding: 18px 17px 15px;
   }
   .note-dialog .dialog-heading h2 {
-    font-size: 18px;
+    font-size: var(--font-dialog-title);
   }
   .note-editor-body {
     gap: 15px;

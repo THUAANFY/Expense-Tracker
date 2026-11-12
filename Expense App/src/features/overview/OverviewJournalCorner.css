@@ -59,7 +59,7 @@
 .journal-receipt-title {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.6;
   overflow-wrap: anywhere;
   display: -webkit-box;
@@ -79,7 +79,7 @@
 .journal-receipt-detail > strong {
   color: var(--text-accent);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
@@ -99,7 +99,7 @@
   padding: 5px 8px;
   color: var(--text-accent);
   font-size: var(--font-control);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
 }
 @media (hover: hover) and (pointer: fine) {
   .journal-receipt:hover {

@@ -281,7 +281,12 @@ function CategoryBudgetCard({
           aria-label={`Xem giao dịch ${category.name}`}
           onClick={() => onView(category.id)}
         >
-          Xem chi tiết {theme === 'dark' ? <ArrowRight size={14} /> : <ArrowUpRight size={14} />}
+          <span>Xem chi tiết</span>
+          {theme === 'dark' ? (
+            <ArrowRight size={14} aria-hidden="true" />
+          ) : (
+            <ArrowUpRight size={14} aria-hidden="true" />
+          )}
         </button>
       </div>
     </motion.article>

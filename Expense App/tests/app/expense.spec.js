@@ -46,7 +46,10 @@ test('expense lifecycle, filters, CSV, persistence and deletion', async ({ page 
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Gọn chi tiêu. Nhẹ cuộc sống.')
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill('125000')
@@ -90,7 +93,10 @@ test('income changes totals and month navigation changes the actual data', async
   await seedSampleBook(page)
   await page.goto('/')
   const before = await page.locator('.stat-card').nth(1).locator('.stat-value').innerText()
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.getByRole('dialog')
   await dialog.getByRole('button', { name: 'Khoản thu' }).click()
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill('5000000')
@@ -171,7 +177,10 @@ test('category budget and profile persist without clearing saved records', async
 
 test('keyboard dialog focus and Escape; storage failure is visible', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   await expect(page.getByRole('dialog').getByRole('spinbutton', { name: 'Số tiền' })).toBeFocused()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).not.toBeVisible()
@@ -180,7 +189,10 @@ test('keyboard dialog focus and Escape; storage failure is visible', async ({ pa
       throw new Error('QuotaExceededError')
     }
   })
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.getByRole('dialog')
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill('10000')
   await dialog.getByRole('textbox', { name: 'Tên giao dịch' }).fill('Khoản chưa lưu')
@@ -244,7 +256,9 @@ test('mobile drawer contains keyboard focus and saved toast fits the viewport', 
   await page.keyboard.press('Escape')
   await expect(sidebar).not.toHaveClass(/is-open/)
   await expect(page.getByRole('button', { name: 'Mở menu' })).toBeFocused()
-  const add = page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first()
+  const add = page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
   await add.click()
   const dialog = page.getByRole('dialog')
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill('50000')
@@ -285,7 +299,10 @@ for (const width of [320, 390, 768, 1024, 1440, 1920, 2560]) {
     await navigate(page, 'Tổng quan')
     await page.waitForTimeout(400)
     await page.screenshot({ path: `artifacts/screenshots/overview-${width}.png`, fullPage: true })
-    await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+    await page
+      .locator('.page-heading')
+      .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+      .click()
     await expect(page.getByRole('dialog')).toBeVisible()
     expect(
       await page
@@ -305,7 +322,10 @@ test('short phone viewport can reach settings and save a scrolling dialog', asyn
   expect(box.y + box.height).toBeLessThanOrEqual(568)
   await settings.click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Theo cách của bạn.')
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.getByRole('dialog')
   await dialog.getByRole('spinbutton', { name: 'Số tiền' }).fill('25000')
   await dialog.getByRole('textbox', { name: 'Tên giao dịch' }).fill('Giao dịch màn hình nhỏ')

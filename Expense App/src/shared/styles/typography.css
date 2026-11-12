@@ -1,0 +1,78 @@
+/* Shared type contract. Both themes use these sizes and weights. */
+:root {
+  --font-family-ui: 'May Currency', 'Plus Jakarta Sans Variable', sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-brand: 600;
+
+  --font-weight-heading: var(--font-weight-semibold);
+  --font-weight-body: var(--font-weight-regular);
+  --font-weight-caption: var(--font-weight-regular);
+  --font-weight-label: var(--font-weight-medium);
+  --font-weight-control: var(--font-weight-medium);
+  --font-weight-field: var(--font-weight-regular);
+  --font-weight-badge: var(--font-weight-medium);
+  --font-weight-value: var(--font-weight-semibold);
+
+  --font-page-title: 27px;
+  --font-dialog-title: 20px;
+  --font-section: 15px;
+  --font-card-title: 14px;
+  --font-body: 13px;
+  --font-content: 14px;
+  --font-caption: 12px;
+  --font-meta: 11px;
+  --font-control: 13px;
+  --font-control-label: 12px;
+  --font-control-option: 13px;
+  --font-picker-title: 14px;
+  --font-tab: 12px;
+  --font-badge: 12px;
+  --font-value: 14px;
+  --font-value-large: clamp(22px, 1.8vw, 26px);
+  --font-value-long: 22px;
+
+  /* Existing components keep the same public alias. */
+  --font-small: var(--font-caption);
+
+  --line-height-heading: 1.35;
+  --line-height-section: 1.45;
+  --line-height-body: 1.6;
+  --line-height-caption: 1.5;
+  --line-height-control: 20px;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --font-page-title: 25px;
+  }
+}
+@media (min-width: 761px) and (max-width: 1200px) {
+  :root {
+    --font-value-long: 18px;
+  }
+}
+@media (max-width: 760px) {
+  :root {
+    --font-page-title: 23px;
+    --font-dialog-title: 18px;
+    --font-section: 14px;
+    --font-control-option: 12px;
+    --font-picker-title: 13px;
+    --font-value: 13px;
+    --font-value-large: 22px;
+    --font-value-long: 18px;
+  }
+}
+@media (max-width: 560px) {
+  :root {
+    --font-tab: 12px;
+  }
+}
+@media (max-width: 374px) {
+  :root {
+    --font-page-title: 21px;
+  }
+}

@@ -29,8 +29,8 @@ html[data-theme] .sidebar-cute .sidebar-prompt button.action-button {
   color: var(--action-label);
   font-family: inherit;
   font-size: var(--font-control);
-  font-weight: 500;
-  line-height: 20px;
+  font-weight: var(--font-weight-control);
+  line-height: var(--line-height-control);
   letter-spacing: 0;
   text-align: center;
   text-decoration: none;
@@ -72,9 +72,9 @@ button.action-button:active:not(:disabled) {
 }
 @media (max-width: 560px) {
   html[data-theme] .page-heading .page-actions button.action-button[data-action-layout='header'] {
-    --action-padding: 0;
-    width: 38px;
-    min-width: 38px;
+    --action-padding: 8px 12px;
+    width: auto;
+    min-width: 0;
     height: 38px;
     min-height: 38px;
     border-radius: 11px;
@@ -84,15 +84,15 @@ button.action-button:active:not(:disabled) {
     .page-actions
     button.action-button[data-action-layout='header']
     > span {
-    display: none;
+    display: inline;
   }
   html[data-theme]
     .page-heading
     .page-actions
     button.action-button[data-action-layout='header']
     > svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 }
 @media (max-width: 374px) {

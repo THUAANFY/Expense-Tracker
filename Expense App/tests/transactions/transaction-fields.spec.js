@@ -4,7 +4,10 @@ import { selectMonth } from '../helpers/month-picker.js'
 
 async function openTransaction(page) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   return page.locator('.transaction-dialog')
 }
 

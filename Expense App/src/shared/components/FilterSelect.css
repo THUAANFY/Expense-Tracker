@@ -14,6 +14,7 @@
   background: #fff;
   color: var(--text-primary);
   font-size: var(--font-control);
+  font-weight: var(--font-weight-field);
   line-height: 20px;
   text-align: left;
   transition:
@@ -87,7 +88,7 @@
   padding: 5px var(--select-option-padding-inline) 9px;
   color: var(--text-muted);
   font-size: var(--font-control-label);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.35px;
 }
 .history-select-caption > span:first-child {
@@ -95,7 +96,7 @@
 }
 .history-select-caption > span:last-child {
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   letter-spacing: 0;
   white-space: nowrap;
 }
@@ -158,7 +159,7 @@
   white-space: nowrap;
 }
 .history-select-option.is-selected .history-select-option-copy > span {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .history-select-option-copy > small {
   color: var(--text-muted);

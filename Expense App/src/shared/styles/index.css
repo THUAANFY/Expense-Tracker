@@ -1,65 +1,28 @@
+@import './typography.css';
+
 /* Scale only the dong sign so its underline stays compact beside amounts. */
 @font-face {
   font-family: 'May Currency';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 200 800;
   font-display: swap;
-  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-400-normal.woff2')
-    format('woff2');
-  unicode-range: U+20AB;
-  size-adjust: 82%;
-}
-@font-face {
-  font-family: 'May Currency';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-500-normal.woff2')
-    format('woff2');
-  unicode-range: U+20AB;
-  size-adjust: 82%;
-}
-@font-face {
-  font-family: 'May Currency';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-600-normal.woff2')
-    format('woff2');
-  unicode-range: U+20AB;
-  size-adjust: 82%;
-}
-@font-face {
-  font-family: 'May Currency';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-700-normal.woff2')
-    format('woff2');
+  src: url('@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-vietnamese-wght-normal.woff2')
+    format('woff2-variations');
   unicode-range: U+20AB;
   size-adjust: 82%;
 }
 
 :root {
-  font-family: 'May Currency', 'Be Vietnam Pro', sans-serif;
+  font-family: var(--font-family-ui);
   color: var(--text-primary);
   background: #f7f8fc;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 400;
+  font-weight: var(--font-weight-body);
   font-size: 16px;
-  line-height: 1.6;
-  --font-caption: 12px;
-  --font-small: 12px;
-  --font-body: 13px;
-  --font-content: 14px;
-  --font-section: 16px;
-  --font-control: 13px;
-  --font-control-label: 12px;
-  --font-control-option: 13px;
-  --font-picker-title: 14px;
+  line-height: var(--line-height-body);
   --control-padding-inline: 12px;
   --control-content-gap: 8px;
   --select-panel-padding: 8px;
@@ -97,6 +60,7 @@
 body {
   margin: 0;
   min-width: 320px;
+  font-size: var(--font-body);
 }
 #root {
   min-height: 100svh;
@@ -151,7 +115,17 @@ p {
 h1,
 h2,
 h3 {
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
+}
+h2 {
+  font-size: var(--font-section);
+}
+h3 {
+  font-size: var(--font-card-title);
+}
+strong,
+b {
+  font-weight: var(--font-weight-semibold);
 }
 button {
   border: 0;
@@ -211,8 +185,6 @@ img {
 
 @media (max-width: 760px) {
   :root {
-    --font-control-option: 12px;
-    --font-picker-title: 13px;
     --control-padding-inline: 10px;
   }
 }

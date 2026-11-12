@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Check, RotateCcw } from 'lucide-react'
 import Dialog from '../../../shared/components/Dialog'
+import DialogChoice from '../../../shared/components/DialogChoice'
 import CategoryArt from '../../../shared/illustrations/CategoryArt'
 import { isClosedMonth } from '../../../shared/lib/closedMonths'
 import ClosedMonthNotice from '../../../shared/components/ClosedMonthNotice'
@@ -16,12 +17,7 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
   const category = getCategory(transaction.category)
   const readOnly = isClosedMonth(transaction.date)
   return (
-    <Dialog
-      title="Khoản chi này thế nào?"
-      subtitle="Một cảm nhận ngắn cho lần nhìn lại sau."
-      className="review-dialog"
-      onClose={onClose}
-    >
+    <Dialog title="Khoản chi này thế nào?" className="review-dialog" onClose={onClose}>
       <div className="review-dialog-transaction">
         <span style={{ background: category.background }}>
           <CategoryArt category={category.id} size={34} />
@@ -50,12 +46,11 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
           {readOnly && <ClosedMonthNotice />}
           <div className="review-dialog-choices" role="group" aria-label="Cảm nhận về khoản chi">
             {REVIEW_OPTIONS.map((option) => (
-              <button
+              <DialogChoice
                 key={option.id}
-                type="button"
                 disabled={readOnly}
                 data-mood={option.id}
-                aria-pressed={rating === option.id}
+                selected={rating === option.id}
                 onClick={() => {
                   setRating(option.id)
                   setError('')
@@ -63,8 +58,7 @@ export default function ReviewDialog({ transaction, onSave, onClear, onClose }) 
               >
                 <MoodArt mood={option.id} />
                 <span>{option.label}</span>
-                {rating === option.id && <Check size={12} />}
-              </button>
+              </DialogChoice>
             ))}
           </div>
           <label className="review-note-field">

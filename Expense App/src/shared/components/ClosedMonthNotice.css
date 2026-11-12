@@ -23,7 +23,7 @@
 }
 .closed-month-notice strong {
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .closed-month-notice button {
   display: inline-flex;
@@ -33,7 +33,7 @@
   padding: 6px 0 6px 8px;
   color: var(--text-accent);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
 }
 .transaction-form > .closed-month-notice,
 .source-form > .closed-month-notice {

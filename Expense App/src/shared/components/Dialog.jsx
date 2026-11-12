@@ -5,14 +5,7 @@ import { X } from 'lucide-react'
 import './Dialog.css'
 import { SaveFeedbackContext } from '../hooks/useBookData'
 
-export default function Dialog({
-  title,
-  subtitle,
-  children,
-  onClose,
-  wide = false,
-  className = '',
-}) {
+export default function Dialog({ title, children, onClose, wide = false, className = '' }) {
   const ref = useRef(null)
   const { saveError, saving } = useContext(SaveFeedbackContext)
   const headingId = useId()
@@ -59,7 +52,6 @@ export default function Dialog({
           <div>
             <span className="eyebrow">MỘT CHÚT GHI CHÉP</span>
             <h2 id={headingId}>{title}</h2>
-            {subtitle && <p>{subtitle}</p>}
           </div>
           <button className="icon-button" aria-label="Đóng" onClick={onClose}>
             <X size={20} />

@@ -1,5 +1,12 @@
 /* Compact occasion cards, with type accents and the user's selected bag color. */
 html[data-theme='dark'] .bags-workspace .bags-grid .bag-card {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  column-gap: 12px;
+  row-gap: 4px;
+  padding: 10px;
   isolation: isolate;
   border: 1px solid transparent;
   border-radius: 18px;
@@ -42,36 +49,34 @@ html[data-theme='dark'] .bags-workspace .bags-grid .bag-card:focus-visible {
   outline-offset: 3px;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-header {
+  grid-column: 2;
+  grid-row: 1;
   gap: 8px;
-  padding: 12px 14px 0;
+  padding: 0;
   background: transparent;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-index {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   gap: 7px;
   background: transparent;
   color: #cbd5eb;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-index > span {
-  width: 23px;
-  height: 23px;
-  border: 1px solid color-mix(in srgb, var(--bag-card-accent) 40%, transparent);
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--bag-card-accent) 12%, #17243b);
-  color: color-mix(in srgb, var(--bag-card-accent) 70%, white);
-  font-size: 11px;
-  font-weight: 600;
+  display: none;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-status {
   gap: 5px;
-  padding: 3px 7px;
+  padding: 2px 6px;
   border: 1px solid #b3bbdf38;
   border-radius: 999px;
   background: #1320374d;
   color: #d2dcef;
-  font-size: var(--font-caption);
-  font-weight: 400;
+  font-size: var(--font-meta);
+  font-weight: var(--font-weight-regular);
   line-height: 1.4;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-status > span {
@@ -85,32 +90,40 @@ html[data-theme='dark'] .bags-workspace .bag-card[data-bag-status='done'] .bag-c
   color: #97dfc5;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-main {
-  grid-template-columns: minmax(0, 1fr) 116px;
-  gap: 8px;
-  min-height: 108px;
-  padding: 8px 14px;
-  background: transparent;
+  display: contents;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-copy {
-  gap: 5px;
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  gap: 4px;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-name {
   color: #f2f4ff;
-  font-size: var(--font-section);
-  font-weight: 600;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--font-card-title);
+  font-weight: var(--font-weight-semibold);
   line-height: 1.4;
   letter-spacing: -0.2px;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-description {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: #becce3;
-  font-size: var(--font-body);
-  font-weight: 400;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-regular);
   line-height: 1.5;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
-  height: 94px;
+  height: 68px;
   background: transparent;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene::before,
@@ -119,14 +132,16 @@ html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene::after {
   content: none;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene > .bag-art {
-  width: 132px;
+  width: 88px;
   max-width: none;
   height: auto;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-footer {
-  gap: 10px;
-  margin: 0 14px;
-  padding: 11px 0 12px;
+  grid-column: 1 / -1;
+  grid-row: 3;
+  gap: 6px;
+  margin: 3px 0 0;
+  padding: 6px 0 0;
   border-top: 1px solid #a5b8dc2e;
   background: transparent;
 }
@@ -135,61 +150,80 @@ html[data-theme='dark'] .bags-workspace .bag-card .bag-card-footer::after {
   display: none;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers {
-  align-items: flex-start;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers > span {
-  gap: 4px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers > span:last-child {
+  justify-content: flex-end;
+}
+html[data-theme='dark'] .bags-workspace .bag-card .bag-card-count {
+  display: none;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers small {
   color: #bdc9e3;
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   line-height: 1.4;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers strong {
   color: #f1f4ff;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.3px;
+  font-size: var(--font-value);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-section);
+  letter-spacing: 0;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers > span > span {
   color: #dbe3f5;
-  font-size: var(--font-body);
-  font-weight: 500;
-  line-height: 1.5;
+  font-size: var(--font-value);
+  font-weight: var(--font-weight-value);
+  line-height: var(--line-height-section);
 }
 html[data-theme='dark'] .bags-workspace .bag-card[data-large-values] .bag-card-numbers {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 7px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 html[data-theme='dark'] .bags-workspace .bag-card[data-large-values] .bag-card-numbers strong {
   overflow: visible;
-  font-size: 18px;
+  font-size: var(--font-caption);
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 html[data-theme='dark']
   .bags-workspace
   .bag-card[data-large-values]
   .bag-card-numbers
   > span:last-child {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: left;
+  display: grid;
+  justify-content: end;
+  text-align: right;
+}
+html[data-theme='dark']
+  .bags-workspace
+  .bag-card[data-large-values]
+  .bag-card-numbers
+  > span:first-child {
+  display: grid;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-bottom {
-  gap: 10px;
+  gap: 8px;
   align-items: flex-end;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-line {
   display: grid;
-  gap: 6px;
+  gap: 4px;
   color: #c6d3eb;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-track {
-  height: 6px;
+  height: 4px;
   background: #53617c66;
   box-shadow: inset 0 1px 1px #0e152633;
 }
@@ -226,30 +260,33 @@ html[data-theme='dark'] .bags-workspace .bag-card .bag-budget-line > span:last-c
 html[data-theme='dark'] .bags-workspace .bag-card .bag-no-budget {
   color: inherit;
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   line-height: 1.4;
 }
 html[data-theme='dark'] .bags-workspace .bag-card .bag-card-open {
-  width: 31px;
-  height: 31px;
+  width: 26px;
+  height: 26px;
   border: 1px solid color-mix(in srgb, var(--bag-card-accent) 40%, transparent);
   border-radius: 50%;
   background: color-mix(in srgb, var(--bag-card-accent) 12%, #19283e);
   color: color-mix(in srgb, var(--bag-card-accent) 65%, white);
   box-shadow: inset 0 1px 1px #c3d6ff14;
 }
-@container bags (max-width: 580px) {
-  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-main {
-    grid-template-columns: minmax(0, 1fr) 104px;
-    gap: 10px;
-    min-height: 100px;
-    padding-right: 13px;
+@media (min-width: 1200px) {
+  html[data-theme='dark'] .bags-workspace .bags-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-name {
-    font-size: var(--font-content);
+}
+@media (max-width: 374px) {
+  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-scene > .bag-art {
-    width: 120px;
+  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers > span {
+    display: grid;
+  }
+  html[data-theme='dark'] .bags-workspace .bag-card .bag-card-numbers > span:last-child {
+    justify-content: end;
+    text-align: right;
   }
 }
 @media (prefers-reduced-motion: reduce) {

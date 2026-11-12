@@ -118,7 +118,7 @@
   background: #f3ebf8;
   color: var(--text-secondary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   white-space: nowrap;
   transition:
     color 160ms ease,
@@ -141,7 +141,7 @@
   background: #eadff3;
   color: var(--text-accent);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   font-variant-numeric: tabular-nums;
 }
 .notebook-search {
@@ -243,7 +243,7 @@
   border-color: #b69acb;
   background: #f2e7fa;
   color: var(--text-accent);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   box-shadow: 0 0 0 1px #fff9 inset;
 }
 .notebook-filter-dot {
@@ -436,8 +436,8 @@
   overflow: hidden;
   margin: 0;
   color: var(--text-primary);
-  font-size: var(--font-content);
-  font-weight: 600;
+  font-size: var(--font-card-title);
+  font-weight: var(--font-weight-heading);
   line-height: 1.55;
   overflow-wrap: anywhere;
   -webkit-line-clamp: 2;
@@ -528,7 +528,7 @@
   overflow: hidden;
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -575,7 +575,7 @@
 .notebook-transaction-footer > span:first-child {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
 }
 .notebook-empty {
@@ -648,7 +648,7 @@
 }
 .notes-workspace .notebook-empty.is-filtered h3 {
   margin: 0;
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 .notes-workspace .notebook-empty.is-filtered p {
   margin: 6px 0 0;

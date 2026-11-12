@@ -63,7 +63,10 @@ async function navigate(page, label) {
   await expect(page.locator('.page-content')).toBeVisible()
 }
 async function prepare(page, title) {
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.locator('.transaction-dialog')
   await dialog.getByRole('textbox', { name: 'Tên giao dịch', exact: true }).fill(title)
   await dialog.getByRole('spinbutton', { name: 'Số tiền', exact: true }).fill('25000')

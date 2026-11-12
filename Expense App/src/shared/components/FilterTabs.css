@@ -55,9 +55,9 @@ html[data-theme] body [data-filter-tabs][role] > button {
   box-shadow: none;
   color: var(--filter-text);
   font-family: inherit;
-  font-size: var(--font-control);
-  font-weight: 500;
-  line-height: 20px;
+  font-size: var(--font-tab);
+  font-weight: var(--font-weight-control);
+  line-height: var(--line-height-control);
   letter-spacing: 0;
   white-space: nowrap;
   transform: none;
@@ -92,8 +92,8 @@ html[data-theme] body [data-filter-tabs][role] > button > [data-filter-count] {
   background: var(--filter-count);
   box-shadow: none;
   color: inherit;
-  font-size: var(--font-caption);
-  font-weight: 500;
+  font-size: var(--font-badge);
+  font-weight: var(--font-weight-badge);
   line-height: 18px;
   font-variant-numeric: tabular-nums;
 }
@@ -137,7 +137,6 @@ html[data-theme] body [data-filter-tabs][role] > button:disabled {
   html[data-theme] body [data-filter-tabs][role] > button {
     gap: 5px;
     padding-inline: 9px;
-    font-size: var(--font-caption);
   }
 }
 @media (prefers-reduced-motion: reduce) {

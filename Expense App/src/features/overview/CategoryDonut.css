@@ -46,7 +46,7 @@ html[data-theme='dark'] .fintech-category-panel .month-picker-trigger {
   padding: 5px 10px;
   gap: 7px;
   border-radius: inherit;
-  font-size: 12px;
+  font-size: var(--font-caption);
   line-height: 1.4;
 }
 html[data-theme='dark'] .overview-workspace .fintech-category-panel .donut-wrap {
@@ -106,7 +106,7 @@ html[data-theme='dark'] .fintech-category-panel .fintech-category-caption {
   justify-content: space-between;
   min-width: 0;
   gap: 8px;
-  font-size: 12px;
+  font-size: var(--font-caption);
   line-height: 1.3;
   color: var(--text-primary);
 }
@@ -118,7 +118,7 @@ html[data-theme='dark'] .fintech-category-panel .fintech-category-caption > span
 html[data-theme='dark'] .fintech-category-panel .fintech-category-caption b {
   flex-shrink: 0;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
 }
 html[data-theme='dark'] .fintech-category-panel .fintech-category-track {
@@ -144,15 +144,15 @@ html[data-theme='dark']
   min-width: 76px;
   text-align: right;
   white-space: nowrap;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-control);
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
 }
 html[data-theme='dark'] .overview-workspace .fintech-category-panel .category-empty-message {
   padding: 7px 0;
-  font-size: 12px;
+  font-size: var(--font-caption);
   white-space: normal;
 }
 @media (hover: hover) and (pointer: fine) {

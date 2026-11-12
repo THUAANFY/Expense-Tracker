@@ -46,7 +46,7 @@
   margin: 16px 0 10px;
   color: #563570;
   font-size: clamp(24px, 1.85vw, 32px);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.3;
   letter-spacing: -0.8px;
 }
@@ -60,7 +60,7 @@
   align-items: center;
   flex-wrap: nowrap;
   color: #624875;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 .overview-workspace .balance-dot {
   flex-shrink: 0;
@@ -109,7 +109,7 @@
 }
 .overview-workspace .stat-foot {
   min-height: 22px;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 .overview-workspace .pill {
   padding: 3px 6px;
@@ -222,7 +222,7 @@
 .overview-workspace .recent-panel .table-head {
   padding-inline: 12px;
   border-bottom: 0;
-  font-size: 13px;
+  font-size: var(--font-body);
 }
 .overview-workspace .transaction-row {
   margin-top: 7px;
@@ -255,7 +255,7 @@
   background: #fffcf8;
 }
 .overview-workspace .category-panel .panel-heading h2 {
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .overview-workspace .tiny-label {
   padding: 3px 7px;
@@ -353,7 +353,7 @@
 }
 .overview-workspace .budget-panel .panel-heading h2 {
   color: #3e5937;
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .overview-workspace .budget-panel .panel-heading > .icon-button {
   flex-shrink: 0;
@@ -370,7 +370,7 @@
 .overview-workspace .budget-numbers > strong {
   color: #3e613b;
   font-size: 22px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .overview-workspace .budget-numbers > span:last-child {
   padding: 2px 5px;
@@ -402,7 +402,7 @@
 }
 .overview-workspace .side-note-heading h2 {
   color: #594333;
-  font-size: 14px;
+  font-size: var(--font-card-title);
 }
 .overview-workspace .dashboard-side > .note-card {
   border-radius: 17px;
@@ -463,7 +463,7 @@
 .overview-workspace .quick-categories > button > strong {
   color: #51405d;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   white-space: nowrap;
 }
 .overview-workspace .quick-category-plus {
@@ -563,7 +563,7 @@
   }
   .overview-workspace .category-panel .panel-heading h2,
   .overview-workspace .budget-panel .panel-heading h2 {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
 }
 @media (max-width: 1050px) {
@@ -656,7 +656,7 @@
     padding: 15px 14px 6px;
   }
   .overview-workspace .recent-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .overview-workspace .recent-panel .text-button {
     font-size: 11px;
@@ -673,7 +673,7 @@
     gap: 5px 12px;
   }
   .overview-workspace .category-strip .section-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .overview-workspace .quick-categories {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -694,7 +694,7 @@
     padding: 16px;
   }
   .overview-workspace .category-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .overview-workspace .donut-wrap {
     width: 174px;
@@ -706,10 +706,10 @@
   }
   .overview-workspace .legend-name,
   .overview-workspace .donut-legend > button > strong {
-    font-size: 12px;
+    font-size: var(--font-caption);
   }
   .overview-workspace .budget-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .overview-budget-intro > div > span {
     font-size: 8px;
@@ -737,7 +737,7 @@
     font-size: 23px;
   }
   .overview-workspace .stat-value {
-    font-size: 16px;
+    font-size: var(--font-section);
   }
   .overview-workspace .stat-label {
     font-size: 10px;
@@ -762,7 +762,7 @@
     width: 65px;
   }
   .overview-workspace .chart-panel .panel-heading h2 {
-    font-size: 14px;
+    font-size: var(--font-card-title);
   }
   .overview-workspace .chart-panel {
     padding-inline: 13px;

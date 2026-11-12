@@ -47,8 +47,8 @@ html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-wave {
 }
 html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-label {
   color: #adbad8;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-regular);
   line-height: 1.5;
 }
 html[data-theme='dark'] .fintech-journal-receipt .journal-receipt-action {
@@ -84,14 +84,14 @@ html[data-theme='dark'] .fintech-journal-receipt .journal-entry-copy {
 html[data-theme='dark'] .overview-workspace .fintech-journal-receipt .journal-receipt-title {
   color: #f5f3ff;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.45;
 }
 html[data-theme='dark'] .fintech-journal-receipt .journal-entry-meta {
   min-width: 0;
   overflow: hidden;
   color: #b0bbd8;
-  font-size: 12px;
+  font-size: var(--font-caption);
   line-height: 1.5;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -103,7 +103,7 @@ html[data-theme='dark'] .fintech-journal-receipt .journal-entry-amount {
   -webkit-background-clip: text;
   color: transparent;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.5px;
@@ -123,7 +123,7 @@ html[data-theme='dark'] .fintech-journal-corner .journal-empty-note {
   border-radius: 16px;
   background: linear-gradient(135deg, #1c263bcc, #28213c80);
   color: #bbc5df;
-  font-size: 13px;
+  font-size: var(--font-body);
   line-height: 1.75;
 }
 html[data-theme='dark'] .fintech-journal-corner .journal-empty-note > button {
@@ -136,7 +136,7 @@ html[data-theme='dark'] .fintech-journal-corner .journal-empty-note > button {
   border-radius: 10px;
   background: linear-gradient(135deg, #744cbe66, #48316b66);
   color: #e6d8ff;
-  font-size: 12px;
+  font-size: var(--font-caption);
 }
 @container journal-corner (max-width: 320px) {
   html[data-theme='dark'] .overview-workspace .fintech-journal-corner .fintech-journal-receipt {

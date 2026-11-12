@@ -10,7 +10,7 @@ import {
   X,
 } from 'lucide-react'
 import CategoryArt from '../../shared/illustrations/CategoryArt'
-import OverviewArt from '../overview/OverviewArt'
+import NotificationEmptyArt from './NotificationEmptyArt'
 import { FieldPopover, useFieldPopover } from '../../shared/components/FieldPopover'
 import useNotifications from './useNotifications'
 import { dateKey } from '../../shared/storage/data'
@@ -197,7 +197,7 @@ export default function NotificationCenter({ data, storageError, onNavigate }) {
             </ul>
           ) : (
             <div className="notification-empty">
-              <OverviewArt variant="cloud" className="notification-empty-art" />
+              <NotificationEmptyArt read={filter === 'unread'} />
               <h3>{filter === 'unread' ? 'Đã xem hết rồi!' : 'Mọi thứ đang nhẹ nhàng'}</h3>
               <p>
                 {filter === 'unread'

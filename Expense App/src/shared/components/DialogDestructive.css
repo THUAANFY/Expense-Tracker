@@ -1,0 +1,153 @@
+/* Destructive actions share one dark treatment across every editor. */
+html[data-theme='dark']
+  body
+  .dialog
+  :is(.delete-confirm, .source-delete-confirm, .bag-delete-confirm) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid #bd718a80;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #352736, #262b41);
+  box-shadow: inset 0 1px 0 #ffc2d511;
+  color: var(--text-primary);
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-body);
+  line-height: var(--line-height-body);
+}
+html[data-theme]
+  body
+  .dialog
+  :is(.delete-confirm, .source-delete-confirm, .bag-delete-confirm)
+  strong {
+  color: inherit;
+  font-weight: var(--font-weight-value);
+}
+html[data-theme='dark']
+  body
+  .dialog
+  :is(.delete-confirm, .source-delete-confirm, .bag-delete-confirm)
+  > :is(p, span) {
+  flex: 1 1 200px;
+  min-width: 0;
+  margin: 0;
+  color: var(--text-primary);
+  line-height: var(--line-height-body);
+  overflow-wrap: anywhere;
+}
+html[data-theme='dark']
+  body
+  .dialog
+  :is(.delete-confirm, .source-delete-confirm, .bag-delete-confirm)
+  > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 32px;
+  max-width: 100%;
+  margin: 0;
+  padding: 6px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-secondary);
+  font-size: var(--font-control);
+  font-weight: var(--font-weight-control);
+  line-height: var(--line-height-control);
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  text-underline-offset: 4px;
+  transition: color 150ms ease;
+}
+html[data-theme='dark'] body .dialog .dialog-actions > .icon-button.danger-text {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  border: 1px solid #b76d8661;
+  border-radius: 10px;
+  background: #ff789d0d;
+  box-shadow: none;
+  transform: none;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+html[data-theme='dark'] body .dialog .dialog-actions > .icon-button.danger-text > svg {
+  display: block;
+}
+html[data-theme='dark'] body .dialog .dialog-actions > .icon-button.danger-text:disabled {
+  border-color: var(--surface-border);
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+html[data-theme='dark']
+  body
+  .dialog
+  :is(
+    .delete-confirm > button,
+    .source-delete-confirm > button,
+    .bag-delete-confirm > button,
+    .dialog-actions > .icon-button.danger-text
+  ):focus-visible {
+  outline: 2px solid #f6b4d0;
+  outline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme='dark']
+    body
+    .dialog
+    :is(.delete-confirm, .source-delete-confirm, .bag-delete-confirm)
+    > button:hover:not(:disabled) {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+  html[data-theme='dark']
+    body
+    .dialog
+    :is(.delete-confirm, .source-delete-confirm, .bag-delete-confirm)
+    > button.danger-text:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+  html[data-theme='dark']
+    body
+    .dialog
+    .dialog-actions
+    > .icon-button.danger-text:hover:not(:disabled) {
+    border-color: #eea0ba;
+    background: #ff789d21;
+  }
+}
+html[data-theme='dark']
+  body
+  .dialog
+  .dialog-actions
+  > .icon-button.danger-text:active:not(:disabled) {
+  border-color: #f2afc5;
+  background: #422b3e;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='dark']
+    body
+    .dialog
+    :is(
+      .delete-confirm > button,
+      .source-delete-confirm > button,
+      .bag-delete-confirm > button,
+      .dialog-actions > .icon-button.danger-text
+    ) {
+    transition: none;
+  }
+}

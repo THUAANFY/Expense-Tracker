@@ -147,7 +147,7 @@
 }
 .worth-summary-name {
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.6;
   white-space: nowrap;
 }
@@ -161,7 +161,7 @@
 .worth-summary-tally strong {
   color: var(--mood-ink);
   font-size: 22px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
 }
 .worth-summary-tally > span {
@@ -262,7 +262,7 @@
 .worth-library-title h2 {
   margin: 0;
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.5;
 }
 .worth-library-title p {
@@ -284,7 +284,7 @@
 }
 .worth-progress-label strong {
   color: var(--text-accent);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
 }
 .worth-progress-track {
@@ -485,7 +485,7 @@
 .worth-transaction-title strong {
   overflow: hidden;
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   line-height: 1.6;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -514,7 +514,7 @@
 .worth-transaction-meta > strong {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -584,7 +584,7 @@
   box-shadow:
     0 0 0 2px #fff inset,
     0 2px 0 var(--mood-paper);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
 }
 .worth-rating-check {
   position: absolute;
@@ -686,7 +686,7 @@
   margin: 5px 0 0;
   color: var(--text-primary);
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 .worth-empty p {
   max-width: 360px;
@@ -745,8 +745,8 @@
 .review-dialog .dialog-heading h2 {
   margin-top: 6px;
   color: var(--text-primary);
-  font-size: 20px;
-  font-weight: 600;
+  font-size: var(--font-dialog-title);
+  font-weight: var(--font-weight-heading);
   line-height: 1.5;
   letter-spacing: -0.5px;
 }
@@ -795,7 +795,7 @@
   overflow: hidden;
   color: var(--text-primary);
   font-size: var(--font-content);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -807,7 +807,7 @@
 .review-dialog-transaction > strong {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -860,7 +860,7 @@
   box-shadow:
     0 0 0 3px #fff inset,
     0 2px 0 var(--mood-paper);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
 }
 .review-dialog-choices > button > svg:not(.mood-art) {
   position: absolute;
@@ -881,12 +881,12 @@
   gap: 4px 8px;
   color: var(--text-secondary);
   font-size: var(--font-control-label);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .review-note-field > span > span {
   color: var(--text-muted);
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 .review-note-field textarea {
   width: 100%;
@@ -1238,7 +1238,7 @@
     padding: 15px 16px 13px;
   }
   .review-dialog .dialog-heading h2 {
-    font-size: 18px;
+    font-size: var(--font-dialog-title);
   }
   .review-dialog-transaction {
     margin: 13px 16px 0;

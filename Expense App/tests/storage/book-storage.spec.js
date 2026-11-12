@@ -39,7 +39,10 @@ async function seed(page, value = book()) {
 const saved = (page) => page.evaluate((key) => JSON.parse(localStorage.getItem(key)), STORAGE_KEY)
 const original = (page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)
 async function prepareAdd(page, title, amount = 20000) {
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.getByRole('dialog')
   await dialog.getByRole('textbox', { name: 'Tên giao dịch', exact: true }).fill(title)
   await dialog.getByRole('spinbutton', { name: 'Số tiền', exact: true }).fill(String(amount))

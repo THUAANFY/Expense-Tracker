@@ -22,7 +22,7 @@ html[data-theme='dark'] .categories-workspace .category-library-mark {
 html[data-theme='dark'] .categories-workspace .category-library-heading h2 {
   gap: 8px;
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.4;
   letter-spacing: -0.2px;
 }
@@ -35,7 +35,7 @@ html[data-theme='dark'] .categories-workspace .category-library-heading h2 > spa
   background: linear-gradient(130deg, #b355ec, #6944e3);
   color: #fff;
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   box-shadow: inset 0 1px 2px #f7dcff40;
 }
 html[data-theme='dark'] .categories-workspace .category-library-heading p {
@@ -52,7 +52,7 @@ html[data-theme='dark'] .categories-workspace .category-sort-button {
   background: linear-gradient(115deg, #7546ad38, #253650);
   color: #ece9ff;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
   box-shadow: inset 0 1px 2px #b8b7ff26;
 }
 html[data-theme='dark'] .categories-workspace .category-sort-button:is(:hover, .is-active) {
@@ -75,7 +75,7 @@ html[data-theme='dark'] .categories-workspace .category-status-filters > button 
   background: linear-gradient(145deg, #252d48, #151c30);
   color: #dfe3f6;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
 }
 html[data-theme='dark'] .categories-workspace .category-status-filters > button:hover {
   border-color: #b49be280;
@@ -178,7 +178,7 @@ html[data-theme='dark'] .categories-workspace .budget-category-heading > div {
 html[data-theme='dark'] .categories-workspace .budget-category-heading h3 {
   color: #f1f3ff;
   font-size: var(--font-section);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   line-height: 1.4;
 }
 html[data-theme='dark'] .categories-workspace .budget-category-heading p {
@@ -269,7 +269,7 @@ html[data-theme='dark'] .categories-workspace .budget-category-limit strong,
 html[data-theme='dark'] .categories-workspace .budget-category-limit > span:last-child {
   color: #edf1ff;
   font-size: var(--font-caption);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 html[data-theme='dark'] .categories-workspace .category-budget-progress {
   height: 8px;
@@ -356,6 +356,7 @@ html[data-theme='dark'] .categories-workspace .budget-transaction-count::before 
   content: '';
 }
 html[data-theme='dark'] .categories-workspace .budget-category-footer > button {
+  --category-detail-color: color-mix(in srgb, var(--category-accent) 65%, #fff);
   gap: 4px;
   min-height: 32px;
   margin-right: -4px;
@@ -363,14 +364,22 @@ html[data-theme='dark'] .categories-workspace .budget-category-footer > button {
   border-radius: 7px;
   color: #f0f2ff;
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-control);
+  background: transparent;
 }
 html[data-theme='dark'] .categories-workspace .budget-category-footer > button > svg {
   width: 12px;
   height: 12px;
 }
-html[data-theme='dark'] .categories-workspace .budget-category-footer > button:hover {
-  background: #b5bcf41a;
+html[data-theme='dark'] .categories-workspace .budget-category-footer > button:focus-visible {
+  background: transparent;
+  color: var(--category-detail-color);
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme='dark'] .categories-workspace .budget-category-footer > button:hover {
+    background: transparent;
+    color: var(--category-detail-color);
+  }
 }
 html[data-theme='dark'] .categories-workspace .category-budget-library button:focus-visible {
   outline: 2px solid #c1b1ff;
@@ -402,7 +411,7 @@ html[data-theme='dark'] .categories-workspace .category-budget-library button:fo
   }
   html[data-theme='dark'] .categories-workspace .category-library-heading h2,
   html[data-theme='dark'] .categories-workspace .budget-category-heading h3 {
-    font-size: var(--font-content);
+    font-size: var(--font-card-title);
   }
   html[data-theme='dark'] .categories-workspace .category-budget-grid {
     gap: 14px;

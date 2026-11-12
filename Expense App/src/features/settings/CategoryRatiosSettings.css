@@ -1,17 +1,3 @@
-.settings-ratios-scope,
-.settings-ratios-preview-label {
-  color: var(--text-secondary);
-  font-size: var(--settings-font-caption);
-  line-height: 1.7;
-}
-.settings-ratios-preview-label {
-  margin-top: 4px;
-  color: var(--text-muted);
-}
-.settings-ratios-preview-label strong {
-  color: var(--text-primary);
-  font-weight: 500;
-}
 .settings-ratios-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -33,7 +19,7 @@
 .settings-ratio-row > label {
   color: var(--text-primary);
   font-size: var(--settings-font-body);
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
 }
 .settings-ratio-control {
   display: flex;
@@ -103,7 +89,7 @@
   line-height: 1.7;
 }
 .settings-ratios-status strong {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
 }
 .settings-ratios-status.is-valid {

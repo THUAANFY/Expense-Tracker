@@ -16,8 +16,8 @@
   background: #fff;
   color: var(--text-primary);
   font-size: var(--font-control);
-  font-weight: 400;
-  line-height: 20px;
+  font-weight: var(--font-weight-field);
+  line-height: var(--line-height-control);
   text-align: left;
   transition:
     border-color 160ms ease,
@@ -70,9 +70,7 @@
     0 14px 44px #49335f24,
     0 3px 12px #49335f0a;
   color: var(--text-primary);
-  font:
-    var(--font-control)/1.5 'Be Vietnam Pro',
-    sans-serif;
+  font: var(--font-control)/1.5 var(--font-family-ui);
   text-align: left;
   transform-origin: center;
 }
@@ -104,18 +102,26 @@
   gap: 6px;
   color: var(--text-accent);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
   letter-spacing: 0.45px;
 }
 
 .field-popover-close {
   display: grid;
   place-items: center;
+  flex-shrink: 0;
   width: 25px;
   height: 25px;
+  padding: 0;
   margin-right: -3px;
   border-radius: 6px;
   color: var(--text-secondary);
+  line-height: 1;
+}
+
+.field-popover-close > svg {
+  display: block;
+  margin: 0;
 }
 
 .field-popover-close:hover {
@@ -140,7 +146,7 @@
   border-radius: 7px;
   color: var(--text-primary);
   font-size: var(--font-picker-title);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
 }
 
@@ -177,7 +183,7 @@
   margin-bottom: 3px;
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   text-align: center;
 }
 
@@ -211,7 +217,7 @@
 .date-picker-day.is-today:not(.is-selected) {
   border-color: #c8b2dc;
   color: var(--text-accent);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .date-picker-day:hover:not(:disabled) {
@@ -225,7 +231,7 @@
   border-color: var(--action);
   background: var(--action);
   color: #fff;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .date-picker-day:focus-visible {
@@ -252,8 +258,8 @@
 .field-popover-footer strong {
   margin-left: 3px;
   color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-label);
   font-variant-numeric: tabular-nums;
 }
 
@@ -262,7 +268,7 @@
   padding: 5px;
   border-radius: 6px;
   color: var(--text-accent);
-  font-size: 12px;
+  font-size: var(--font-caption);
   white-space: nowrap;
 }
 
@@ -279,7 +285,7 @@
   padding: 6px var(--select-option-padding-inline) 8px;
   color: var(--text-secondary);
   font-size: var(--font-control-label);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.4px;
 }
 
@@ -315,7 +321,7 @@
 
 .payment-select-option.is-selected {
   color: var(--text-accent);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .payment-option-icon {

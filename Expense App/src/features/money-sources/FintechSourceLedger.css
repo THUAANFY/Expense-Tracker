@@ -66,7 +66,7 @@ html[data-theme='dark'] .sources-workspace .source-ledger-eyebrow {
   gap: 6px;
   color: #bdb4d7;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.7px;
 }
 html[data-theme='dark'] .sources-workspace .source-ledger-eyebrow::before {
@@ -128,7 +128,7 @@ html[data-theme='dark'] .sources-workspace .source-ledger-count-copy {
 html[data-theme='dark'] .sources-workspace .source-ledger-count-copy > strong {
   color: #ebe6ff;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
   line-height: 1.15;
 }
@@ -177,7 +177,7 @@ html[data-theme='dark'] .sources-workspace .source-ledger-kind {
   border-radius: 12px;
   background: linear-gradient(125deg, #172239, #111a2e);
   color: #d4d9ed;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   box-shadow: inset 0 1px 0 #c8d9ff08;
 }
 html[data-theme='dark'] .sources-workspace .source-ledger-kind[data-kind='income'] {
@@ -214,7 +214,7 @@ html[data-theme='dark'] .sources-workspace .source-ledger-kind.is-active > small
   background: #171c4c66;
 }
 html[data-theme='dark'] .sources-workspace .source-ledger-columns {
-  margin: 0 16px 8px;
+  margin: 8px 16px 8px;
   padding: 8px 12px;
   border: 1px solid #9283d64a;
   border-radius: 11px;
@@ -445,7 +445,7 @@ html[data-theme='dark'] .sources-workspace .source-pagination button:disabled {
     background: #8d83bc13;
   }
   html[data-theme='dark'] .sources-workspace .source-ledger-count-copy > strong {
-    font-size: 16px;
+    font-size: var(--font-section);
   }
   html[data-theme='dark'] .sources-workspace .source-ledger-count-copy > span {
     position: absolute;

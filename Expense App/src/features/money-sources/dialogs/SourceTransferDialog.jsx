@@ -57,7 +57,6 @@ export default function SourceTransferDialog({
             ? 'Sửa ghi nhận chuyển nguồn'
             : 'Ghi nhận chuyển nguồn'
       }
-      subtitle="Di chuyển giữa hai nguồn trong sổ của bạn."
       className="source-dialog"
       onClose={onClose}
     >
@@ -172,7 +171,17 @@ export default function SourceTransferDialog({
             )}
             {confirmDelete && !readOnly && (
               <div className="source-delete-confirm" ref={confirmation}>
-                <p>Xóa bản ghi chuyển nguồn sẽ tính lại số dư cả hai nguồn.</p>
+                <p>
+                  Xóa bản ghi chuyển <strong>{money(transfer.amount)}</strong> từ{' '}
+                  <strong>
+                    {getMoneySource(sources, transfer.fromSourceId)?.name || 'Nguồn tiền'}
+                  </strong>{' '}
+                  sang{' '}
+                  <strong>
+                    {getMoneySource(sources, transfer.toSourceId)?.name || 'Nguồn tiền'}
+                  </strong>
+                  ? Số dư cả hai nguồn sẽ được tính lại.
+                </p>
                 <button type="button" className="danger-text" onClick={() => onDelete(transfer.id)}>
                   Xác nhận xóa chuyển nguồn
                 </button>

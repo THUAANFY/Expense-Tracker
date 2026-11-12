@@ -447,7 +447,10 @@ test('creating a source inside a transaction preserves the draft and selects the
   page,
 }) => {
   await seed(page, createEmptyData())
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const transactionDialog = page.locator('.transaction-dialog')
   await transactionDialog
     .getByRole('textbox', { name: 'Tên giao dịch', exact: true })
@@ -490,7 +493,10 @@ test('new records require a source once configured, while old unassigned records
   data.transactions = [transaction('legacy', 100000)]
   await seed(page, data)
   await expect(page.locator('.overview-sources strong')).toHaveText(money(7000000))
-  await page.getByRole('button', { name: 'Thêm giao dịch', exact: true }).first().click()
+  await page
+    .locator('.page-heading')
+    .getByRole('button', { name: 'Thêm giao dịch', exact: true })
+    .click()
   const dialog = page.locator('.transaction-dialog')
   await dialog.getByRole('textbox', { name: 'Tên giao dịch', exact: true }).fill('Nguồn cần chọn')
   await dialog.getByRole('spinbutton', { name: 'Số tiền', exact: true }).fill('10000')

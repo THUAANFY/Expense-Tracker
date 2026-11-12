@@ -49,6 +49,7 @@
   border-radius: 6px;
   color: var(--text-secondary);
   font-size: var(--font-control);
+  font-weight: var(--font-weight-control);
   line-height: 1.5;
   white-space: nowrap;
 }
@@ -121,14 +122,21 @@
   gap: 7px;
   color: var(--text-accent);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.6px;
 }
 
 .month-popover-close {
   width: 25px;
   height: 25px;
+  padding: 0;
   margin: -3px -3px 0 0;
+  line-height: 1;
+}
+
+.month-popover-close > svg {
+  display: block;
+  margin: 0;
 }
 
 .month-popover-navigation {
@@ -153,7 +161,7 @@
   border-radius: 7px;
   color: var(--text-primary);
   font-size: var(--font-picker-title);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .month-year-toggle > svg {
@@ -222,7 +230,7 @@
   background: var(--action);
   box-shadow: 0 3px 9px #7b5ba41c;
   color: #fff;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .month-option:focus-visible {
@@ -247,7 +255,7 @@
 .month-popover-footer strong {
   margin-left: 3px;
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   font-variant-numeric: tabular-nums;
 }
 

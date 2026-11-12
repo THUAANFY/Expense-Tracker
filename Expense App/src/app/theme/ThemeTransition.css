@@ -1,0 +1,21 @@
+/* Keep the old page intact while the new palette grows from the chosen point. */
+:root[data-theme-transition]::view-transition {
+  pointer-events: none;
+}
+:root[data-theme-transition]::view-transition-group(root),
+:root[data-theme-transition]::view-transition-image-pair(root),
+:root[data-theme-transition]::view-transition-old(root),
+:root[data-theme-transition]::view-transition-new(root) {
+  animation: none !important;
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
+:root[data-theme-transition]::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+:root[data-theme-transition]::view-transition-old(root) {
+  z-index: 0;
+}
+:root[data-theme-transition]::view-transition-new(root) {
+  z-index: 1;
+}

@@ -34,7 +34,7 @@
 .bag-picker-dialog .dialog-heading h2 {
   margin-top: 5px;
   color: var(--text-primary);
-  font-size: 20px;
+  font-size: var(--font-dialog-title);
   line-height: 1.5;
 }
 .bag-dialog .dialog-heading p,
@@ -91,7 +91,7 @@
   overflow: hidden;
   color: var(--text-primary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -248,7 +248,7 @@
   box-shadow: 0 3px 10px #251b3514;
   color: var(--text-primary);
   font-size: var(--font-caption);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   line-height: 1.5;
   white-space: nowrap;
   opacity: 0;
@@ -413,7 +413,7 @@ html[data-theme='dark'] .bag-picker-dialog .bag-picker-row input[type='checkbox'
   overflow: hidden;
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -425,7 +425,7 @@ html[data-theme='dark'] .bag-picker-dialog .bag-picker-row input[type='checkbox'
 .bag-picker-row > strong {
   color: var(--text-primary);
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
 }
 .bag-picker-empty {
@@ -460,7 +460,7 @@ html[data-theme='dark'] .bag-picker-dialog .bag-picker-row input[type='checkbox'
 .bag-selection-total strong {
   color: var(--text-primary);
   font-size: var(--font-caption);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 @media (max-width: 760px) {
   .bag-form-body,
@@ -474,7 +474,7 @@ html[data-theme='dark'] .bag-picker-dialog .bag-picker-row input[type='checkbox'
   }
   .bag-dialog .dialog-heading h2,
   .bag-picker-dialog .dialog-heading h2 {
-    font-size: 18px;
+    font-size: var(--font-dialog-title);
   }
   .bag-dialog .dialog-actions,
   .bag-picker-dialog .dialog-actions {

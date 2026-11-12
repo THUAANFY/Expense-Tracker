@@ -1,5 +1,5 @@
 import { useId, useState } from 'react'
-import { Check, RotateCcw, SlidersHorizontal } from 'lucide-react'
+import { Check, CheckCircle2, CircleAlert, ChartPie, RotateCcw } from 'lucide-react'
 import { CATEGORIES, money } from '../../shared/storage/data'
 import { isClosedMonth } from '../../shared/lib/closedMonths'
 import {
@@ -54,11 +54,11 @@ export default function CategoryRatiosSettings({
       )
     : null
   const caption = `tháng ${Number(month.slice(5))}/${month.slice(0, 4)}`
-  const hint = valid
-    ? 'Đủ 100% · Sẵn sàng phân bổ'
-    : total !== 100
-      ? `Tổng phải bằng 100%. ${total < 100 ? `Còn thiếu ${100 - total}%` : `Đang dư ${total - 100}%`}.`
+  const hint =
+    total !== 100
+      ? `${total < 100 ? `Còn thiếu ${100 - total}%` : `Đang dư ${total - 100}%`}.`
       : 'Mỗi tỷ lệ cần là số nguyên từ 0 đến 100.'
+  const previewTotal = preview?.total ?? data.monthlyBudgets?.[month] ?? data.profile.budget
   function change(values) {
     if (readOnly || storageBlocked) return
     setDrafts((previous) => ({
@@ -103,31 +103,34 @@ export default function CategoryRatiosSettings({
     >
       <div className="settings-section-heading">
         <span className="settings-section-icon">
-          <SlidersHorizontal size={17} aria-hidden="true" />
+          <ChartPie size={17} aria-hidden="true" />
         </span>
         <div>
           <h2>Tỷ lệ danh mục</h2>
-          <p>Tự chia ngân sách</p>
         </div>
       </div>
       <div className="settings-section-content">
-        <p className="settings-ratios-scope">
-          {legacy
-            ? 'Tháng này dùng hạn mức lịch sử, chưa áp dụng tỷ lệ tự chia.'
-            : readOnly
-              ? `Tỷ lệ của ${caption} chỉ được xem.`
-              : `Áp dụng từ ${caption} trở đi. Các tháng đã có tỷ lệ riêng giữ nguyên.`}
-        </p>
-        <p className="settings-ratios-preview-label">
-          Xem trước theo ngân sách đã lưu:{' '}
-          <strong>
-            {money(preview?.total ?? data.monthlyBudgets?.[month] ?? data.profile.budget)}
-          </strong>
-          . Giữ các hạn mức đặt riêng.
-        </p>
+        <dl className="settings-allocation-metrics">
+          <div>
+            <dt>Ngân sách tháng</dt>
+            <dd>{money(previewTotal)}</dd>
+          </div>
+          <div>
+            <dt>Danh mục</dt>
+            <dd>{CATEGORIES.length}</dd>
+          </div>
+          <div>
+            <dt>Tổng tỷ lệ</dt>
+            <dd>{legacy ? '—' : `${total.toLocaleString('vi-VN')}%`}</dd>
+          </div>
+        </dl>
         <div className="settings-ratios-grid">
           {CATEGORIES.map((category) => (
-            <div className="settings-ratio-row" key={category.id}>
+            <div
+              className="settings-ratio-row"
+              key={category.id}
+              style={{ '--ratio-color': category.color }}
+            >
               <SettingsCategoryMark category={category.id} size={32} />
               <label htmlFor={`${id}-${category.id}`}>{category.name}</label>
               <div className="settings-ratio-control">
@@ -154,6 +157,13 @@ export default function CategoryRatiosSettings({
                   <small>Đặt riêng</small>
                 )}
               </span>
+              <span className="settings-ratio-bar" aria-hidden="true">
+                <span
+                  style={{
+                    width: `${legacy ? 0 : Math.max(0, Math.min(100, weights[category.id] || 0))}%`,
+                  }}
+                />
+              </span>
             </div>
           ))}
         </div>
@@ -162,8 +172,19 @@ export default function CategoryRatiosSettings({
           id={`${id}-status`}
           role="status"
         >
-          <strong>{legacy ? 'Hạn mức lịch sử' : `Tổng ${total.toLocaleString('vi-VN')}%`}</strong>
-          <span>{legacy ? 'Giữ nguyên thiết lập đã lưu.' : hint}</span>
+          {valid ? (
+            <CheckCircle2 size={17} aria-hidden="true" />
+          ) : (
+            <CircleAlert size={17} aria-hidden="true" />
+          )}
+          <strong>
+            {legacy
+              ? 'Hạn mức lịch sử'
+              : valid
+                ? 'Phân bổ hợp lệ'
+                : `Tổng ${total.toLocaleString('vi-VN')}%`}
+          </strong>
+          {legacy ? <span>Chỉ xem.</span> : !valid && <span>{hint}</span>}
         </div>
         {preview?.unallocated > 0 && (
           <p className="settings-ratios-warning">
