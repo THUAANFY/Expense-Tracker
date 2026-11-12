@@ -1,5 +1,6 @@
 import { flushSync } from 'react-dom'
 import { subscribeAppearance } from './appearance'
+import { prefersLightweightMotion } from '../../shared/lib/motionPreferences'
 
 let sequence = 0
 let active
@@ -30,6 +31,7 @@ export function revealAppearance(update, origin, changeColors = true) {
   }
   if (
     !changeColors ||
+    prefersLightweightMotion() ||
     typeof document.startViewTransition !== 'function' ||
     typeof document.documentElement.animate !== 'function' ||
     window.matchMedia('(prefers-reduced-motion: reduce)').matches ||

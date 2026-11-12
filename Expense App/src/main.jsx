@@ -12,6 +12,7 @@ import './shared/components/DialogDestructive.css'
 import './shared/components/FilterTabs.css'
 import './app/layout/PageHeading.css'
 import './app/layout/Topbar.css'
+import './shared/styles/mobileMotion.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

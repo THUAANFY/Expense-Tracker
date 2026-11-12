@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { AnimatePresence, motion, MotionConfig } from 'motion/react'
 import {
   ArrowDownLeft,
@@ -103,6 +103,10 @@ import '../features/transactions/HistoryView.css'
 import '../features/transactions/FintechHistoryLedger.css'
 import '../features/overview/OverviewView.css'
 import './layout/Sidebar.css'
+import {
+  prefersLightweightMotion,
+  subscribeLightweightMotion,
+} from '../shared/lib/motionPreferences'
 
 const NAVIGATION = [
   { id: 'overview', label: 'Tổng quan', icon: LayoutDashboard },
@@ -516,6 +520,10 @@ function AppProviders({ saveError, saving, children }) {
 
 export default function App() {
   const { theme } = useAppearance()
+  const lightweightMotion = useSyncExternalStore(
+    subscribeLightweightMotion,
+    prefersLightweightMotion,
+  )
   const [requestedView, setView] = useState('overview')
   const view = theme === 'dark' && requestedView === 'notes' ? 'bags' : requestedView
   const [asOf, setAsOf] = useState(dateKey)
@@ -1112,10 +1120,16 @@ export default function App() {
               <motion.div
                 key={view}
                 className="page-content"
-                initial={{ opacity: 0, y: 12, filter: 'blur(3px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -6, filter: 'blur(2px)' }}
-                transition={{ duration: 0.3, ease }}
+                initial={
+                  lightweightMotion ? { opacity: 0 } : { opacity: 0, y: 12, filter: 'blur(3px)' }
+                }
+                animate={{ opacity: 1, y: 0, filter: lightweightMotion ? 'none' : 'blur(0px)' }}
+                exit={
+                  lightweightMotion
+                    ? { opacity: 0, transition: { duration: 0 } }
+                    : { opacity: 0, y: -6, filter: 'blur(2px)' }
+                }
+                transition={{ duration: lightweightMotion ? 0.14 : 0.3, ease }}
               >
                 {view === 'overview' && (
                   <div className="overview-workspace">

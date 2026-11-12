@@ -189,23 +189,97 @@ for (const fallback of ['reduced motion', 'unsupported browser']) {
   })
 }
 
-test.describe('touch appearance reveal', () => {
+test.describe('lightweight touch appearance', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })
-  test('uses viewport tap coordinates after scrolling', async ({ page }) => {
+  test.setTimeout(60000)
+  test('portrait and landscape changes skip snapshots and preserve drafts and financial data', async ({
+    page,
+  }) => {
+    const cpu = await page.context().newCDPSession(page)
     await openSettings(page)
-    test.skip(
-      !(await page.evaluate(() => Boolean(document.startViewTransition))),
-      'Native snapshots unavailable',
-    )
-    const button = option(page, 'dark')
-    await button.scrollIntoViewIfNeeded()
-    const box = await button.boundingBox()
-    await button.tap({ position: { x: 35, y: 30 } })
-    const { frames } = await reveal(page, 1)
-    const origin = originOf(frames.clipPath[0])
-    expect(Math.abs(origin.x - box.x - 35)).toBeLessThanOrEqual(1)
-    expect(Math.abs(origin.y - box.y - 30)).toBeLessThanOrEqual(1)
-    await finish(page)
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390)
+    await cpu.send('Emulation.setCPUThrottlingRate', { rate: 4 })
+    const before = await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)
+    const name = page.getByRole('textbox', { name: 'Mây có thể gọi bạn là', exact: true })
+    await name.fill('Bản nháp trên điện thoại')
+    for (const viewport of [
+      { width: 390, height: 844 },
+      { width: 844, height: 390 },
+    ]) {
+      await page.setViewportSize(viewport)
+      for (const mode of ['dark', 'light', 'dark']) {
+        await option(page, mode).tap()
+        await expect(page.locator('html')).toHaveAttribute('data-theme', mode)
+        await expect(option(page, mode)).toHaveAttribute('aria-checked', 'true')
+        await expect(page.locator('html')).not.toHaveAttribute('data-theme-transition')
+        await expect(name).toHaveValue('Bản nháp trên điện thoại')
+      }
+    }
+    expect(await page.evaluate(() => window.themeTransitionCalls)).toBe(0)
+    expect(await page.evaluate(() => window.themeReveals.length)).toBe(0)
+    expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).toBe(before)
+    await cpu.send('Emulation.setCPUThrottlingRate', { rate: 1 })
+    await page.reload()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+    await page.getByRole('button', { name: 'Mở cài đặt cá nhân', exact: true }).click()
+    await expect(option(page, 'dark')).toHaveAttribute('aria-checked', 'true')
   })
+
+  test('dark navigation avoids whole-page blur and preserves the book under CPU throttling', async ({
+    page,
+  }) => {
+    await openSettings(page, { mode: 'dark' })
+    const before = await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)
+    const cpu = await page.context().newCDPSession(page)
+    await cpu.send('Emulation.setCPUThrottlingRate', { rate: 4 })
+    await page.evaluate(() => {
+      window.blurredPageFrames = []
+      const check = () => {
+        const content = document.querySelector('.page-content')
+        if (content) {
+          const filter = getComputedStyle(content).filter
+          if (filter !== 'none') window.blurredPageFrames.push(filter)
+        }
+        window.motionFrame = requestAnimationFrame(check)
+      }
+      check()
+    })
+    for (const [label, selector] of [
+      ['Lịch sử giao dịch', '.history-workspace'],
+      ['Nguồn tiền', '.sources-workspace'],
+      ['Túi chi tiêu', '.bags-workspace'],
+      ['Tổng quan', '.overview-workspace'],
+    ]) {
+      await page.getByRole('button', { name: 'Mở menu', exact: true }).tap()
+      await page.locator('.sidebar').getByRole('button', { name: label, exact: true }).tap()
+      await expect(page.locator(`.page-content ${selector}`)).toBeVisible()
+      await expect(page.locator('.sidebar')).not.toHaveClass(/is-open/)
+      await expect(page.locator('.page-content')).toHaveCount(1)
+    }
+    await page.locator('.overview-sources-add').tap()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    expect(await dialog.evaluate((el) => getComputedStyle(el, '::backdrop').backdropFilter)).toBe(
+      'none',
+    )
+    await page.keyboard.press('Escape')
+    await expect(dialog).not.toBeVisible()
+    expect(await page.evaluate(() => window.blurredPageFrames)).toEqual([])
+    expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).toBe(before)
+    await page.evaluate(() => cancelAnimationFrame(window.motionFrame))
+  })
+})
+
+test('a narrow viewport with a mouse also skips full-screen theme snapshots', async ({ page }) => {
+  await page.setViewportSize({ width: 560, height: 900 })
+  await openSettings(page)
+  await option(page, 'dark').click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  expect(await page.evaluate(() => window.themeTransitionCalls)).toBe(0)
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await option(page, 'light').click()
+  if (await page.evaluate(() => Boolean(document.startViewTransition))) {
+    await reveal(page, 1)
+    await finish(page)
+  }
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
 })

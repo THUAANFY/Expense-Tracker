@@ -1,0 +1,19 @@
+/* Keep the artwork and colors; avoid continuous painting and full-screen blur on phones. */
+@media (max-width: 760px), (pointer: coarse) {
+  .footer-cloud-character,
+  .sidebar-art *,
+  .overview-journal-corner .journal-desk-art * {
+    animation: none !important;
+  }
+
+  html[data-theme] .dialog::backdrop,
+  html[data-theme] .modal-overlay,
+  .sidebar-scrim {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  html[data-theme] .dialog::backdrop {
+    animation: none;
+  }
+}

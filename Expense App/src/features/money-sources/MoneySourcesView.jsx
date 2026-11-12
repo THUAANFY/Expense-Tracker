@@ -119,17 +119,35 @@ export function OverviewMoneySources({ sources, transactions, transfers, asOf, o
       </section>
     )
   }
+  if (!sources.length) {
+    return (
+      <section className="overview-sources overview-sources--empty" aria-label="Nguồn tiền">
+        <div className="overview-sources-empty-art" aria-hidden="true">
+          <SourceArt type="cash" />
+        </div>
+        <div className="overview-sources-empty-copy">
+          <span className="overview-sources-empty-label">Nguồn tiền</span>
+          <h2>Tiền của bạn đang ở đâu?</h2>
+          <p>Thêm tiền mặt, ngân hàng hoặc ví điện tử để theo dõi.</p>
+        </div>
+        <button type="button" className="overview-sources-empty-add" onClick={onCreate}>
+          <Plus size={16} aria-hidden="true" />
+          Thêm nguồn tiền
+        </button>
+      </section>
+    )
+  }
   return (
-    <button className="overview-sources" onClick={sources.length ? onOpen : onCreate}>
+    <button className="overview-sources" onClick={onOpen}>
       <SourceArt type="cash" />
       <span>
         <span className="overview-sources-label">
           Nguồn tiền <small>Đến {formatDate(asOf, { day: '2-digit', month: '2-digit' })}</small>
         </span>
-        <strong>{sources.length ? money(total) : 'Bạn đang có tiền ở đâu?'}</strong>
+        <strong>{money(total)}</strong>
       </span>
       <span className="overview-sources-link">
-        {sources.length ? `${sources.length} nguồn · Xem chi tiết` : 'Thêm nguồn đầu tiên'}
+        {sources.length} nguồn · Xem chi tiết
         <ArrowRight size={15} />
       </span>
     </button>
