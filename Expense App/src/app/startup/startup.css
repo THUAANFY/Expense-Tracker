@@ -297,5 +297,5 @@ body.is-starting:not(.startup-revealing) #root {
 }
 
 html[data-theme='dark'] .startup-logo {
-  content: url('/logo-may-dark.svg');
+  content: url('/logo-may-sidebar-dark.svg');
 }

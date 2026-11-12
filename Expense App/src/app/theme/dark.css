@@ -70,7 +70,7 @@ html[data-theme='dark'] :is(.brand-caption, .breadcrumb, .breadcrumb strong) {
   color: var(--text-muted);
 }
 html[data-theme='dark'] .brand-symbol img {
-  content: url('/logo-may-dark.svg');
+  content: url('/logo-may-sidebar-dark.svg');
 }
 html[data-theme='dark'] :is(.mobile-menu, .mobile-close, .avatar, .notification-trigger) {
   background: var(--glass-face);

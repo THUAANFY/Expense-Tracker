@@ -117,8 +117,7 @@ Expense App/
 │       ├── storage/            # Định dạng sổ, kiểm tra dữ liệu và lượt ghi an toàn
 │       ├── lib/                # Ngày tháng và quy tắc khóa tháng đã qua
 │       ├── illustrations/      # CategoryArt dùng ở nhiều chức năng
-│       ├── styles/             # Token chữ/màu, reset và kiểu ô nhập dùng chung
-│       └── assets/             # Tài nguyên ảnh
+│       └── styles/             # Token chữ/màu, reset và kiểu ô nhập dùng chung
 ├── tests/
 │   ├── app/                    # Khởi động, luồng tổng thể, điều hướng, responsive
 │   ├── overview/               # Biểu đồ, donut và góc mây ghi chép
@@ -144,7 +143,7 @@ Component, CSS và SVG riêng của một chức năng nằm cạnh nhau trong `
 
 Logic số dư ở `features/money-sources/moneySources.js`; logic ngân sách ở `features/budgets/`; cấu trúc sổ và lưu trữ ở `shared/storage/`. Các khóa localStorage và định dạng bản sao lưu được giữ nguyên.
 
-Kiểm thử được nhóm theo chức năng dưới `tests/`, dùng chung fixture trong `tests/helpers/`. Chạy một nhóm bằng `npx playwright test tests/budgets --workers=2`, hoặc toàn bộ bằng `npm run test:e2e -- --workers=2`. Trace và ảnh lỗi nằm trong `artifacts/playwright/`; ảnh chụp giao diện nằm trong `artifacts/screenshots/`. Thư mục `artifacts/previous-test-results/` giữ kết quả có từ trước khi sắp xếp lại.
+Kiểm thử được nhóm theo chức năng dưới `tests/`, dùng chung fixture trong `tests/helpers/`. Chạy một nhóm bằng `npx playwright test tests/budgets --workers=2`, hoặc toàn bộ bằng `npm run test:e2e -- --workers=2`. Trace và ảnh lỗi nằm trong `artifacts/playwright/`; ảnh chụp giao diện nằm trong `artifacts/screenshots/`. Các kết quả này có thể xóa và tạo lại bằng công cụ kiểm thử.
 
 Chạy `node scripts/capture.mjs` khi dev server đang mở để chụp Tổng quan trên desktop và mobile. `node_modules/`, `dist/` và `artifacts/` là các thư mục được công cụ tạo ra; mã nguồn ứng dụng nằm trong `src/`.
 
